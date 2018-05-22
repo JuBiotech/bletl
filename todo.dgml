@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph Layout="Sugiyama" ZoomLevel="-1" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="BL1" Bounds="-173.982176352376,372.977542984524,63.6933333333333,25.96" Label="BL1Data" UseManualLocation="True" />
+    <Node Id="BLProData" Bounds="88.2992368066229,373.866632520656,75.1466666666666,25.96" UseManualLocation="True" />
+    <Node Id="Bl1" Bounds="-439.343836486784,134.56545240723,50,25.96" Label="bl1" UseManualLocation="True" />
+    <Node Id="Bletl" Bounds="-312.424142387617,9.91307775786177,50,25.96" Label="bletl" UseManualLocation="True" />
+    <Node Id="Blpro" Bounds="-359.343836487365,134.56545240723,50,25.96" Label="blpro" UseManualLocation="True" />
+    <Node Id="Comments" Bounds="8.0270538210534,521.706492919922,93.43,25.96" Label="comments (C)" UseManualLocation="True" />
+    <Node Id="CommonFormatForTransformedData" Bounds="231.711666666667,111.92,218.86,25.96" Label="common format for transformed data" />
+    <Node Id="Core" Bounds="-272.213061946409,74.9964534863728,50,25.9600000000001" Label="core" UseManualLocation="True" />
+    <Node Id="DiagnosticData" Bounds="-123.182946178947,505.451869506836,101.21,25.96" Label="diagnostic data" UseManualLocation="True" />
+    <Node Id="ExtractFiltersetsFromBLProMetadata" Bounds="15.1824574240439,-79.1073482336255,219.386666666667,25.96" Label="extract filtersets from BLPro metadata" UseManualLocation="True" />
+    <Node Id="Filtersets" Bounds="-217.799612845613,489.804606933594,64.6166666666667,25.96" Label="filtersets" UseManualLocation="True" />
+    <Node Id="FindCommonRepresentationForUntransformedData" Bounds="125.871156454087,55.9598231506348,297.856666666666,25.96" Label="find common representation for untransformed data" UseManualLocation="True" />
+    <Node Id="Fluidics" Bounds="402.717053821053,491.582789916992,73.3566666666667,25.96" Label="fluidics (F)" UseManualLocation="True" />
+    <Node Id="HDF5Storage" Bounds="146.355,223.84,93.5733333333333,25.96" Label="store to HDF5" />
+    <Node Id="Measurements" Bounds="131.457053821053,509.897288818359,118.92,25.96" Label="measurements (M)" UseManualLocation="True" />
+    <Node Id="Parameters(P)" Bounds="290.960834431782,548.48452464455,96.91,25.96" Label="parameters (P)" UseManualLocation="True" />
+    <Node Id="ParseContinuousDataFromBLPro" Bounds="243.092776285807,-4.37128642219215,199.776666666667,25.96" Label="parse continuous data from BLPro" />
+    <Node Id="ParseRemainingTypesInBLProData" Bounds="-73.2398756192495,-13.0750213714171,210.283333333333,25.96" Label="parse remaining types in BLPro data" UseManualLocation="True" />
+    <Node Id="Parsing" Bounds="-383.512651998974,75.7582442090169,57.97,25.96" Label="parsers" UseManualLocation="True" />
+    <Node Id="ProcessParameter" Bounds="-371.012946178947,466.68828918457,123.213333333333,25.96" Label="process parameters" UseManualLocation="True" />
+    <Node Id="PropertyAnnotations" Bounds="275.293333333333,167.88,131.696666666667,25.96" Label="property annotations" />
+    <Node Id="Pumps" Bounds="402.98611598444,433.791974483496,75.83,25.96" Label="pumps (N)" UseManualLocation="True" />
+    <Node Id="ReadFromHDF5" Bounds="140.763333333333,279.8,104.756666666667,25.96" Label="read from HDF5" />
+    <Node Id="Reference" Bounds="280.377053821053,490.693690795898,92.3399999999999,25.96" Label="references (R)" UseManualLocation="True" />
+    <Node Id="SliceableFormat" Bounds="141.228333333333,167.88,103.826666666667,25.96" Label="sliceable format" />
+  </Nodes>
+  <Links>
+    <Link Source="BL1" Target="Comments" Bounds="-124.953442741595,398.937542984524,155.332220439801,117.343985904985" />
+    <Link Source="BL1" Target="Filtersets" Bounds="-177.542941562832,398.937542984524,30.5904153971548,82.4293613082576" />
+    <Link Source="BL1" Target="Measurements" Bounds="-111.687957170443,398.474699759292,262.707574859951,108.00053300811" />
+    <Link Source="BL1" Target="ProcessParameter" Bounds="-278.385611596426,398.937542984524,113.081205275169,63.3519182013912" />
+    <Link Source="BL1" Target="Reference" Bounds="-110.288843019043,393.956276482487,382.346683210876,96.031690061776" />
+    <Link Source="BLProData" Target="Comments" Bounds="64.8891904518901,399.826632520656,54.738283816588,113.769738457377" />
+    <Link Source="BLProData" Target="DiagnosticData" Bounds="-45.5012311240085,399.826632520656,151.797990475328,100.651663302421" />
+    <Link Source="BLProData" Target="Fluidics" Bounds="160.443237878844,399.826632520656,236.165440273334,88.6713394690863" />
+    <Link Source="BLProData" Target="Measurements" Bounds="132.079093148512,399.826632520656,48.7490015910346,101.95113105669" />
+    <Link Source="BLProData" Target="Parameters(P)" Bounds="140.542144775391,399.826629638672,161.294555664063,142.717437744141" />
+    <Link Source="BLProData" Target="Pumps" Bounds="163.445903473289,393.993904977024,230.698752494588,43.883964853342" />
+    <Link Source="BLProData" Target="Reference" Bounds="148.168387878034,399.826632520656,148.304909531097,86.338960442164" />
+    <Link Source="Bletl" Target="Core" Bounds="-279.404585653128,35.8730777578618,19.4414645279604,31.4668525864598" />
+    <Link Source="Bletl" Target="Parsing" Bounds="-334.875688493652,35.8730777578618,34.2234900208322,33.5817218803077" />
+    <Link Source="CommonFormatForTransformedData" Target="PropertyAnnotations" Bounds="341.141666666667,137.87985,1.70530256582424E-13,21.0001500000001" />
+    <Link Source="CommonFormatForTransformedData" Target="SliceableFormat" Bounds="235.888738889222,137.87985,70.9241828323862,26.8170565116122" />
+    <Link Source="ExtractFiltersetsFromBLProMetadata" Target="FindCommonRepresentationForUntransformedData" Bounds="139.283507995148,-53.1473482336255,114.421630638329,103.083142261563" />
+    <Link Source="FindCommonRepresentationForUntransformedData" Target="CommonFormatForTransformedData" Bounds="290.187642802618,81.9198231506348,28.6864203763807,24.197168829662" />
+    <Link Source="HDF5Storage" Target="ReadFromHDF5" Bounds="193.141666666667,249.80005,5.6843418860808E-14,21.0001" />
+    <Link Source="ParseContinuousDataFromBLPro" Target="FindCommonRepresentationForUntransformedData" Bounds="296.208650708517,21.5887135778079,32.1034526271003,28.4070241054988" />
+    <Link Source="ParseRemainingTypesInBLProData" Target="FindCommonRepresentationForUntransformedData" Bounds="77.5716572301408,12.8849787521362,142.900827137162,40.6143672813723" />
+    <Link Source="Parsing" Target="Bl1" Bounds="-394.72327509647,101.718244209017,26.992920598258,26.5376054171941" />
+    <Link Source="Parsing" Target="Blpro" Bounds="-350.072655181957,101.718244209017,8.35213845737451,24.3346430153717" />
+    <Link Source="SliceableFormat" Target="HDF5Storage" Bounds="193.141666666667,193.83995,5.6843418860808E-14,21.0001" />
+  </Links>
+  <Properties>
+    <Property Id="Bounds" DataType="System.Windows.Rect" />
+    <Property Id="Label" Label="Label" Description="Displayable label of an Annotatable object" DataType="System.String" />
+    <Property Id="Layout" DataType="System.String" />
+    <Property Id="UseManualLocation" DataType="System.Boolean" />
+    <Property Id="ZoomLevel" DataType="System.String" />
+  </Properties>
+</DirectedGraph>

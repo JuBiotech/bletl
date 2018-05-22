@@ -1,0 +1,57 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>928d9c1d-ec3d-49b3-ab01-1f6f2775396b</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>tests.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>bletl</Name>
+    <RootNamespace>bletl</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="bletl\core.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="bletl\parsing\bl1.py" />
+    <Compile Include="bletl\parsing\blpro.py" />
+    <Compile Include="bletl\parsing\__init__.py" />
+    <Compile Include="bletl\utils.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests.py" />
+    <Compile Include="bletl\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bletl\" />
+    <Folder Include="bletl\parsing\" />
+    <Folder Include="bletl\parsing\__pycache__\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bletl\parsing\__pycache__\bl1.cpython-36.pyc" />
+    <Content Include="bletl\parsing\__pycache__\blpro.cpython-36.pyc" />
+    <Content Include="bletl\parsing\__pycache__\__init__.cpython-36.pyc" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>
