@@ -24,6 +24,7 @@ class BioLector1Parser(core.BLDParser):
 
         data = core.BLData()
         data.metadata = metadata
+        data.filtersets = filtersets
         data.process_parameters = process_parameters
         data.comments = comments
         data.references = references

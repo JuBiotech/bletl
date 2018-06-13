@@ -41,12 +41,6 @@
   <ItemGroup>
     <Folder Include="bletl\" />
     <Folder Include="bletl\parsing\" />
-    <Folder Include="bletl\parsing\__pycache__\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="bletl\parsing\__pycache__\bl1.cpython-36.pyc" />
-    <Content Include="bletl\parsing\__pycache__\blpro.cpython-36.pyc" />
-    <Content Include="bletl\parsing\__pycache__\__init__.cpython-36.pyc" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -7,6 +7,8 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "bletl", "bletl\bletl.pyproj
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2FB3E390-A932-485C-B1B5-4B4B3DD78E18}"
 	ProjectSection(SolutionItems) = preProject
+		.gitlab-ci.yml = .gitlab-ci.yml
+		requirements.txt = requirements.txt
 		todo.dgml = todo.dgml
 	EndProjectSection
 EndProject

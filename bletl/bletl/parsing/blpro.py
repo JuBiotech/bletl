@@ -61,6 +61,19 @@ def parse_metadata_data(fp):
     return metadata, dfraw[list(dfraw.columns)[:-1]]
 
 
+def extract_filtersets(metadata):
+
+    # filterset-related metadata is spread over: channels, measurement channels, process
+    channels = metadata.pop('channels')
+    measurement_channels = metadata.pop('measurement channels')
+    for k, v in metadata['process'].copy().items():
+        if '_reference_value_' in k:
+            measurement_channels[k] = metadata['process'].pop(k)
+    # TODO: compile a dataframe of filtersets
+
+    return channels, measurement_channels
+
+
 def extract_comments(dfraw):
     ocol_ncol_type = [
         ('Time', 'time', float),
@@ -88,6 +101,7 @@ def extract_references(dfraw):
         ('Amp_1', 'amp_1', float),
         ('Amp_2', 'amp_2', float),
         ('Phase', 'phase', float),
+        ('Service', 'service', float),
     ]
     df = utils.__to_typed_cols__(dfraw[dfraw['Type'] == 'R'], ocol_ncol_type)
     return df.set_index(['cycle', 'filterset'])
