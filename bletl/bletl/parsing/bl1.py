@@ -41,7 +41,7 @@ def read_header_loglines(dir_incremental):
     loglines = []
     for tmpfile in dir_incremental.iterdir():
         if tmpfile.suffix == '.tmp':
-            with open(tmpfile, 'r', encoding='latin-1') as f:
+            with open(tmpfile, 'r', encoding='utf-8') as f:
                 loglines += f.readlines()
     return headerlines, loglines
 
