@@ -3,4 +3,5 @@ py36:
   script:
     - apt-get update -q -y
     - pip install -r requirements.txt
-    - python -m unittest
+    - cd bletl
+    - python -m unittest -v
