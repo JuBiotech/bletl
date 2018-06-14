@@ -27,7 +27,7 @@ class BioLectorProParser(core.BLDParser):
 
 
 def parse_metadata_data(fp):
-    with open(fp, 'r') as f:
+    with open(fp, 'r', encoding='utf-8') as f:
         lines = f.readlines()
 
     metadata = collections.defaultdict(dict)

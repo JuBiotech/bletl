@@ -35,19 +35,19 @@ class BioLector1Parser(core.BLDParser):
 def read_header_loglines(dir_incremental):
     fp_header = pathlib.Path(dir_incremental, 'header.csv')
     
-    with open(fp_header) as f:
+    with open(fp_header, encoding='latin-1') as f:
         headerlines = f.readlines()
         
     loglines = []
     for tmpfile in dir_incremental.iterdir():
         if tmpfile.suffix == '.tmp':
-            with open(tmpfile, 'r') as f:
+            with open(tmpfile, 'r', encoding='latin-1') as f:
                 loglines += f.readlines()
     return headerlines, loglines
 
 
 def split_header_data(fp):
-    with open(fp, 'r') as f:
+    with open(fp, 'r', encoding='latin-1') as f:
         lines = f.readlines()
 
     headerlines = []

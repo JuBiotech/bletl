@@ -23,8 +23,12 @@ def get_parser(filepath) -> BLDParser:
     Raises:
         NotImlementedError: when the file contents do not match with a known BioLector CSV style
     """
-    with open(filepath, 'r') as f:
-        lines = f.readlines()
+    try:
+        with open(filepath, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+    except UnicodeDecodeError:
+        with open(filepath, 'r', encoding='latin-1') as f:
+            lines = f.readlines()
 
     model = None
     version = None
