@@ -40,7 +40,7 @@ class TestParserSelection(unittest.TestCase):
 class TestBL1Parsing(unittest.TestCase):
     def test_splitting(self):
         for fp in BL1_files:
-            with open(fp, 'r') as f:
+            with open(fp, 'r', encoding='latin-1') as f:
                 lines = f.readlines()        
             
             headerlines, data = parsing.bl1.split_header_data(fp)
