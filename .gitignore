@@ -5,5 +5,6 @@
 **/.vs/bletl/v15
 **/__pycache__
 **/.ipynb_checkpoints
-/bletl/Sandbox.ipynb
+*.egg-info
 *.pyperf
+/examples/Sandbox.ipynb
