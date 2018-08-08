@@ -33,6 +33,9 @@
     <Compile Include="bletl\utils.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="setup.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="tests.py" />
     <Compile Include="bletl\__init__.py">
       <SubType>Code</SubType>

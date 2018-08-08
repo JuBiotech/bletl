@@ -5,6 +5,8 @@ format.
 from bletl.core import BioLectorModel, BLData, BLDParser
 from bletl import parsing
 
+__version__ = '0.1'
+
 parsers = {
     (BioLectorModel.BL1, '3.3') : parsing.bl1.BioLector1Parser,
     (BioLectorModel.BLPro, '0.0.0') : parsing.blpro.BioLectorProParser,
@@ -13,7 +15,7 @@ parsers = {
 
 def get_parser(filepath) -> BLDParser:
     """Analyzes a raw BioLector file and selects an appropiate parser.
-    
+
     Args:
         filepath (str or pathlib.Path): path pointing to the file of interest
 
