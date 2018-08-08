@@ -2,7 +2,7 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-**/.vs/bletl/v15
+**/.vs
 **/__pycache__
 **/.ipynb_checkpoints
 *.egg-info
