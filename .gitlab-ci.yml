@@ -2,6 +2,6 @@ py36:
   image: python:3.6
   script:
     - apt-get update -q -y
-    - pip install -r requirements.txt
     - cd bletl
+    - python setup.py develop
     - python -m unittest -v
