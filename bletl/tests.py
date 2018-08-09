@@ -77,3 +77,38 @@ class TestBLProParsing(unittest.TestCase):
         return
 
 
+class TestDataEquivalence(unittest.TestCase):
+    def test_environment(self):
+        d_1 = bletl.parse(BL1_files[0])
+        d_p = bletl.parse(BLPro_files[0])
+
+        self.assertSequenceEqual(list(d_1.environment.columns), list(d_p.environment.columns))
+        return
+
+    def test_filtersets(self):
+        d_1 = bletl.parse(BL1_files[0])
+        d_p = bletl.parse(BLPro_files[0])
+
+        self.assertSequenceEqual(list(d_1.filtersets.columns), list(d_p.filtersets.columns))
+        return
+
+    def test_references(self):
+        d_1 = bletl.parse(BL1_files[0])
+        d_p = bletl.parse(BLPro_files[0])
+
+        self.assertSequenceEqual(list(d_1.references.columns), list(d_p.references.columns))
+        return
+
+    def test_measurements(self):
+        d_1 = bletl.parse(BL1_files[0])
+        d_p = bletl.parse(BLPro_files[0])
+
+        self.assertSequenceEqual(list(d_1.measurements.columns), list(d_p.measurements.columns))
+        return
+
+    def test_comments(self):
+        d_1 = bletl.parse(BL1_files[0])
+        d_p = bletl.parse(BLPro_files[0])
+
+        self.assertSequenceEqual(list(d_1.comments.columns), list(d_p.comments.columns))
+        return
