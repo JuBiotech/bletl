@@ -112,7 +112,6 @@ def extract_references(dfraw):
         ('Amp_1', 'amp_1', float),
         ('Amp_2', 'amp_2', float),
         ('Phase', 'phase', float),
-        ('Service', 'service', float),
     ]
     df = utils.__to_typed_cols__(dfraw[dfraw['Type'] == 'R'], ocol_ncol_type)
     return standardize(df).set_index(['cycle', 'filterset'])
