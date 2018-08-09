@@ -61,7 +61,15 @@ def parse_metadata_data(fp):
     # parse the data as a DataFrame
     dfraw = pandas.read_csv(io.StringIO(''.join(datalines)), sep=';', low_memory=False)
 
+    # TODO: convert well numbers to MF-conditional well ids
+
     return metadata, dfraw[list(dfraw.columns)[:-1]]
+
+
+def standardize(df):
+    if 'time' in df.columns:
+        df['time'] = df['time'] / 3600
+    return df
 
 
 def extract_filtersets(metadata):
@@ -84,7 +92,7 @@ def extract_comments(dfraw):
         ('Sys_Comment', 'sys_comment', str),
     ]
     df = utils.__to_typed_cols__(dfraw[dfraw['Type'] == 'C'], ocol_ncol_type)
-    return df
+    return standardize(df)
 
 
 def extract_parameters(dfraw):
@@ -93,7 +101,7 @@ def extract_parameters(dfraw):
         ('Time', 'time', float),
     ]
     df = utils.__to_typed_cols__(dfraw[dfraw['Type'] == 'P'], ocol_ncol_type)
-    return df
+    return standardize(df)
 
 
 def extract_references(dfraw):
@@ -107,7 +115,7 @@ def extract_references(dfraw):
         ('Service', 'service', float),
     ]
     df = utils.__to_typed_cols__(dfraw[dfraw['Type'] == 'R'], ocol_ncol_type)
-    return df.set_index(['cycle', 'filterset'])
+    return standardize(df).set_index(['cycle', 'filterset'])
 
 
 def extract_measurements(dfraw):
@@ -125,13 +133,10 @@ def extract_measurements(dfraw):
     ]
     df = utils.__to_typed_cols__(dfraw[dfraw['Type'] == 'M'], ocol_ncol_type)
     df = df.set_index(['filterset', 'cycle', 'well'])
-    return df
+    return standardize(df)
 
 
 def extract_environment(dfraw):
-    # TODO: extract
-    # Time, Temp_up, Temp_down, Temp_water, O2, CO2, Humidity, Shaker
-    # (Temp_Ch4	P_Ch1	P_Ch2	P_Ch3	T_Hum	T_CO2	T_LED)
     ocol_ncol_type = [
         ('Cycle', 'cycle', int),
         ('Time', 'time', float),
@@ -144,7 +149,8 @@ def extract_environment(dfraw):
         ('Shaker', 'shaker', float),
     ]
     df = utils.__to_typed_cols__(dfraw[dfraw['Type'] == 'R'], ocol_ncol_type)
-    return df.set_index(['cycle'])
+    # TODO: clean up -9999.0 values in co2 column
+    return standardize(df)
 
 
 def extract_fluidics(dfraw):
@@ -158,7 +164,7 @@ def extract_fluidics(dfraw):
     ]
     df = utils.__to_typed_cols__(dfraw[dfraw['Type'] == 'F'], ocol_ncol_type)
     df = df.sort_values(['well', 'cycle']).set_index(['well'])
-    return df
+    return standardize(df)
 
 
 def extract_valves_module(dfraw):
@@ -178,7 +184,7 @@ def extract_valves_module(dfraw):
     df_valves['well'] = df_valves['well'].str.replace('Well', '').astype(int)
     df_valves['acid'] = df_valves['acid'].str.replace('Sollvolumen \(Acid\) ', '').astype(float)
     df_valves['base'] = df_valves['base'].str.replace('Sollvolumen \(Base\) ', '').astype(float)
-    df_valves = df_valves.set_index(['well', 'valve', 'cycle'])
+    df_valves = standardize(df_valves).set_index(['well', 'valve', 'cycle'])
 
     # TODO: unknown column purpose
     df_module = df[df['valve'] == 'Module 1 (BASE)'].copy()
@@ -186,15 +192,16 @@ def extract_valves_module(dfraw):
     df_module['valve'] = df_module['valve'].str.replace('Valve ', '').astype(int)
     df_module['well'] = df_module['well'].str.replace('Well ', '').astype(int)
     df_module['volume'] = df_module['volume'].str.replace('Volume ', '').astype(float)
-    df_module = df_module.set_index(['well', 'valve', 'cycle'])
+    df_module = standardize(df_module).set_index(['well', 'valve', 'cycle'])
 
     return df_valves, df_module
 
 
 def extract_diagnostics(dfraw):
+    dff = dfraw[dfraw['Type'] != 'N']
     ocol_ncol_type = [
         ('Cycle', 'cycle', int),
-        ('Time', 'time', str),
+        ('Time', 'time', float),
         ('Temp_Ch4', 'temp_ch4', float),
         ('T_144', 't_144', float),
         ('T_180', 't_180', float),
@@ -217,5 +224,5 @@ def extract_diagnostics(dfraw):
         ('Ch4-OP', 'ch4_op', float),
         ('Ch5-FB', 'ch5_fb', float),
     ]
-    df = utils.__to_typed_cols__(dfraw, ocol_ncol_type)
-    return df
+    df = utils.__to_typed_cols__(dff, ocol_ncol_type)
+    return standardize(df)
