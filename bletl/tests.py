@@ -41,8 +41,8 @@ class TestBL1Parsing(unittest.TestCase):
     def test_splitting(self):
         for fp in BL1_files:
             with open(fp, 'r', encoding='latin-1') as f:
-                lines = f.readlines()        
-            
+                lines = f.readlines()
+
             headerlines, data = parsing.bl1.split_header_data(fp)
 
             self.assertEqual(len(headerlines) + len(data), len(lines))
@@ -51,9 +51,9 @@ class TestBL1Parsing(unittest.TestCase):
     def test_parsing(self):
         for fp in BL1_files:
             data = bletl.parse(fp)
-            
+
             self.assertIsInstance(data.metadata, dict)
-            self.assertIsInstance(data.process_parameters, dict)
+            self.assertIsInstance(data.environment, pandas.DataFrame)
             self.assertIsInstance(data.comments, pandas.DataFrame)
             self.assertIsInstance(data.measurements, pandas.DataFrame)
             self.assertIsInstance(data.references, pandas.DataFrame)

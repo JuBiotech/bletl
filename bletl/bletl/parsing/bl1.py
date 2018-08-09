@@ -13,31 +13,34 @@ from bletl import utils
 class BioLector1Parser(core.BLDParser):
     def parse(self, filepath):
         headerlines, data = split_header_data(filepath)
-        
+
         metadata = extract_metadata(headerlines)
         process_parameters = extract_process_parameters(headerlines)
-        filtersets = extract_filtersets(headerlines)                
+        filtersets = extract_filtersets(headerlines)
         comments = extract_comments(data)
         references = extract_references(data)
         measurements = extract_measurements(data)
-        environment = extract_environment(data)
 
-        data = core.BLData()
+
+        data = core.BLData(
+            environment = extract_environment(data),
+            filtersets=filtersets,
+            references=references,
+            measurements=measurements,
+            comments=comments,
+        )
+
         data.metadata = metadata
-        data.filtersets = filtersets
-        data.process_parameters = process_parameters
-        data.comments = comments
-        data.references = references
-        data.measurements = measurements
+
         return data
 
 
 def read_header_loglines(dir_incremental):
     fp_header = pathlib.Path(dir_incremental, 'header.csv')
-    
+
     with open(fp_header, encoding='latin-1') as f:
         headerlines = f.readlines()
-        
+
     loglines = []
     for tmpfile in dir_incremental.iterdir():
         if tmpfile.suffix == '.tmp':
@@ -47,6 +50,15 @@ def read_header_loglines(dir_incremental):
 
 
 def split_header_data(fp):
+    """Splits the raw data into the header and data sections.
+
+    Arguments:
+        fp (str): filepath to the raw CSV file
+
+    Returns:
+        headerlines (list): lines of the header section
+        dfraw (pandas.DataFrame): data table
+    """
     with open(fp, 'r', encoding='latin-1') as f:
         lines = f.readlines()
 
@@ -67,6 +79,10 @@ def split_header_data(fp):
 
     # parse the data as a DataFrame
     dfraw = pandas.read_csv(io.StringIO(''.join(datalines)), sep=';', low_memory=False)
+
+    # TODO: convert time to BioLector Pro format
+    # TODO: add a cycle column to dfraw
+    # TODO: convert well ids to BioLector Pro format
 
     return headerlines, dfraw
 
@@ -111,7 +127,7 @@ def extract_filtersets(headerlines):
             filterlines.append(line)
         elif filter_start:
             break
-        
+
     df_filtersets = pandas.read_csv(io.StringIO(''.join(filterlines)), sep=';', usecols=range(11))
     df_filtersets.columns = ['filtername', 'excitation', 'emission', 'layout', 'filternumber', 'gain', 'phase_statistic_sigma', 'signal_quality_tolerance', 'reference_value', 'emission2', 'gain2']
     cols_numeric = ['excitation', 'emission', 'gain', 'phase_statistic_sigma', 'signal_quality_tolerance', 'reference_value', 'emission2', 'gain2']
@@ -147,7 +163,6 @@ def extract_comments(dfraw):
     # TODO: automatically separate comments into user/sys
     df['sys_comment'] = None
     df.index = range(len(df))
-    # TODO: convert time
     return df
 
 
@@ -170,7 +185,6 @@ def extract_references(dfraw):
     ]
     dfref['amp_2'] = numpy.nan
     df = utils.__to_typed_cols__(dfref, ocol_ncol_type)
-    # TODO: convert time
     return df.set_index(['cycle', 'filterset'])
 
 
@@ -195,14 +209,19 @@ def extract_measurements(dfraw):
     ]
     df = utils.__to_typed_cols__(dfmes, ocol_ncol_type)
     df = df.set_index(['filterset', 'cycle', 'well'])
-
-    # TODO: convert time
-    # TODO: convert well ids
     return df
 
 
 def extract_environment(dfraw):
-    #lines_env = ''.join([l for l in loglines if not l.startswith('K')])
-    #df_env = pandas.read_csv(io.StringIO(lines_env), sep=';', usecols=[5,8,9,10,11])
-    #df_env.columns = ['time', 'temperature', 'humidity', 'O2', 'CO2']
-    return dfraw[dfraw['READING'] != 'K']
+    ocol_ncol_type = [
+        ('TIME [h]', 'time', float),
+        ('ACT TEMP [°C]', 'temp_up', float),
+        (None, 'temp_down', float),
+        (None, 'temp_water', float),
+        ('ACT O2 [%]', 'o2', float),
+        ('ACT CO2 [%]', 'co2', float),
+        ('ACT HUMIDITY [rH]', 'humidity', float),
+        (None, 'shaker', float),
+    ]
+    df = utils.__to_typed_cols__(dfraw, ocol_ncol_type)
+    return df

@@ -12,16 +12,19 @@ class BioLectorProParser(core.BLDParser):
     def parse(self, filepath):
         metadata, data = parse_metadata_data(filepath)
 
-        bld = core.BLData()
+        bld = core.BLData(
+            environment=extract_environment(data),
+            filtersets=None,
+            references=extract_references(data),
+            measurements=extract_measurements(data),
+            comments=extract_comments(data),
+        )
 
         bld.metadata = metadata
-        bld.comments = extract_comments(data)
-        bld.parameters = extract_parameters(data)
-        bld.references = extract_references(data)
-        bld.measurements = extract_measurements(data)
         bld.fluidics = extract_fluidics(data)
         bld.valves, bld.module = extract_valves_module(data)
         bld.diagnostics = extract_diagnostics(data)
+
         return bld
 
 
@@ -57,7 +60,7 @@ def parse_metadata_data(fp):
 
     # parse the data as a DataFrame
     dfraw = pandas.read_csv(io.StringIO(''.join(datalines)), sep=';', low_memory=False)
-        
+
     return metadata, dfraw[list(dfraw.columns)[:-1]]
 
 
@@ -130,6 +133,7 @@ def extract_environment(dfraw):
     # Time, Temp_up, Temp_down, Temp_water, O2, CO2, Humidity, Shaker
     # (Temp_Ch4	P_Ch1	P_Ch2	P_Ch3	T_Hum	T_CO2	T_LED)
     ocol_ncol_type = [
+        ('Cycle', 'cycle', int),
         ('Time', 'time', float),
         ('Temp_up', 'temp_up', float),
         ('Temp_down', 'temp_down', float),
@@ -140,7 +144,7 @@ def extract_environment(dfraw):
         ('Shaker', 'shaker', float),
     ]
     df = utils.__to_typed_cols__(dfraw[dfraw['Type'] == 'R'], ocol_ncol_type)
-    return df.set_index(['cycle', 'filterset'])
+    return df.set_index(['cycle'])
 
 
 def extract_fluidics(dfraw):
