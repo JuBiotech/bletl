@@ -8,3 +8,4 @@
 *.egg-info
 *.pyperf
 /examples/Sandbox.ipynb
+/~$*.xlsx
