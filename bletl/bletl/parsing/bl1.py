@@ -80,9 +80,17 @@ def split_header_data(fp):
     # parse the data as a DataFrame
     dfraw = pandas.read_csv(io.StringIO(''.join(datalines)), sep=';', low_memory=False)
 
-    # TODO: convert time to BioLector Pro format
-    # TODO: add a cycle column to dfraw
+    # add a cycle column to dfraw
+    reflines = list(dfraw.index[(dfraw['READING'] == 'R') & (dfraw['FILTERSET'] == 1)])
+    cycles = numpy.zeros((len(dfraw),), dtype=int)
+    for c in range(len(reflines)):
+        l_start = reflines[c]
+        l_end = reflines[c + 1] if len(reflines) < c else len(dfraw)
+        cycles[l_start:l_end] = c + 1
+    dfraw['cycle'] = cycles
+
     # TODO: convert well ids to BioLector Pro format
+    # TODO: create column of well numbers
 
     return headerlines, dfraw
 
@@ -214,6 +222,7 @@ def extract_measurements(dfraw):
 
 def extract_environment(dfraw):
     ocol_ncol_type = [
+        ('cycle', 'cycle', int),
         ('TIME [h]', 'time', float),
         ('ACT TEMP [°C]', 'temp_up', float),
         (None, 'temp_down', float),
