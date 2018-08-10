@@ -14,7 +14,7 @@ def __to_typed_cols__(dfin:pandas.DataFrame, ocol_ncol_type:list):
     """
     dfout = pandas.DataFrame()
     for ocol, ncol, typ in ocol_ncol_type:
-        if ocol is None:
+        if ocol is None or not ocol in dfin:
             dfout[ncol] = None
         else:
             dfout[ncol] = dfin[ocol].astype(typ)
