@@ -72,8 +72,11 @@ class TestBLProParsing(unittest.TestCase):
 
     def test_parsing(self):
         for fp in BLPro_files:
-            data = bletl.parse(fp)
-            pass
+            try:
+                data = bletl.parse(fp)
+            except:
+                print('parsing failed for: {}'.format(fp))
+                raise
         return
 
 
