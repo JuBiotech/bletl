@@ -136,11 +136,32 @@ def extract_filtersets(headerlines):
         elif filter_start:
             break
 
-    df_filtersets = pandas.read_csv(io.StringIO(''.join(filterlines)), sep=';', usecols=range(11))
-    df_filtersets.columns = ['filtername', 'excitation', 'emission', 'layout', 'filternumber', 'gain', 'phase_statistic_sigma', 'signal_quality_tolerance', 'reference_value', 'emission2', 'gain2']
-    cols_numeric = ['excitation', 'emission', 'gain', 'phase_statistic_sigma', 'signal_quality_tolerance', 'reference_value', 'emission2', 'gain2']
-    df_filtersets[cols_numeric] = df_filtersets[cols_numeric].apply(pandas.to_numeric)
-    return df_filtersets
+    df_filtersets = pandas.read_csv(io.StringIO(''.join(filterlines)), sep=';', usecols=range(12), index_col=False)
+
+    ocol_ncol_type = [
+        ('FILTERSET', 'filter_number', int),
+        ('FILTERNAME', 'filter_name', str),
+        ('FILTERNR', 'filter_id', str),
+        (None, 'filter_type', str),
+        ('EX [nm]', 'excitation', float),
+        ('EM [nm]', 'emission', float),
+        #('LAYOUT', 'layout', str),
+        ('GAIN', 'gain', float),
+        (None, 'gain_1', float),
+        ('GAIN2', 'gain_2', float),
+        ('PHASESTATISTICSSIGMA', 'phase_statistic_sigma', float),
+        ('SIGNALQUALITYTOLERANCE', 'signal_quality_tolerance', float),
+        (None, 'reference_gain', float),
+        ('REFERENCE VALUE', 'reference_value', float),
+        (None, 'calibration', str),
+        ('EM2 [nm]', 'emission2', float),
+    ]
+
+    # TODO: infer filter_type column
+    # TODO: find mapping between BL1 and BLP "gain" columns
+    # TODO: identify "emission2" column in BL1
+
+    return utils.__to_typed_cols__(df_filtersets, ocol_ncol_type)
 
 
 def extract_process_parameters(headerlines):

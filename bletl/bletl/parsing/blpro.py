@@ -14,7 +14,7 @@ class BioLectorProParser(core.BLDParser):
 
         bld = core.BLData(
             environment=extract_environment(data),
-            filtersets=None,
+            filtersets=extract_filtersets(metadata),
             references=extract_references(data),
             measurements=extract_measurements(data),
             comments=extract_comments(data),
@@ -77,12 +77,48 @@ def extract_filtersets(metadata):
     # filterset-related metadata is spread over: channels, measurement channels, process
     channels = metadata.pop('channels')
     measurement_channels = metadata.pop('measurement channels')
-    for k, v in metadata['process'].copy().items():
-        if '_reference_value_' in k:
-            measurement_channels[k] = metadata['process'].pop(k)
-    # TODO: compile a dataframe of filtersets
+    process = metadata['process']
 
-    return channels, measurement_channels
+    # dictionary that will become the DataFrame
+    filtersets = {
+        fnum : {}
+        for fnum in range(1, int(channels['no_filterset']) + 1)
+    }
+
+    # grab data from measurement_channels
+    for k, v in measurement_channels.items():
+        num = int(k[0:2])
+        key = k[3:]
+        filtersets[num][key] = v
+
+    # grab data from metadata['process']
+    for fnum, fset in filtersets.items():
+        for k in ['reference_value', 'reference_gain', 'gain']:
+            pk = '{:02d}_{}_{}'.format(fnum, k, fset['name'])
+            if pk in process:
+                filtersets[fnum][k] = process.pop(pk)
+
+    # convert to DataFrame and align column names & types
+    df = pandas.DataFrame(filtersets).T
+    ocol_ncol_type = [
+        ('no', 'filter_number', int),
+        ('name', 'filter_name', str),
+        ('filter_id', 'filter_id', str),
+        ('filter_type', 'filter_type', str),
+        (None, 'excitation', float),
+        (None, 'emission', float),
+        #(None, 'layout', str),
+        ('gain', 'gain', float),
+        ('gain_1', 'gain_1', float),
+        ('gain_2', 'gain_2', float),
+        (None, 'phase_statistic_sigma', float),
+        (None, 'signal_quality_tolerance', float),
+        ('reference_gain', 'reference_gain', float),
+        ('reference_value', 'reference_value', float),
+        ('calibration', 'calibration', str),
+        (None, 'emission2', float),
+    ]
+    return utils.__to_typed_cols__(df, ocol_ncol_type)
 
 
 def extract_comments(dfraw):
