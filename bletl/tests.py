@@ -16,6 +16,21 @@ BL1_files =  [
 BLPro_files = list(pathlib.Path('data', 'BLPro').iterdir())
 not_a_bl_file = pathlib.Path('data', 'BL1', 'incremental', 'C42.tmp')
 
+calibration_test_file = pathlib.Path('data', 'BL1', 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
+calibration_test_cal_data = {
+        'cal_0': 65.91,
+        'cal_100': 40.60,
+        'phi_min': 57.45,
+        'phi_max': 18.99,
+        'pH_0': 6.46,
+        'dpH': 0.56,
+        }
+calibration_test_times = {'BS10': (52, 'D03', 10.5221)}
+calibration_test_values = {'BS10': (5, 'A04', 11.7175),
+                                 'DO': (13, 'A05', 99.4285),
+                                 'pH': (39, 'D08', 7.06787),
+                                 'GFP75': (81, 'F07', 216.99),
+                                 }
 
 class TestParserSelection(unittest.TestCase):
     def test_selects_parsers(self):
@@ -61,6 +76,26 @@ class TestBL1Parsing(unittest.TestCase):
         return
 
 
+class TestBL1Calibration(unittest.TestCase):
+    def test_calibration_data_type(self):
+        parsed_data = bletl.parse(calibration_test_file)
+        parsed_data.calibrate(calibration_test_cal_data)
+        data = parsed_data.calibrated_data
+        
+        for key, item in data.items():
+            self.assertIsInstance(item, core.FilterTimeSeries)
+    
+    def test_calibration(self):
+        parsed_data = bletl.parse(calibration_test_file)
+        parsed_data.calibrate(calibration_test_cal_data)
+        data = parsed_data.calibrated_data
+        
+        for key, (cycle, well, value) in calibration_test_times.items():
+            self.assertAlmostEqual(data[key].time.loc[cycle, well], value, places=4)
+            
+        for key, (cycle, well, value) in calibration_test_values.items():
+            self.assertAlmostEqual(data[key].value.loc[cycle, well], value, places=4) 
+        
 class TestBLProParsing(unittest.TestCase):
     def test_parse_metadata_data(self):
         for fp in BLPro_files:

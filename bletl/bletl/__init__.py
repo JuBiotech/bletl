@@ -52,7 +52,6 @@ def get_parser(filepath) -> BLDParser:
     parser_cls = parsers[(model, version)]
     return parser_cls()
 
-
 def parse(filepath) -> BLData:
     """Parses a raw BioLector CSV file into a BLData object.
 
@@ -67,3 +66,4 @@ def parse(filepath) -> BLData:
     """
     parser = get_parser(filepath)
     return parser.parse(filepath)
+
