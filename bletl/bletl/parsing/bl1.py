@@ -21,8 +21,7 @@ class BioLector1Parser(core.BLDParser):
         references = extract_references(data)
         measurements = extract_measurements(data)
 
-
-        data = core.BLData(
+        data = BL1Data(
             environment = extract_environment(data),
             filtersets=filtersets,
             references=references,
@@ -30,10 +29,82 @@ class BioLector1Parser(core.BLDParser):
             comments=comments,
         )
 
+        data.calibrated_data = dict()
         data.metadata = metadata
-
+        
         return data
 
+
+class BL1Data(core.BLData):
+    def calibrate(self, calibration_dict):
+        def process_backscatter(raw_data_df, cycle_ref_df, global_ref):
+            """
+            Calculation of referenced BS signal: 
+            (global_ref / cycle_ref) * amplitude
+            """
+            BS = pandas.DataFrame().reindex_like(raw_data_df)
+            for row in raw_data_df.iterrows():
+                current_cycle = row[0]
+                current_raw_measurements = row[1]
+                current_cycle_ref = cycle_ref_df.loc[current_cycle, 'amp_1']
+                current_values = (global_ref / current_cycle_ref) * current_raw_measurements
+                BS.loc[current_cycle, :] = current_values
+            return BS
+            
+        def process_pH(raw_data_df, cal_data):
+            """
+            Calculation of pH:
+            pH_0 + dpH * log((phi_min - phase_shift) / (phase_shift - phi_max))
+            """
+            pH = cal_data['pH_0'] + cal_data['dpH'] * \
+                numpy.log((cal_data['phi_min'] - raw_data_df) / (raw_data_df - cal_data['phi_max']))
+            return pH
+
+        def process_DO(raw_data_df, cal_data):
+            """
+            Calculation of DO: 
+            S_cal_0 = tan(cal_0 * pi / 180)
+            S_cal_100 = tan(cal_100 * pi / 180)
+            ksv = 0.01 * ((S_cal_0 / S_cal_100) - 1)
+            DO = (1 / ksv) * ((S_cal_0 / tan(phase_shift * pi / 180)) - 1)
+            """
+            S_cal_0 = numpy.tan(cal_data['cal_0'] * numpy.pi / 180)
+            S_cal_100 = numpy.tan(cal_data['cal_100'] * numpy.pi / 180)
+            ksv = 0.01 * ((S_cal_0 / S_cal_100) - 1)
+            DO = (1 / ksv) * ((S_cal_0 / numpy.tan(raw_data_df * numpy.pi / 180)) - 1)
+            return DO
+
+        for row in self.filtersets.iterrows():
+            filter_number = row[1]['filter_number']
+            filter_name = row[1]['filter_name']
+            gain = row[1]['gain']
+            ref_value = row[1]['reference_value']
+            
+            if filter_name == 'Biomass':
+                raw_bs = self.measurements.xs(filter_number, level='filterset')['amp_1'].unstack()
+                bs_times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
+                cycle_ref_bs = self.references.xs(filter_number, level='filterset')
+                bs_values = process_backscatter(raw_bs, cycle_ref_bs, ref_value)
+                self.calibrated_data.update({'BS' + f'{gain:.0f}':
+                    core.FilterTimeSeries(bs_times, bs_values)})
+            
+            elif filter_name == 'pH-hc':
+                raw_ph = self.measurements.xs(filter_number, level='filterset')['phase'].unstack()
+                ph_times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
+                ph_values = process_pH(raw_ph, calibration_dict)
+                self.calibrated_data.update({'pH': core.FilterTimeSeries(ph_times, ph_values)})
+                
+            elif filter_name == 'pO2-hc':
+                raw_do = self.measurements.xs(filter_number, level='filterset')['phase'].unstack()
+                do_times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
+                do_values = process_DO(raw_do, calibration_dict)
+                self.calibrated_data.update({'DO': core.FilterTimeSeries(do_times, do_values)})
+                
+            else:
+                raw_values = self.measurements.xs(filter_number, level='filterset')['amp_1'].unstack()
+                times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
+                self.calibrated_data.update({filter_name + f'{gain:.0f}':
+                    core.FilterTimeSeries(times, raw_values)})
 
 def read_header_loglines(dir_incremental):
     fp_header = pathlib.Path(dir_incremental, 'header.csv')
@@ -47,7 +118,6 @@ def read_header_loglines(dir_incremental):
             with open(tmpfile, 'r', encoding='utf-8') as f:
                 loglines += f.readlines()
     return headerlines, loglines
-
 
 def split_header_data(fp):
     """Splits the raw data into the header and data sections.
@@ -94,7 +164,6 @@ def split_header_data(fp):
 
     return headerlines, dfraw
 
-
 def extract_metadata(headerlines):
     L4 = headerlines[4].split(';')
     L6 = headerlines[6].split(';')
@@ -122,7 +191,6 @@ def extract_metadata(headerlines):
         metadata['date_end'] = None
 
     return metadata
-
 
 def extract_filtersets(headerlines):
     filterlines = []
@@ -163,7 +231,6 @@ def extract_filtersets(headerlines):
 
     return utils.__to_typed_cols__(df_filtersets, ocol_ncol_type)
 
-
 def extract_process_parameters(headerlines):
     fs_start = None
     for l, line in enumerate(headerlines):
@@ -182,7 +249,6 @@ def extract_process_parameters(headerlines):
     }
     return proccess_parameters
 
-
 def extract_comments(dfraw):
     ocol_ncol_type = [
         ('TIME [h]', 'time', float),
@@ -196,14 +262,7 @@ def extract_comments(dfraw):
 
 
 def extract_references(dfraw):
-
     dfref = dfraw[dfraw['READING'] == 'R'].copy()
-    lookup = list(dfraw['READING'])
-    cycles = -numpy.ones((len(dfref),), dtype=int)
-    for i, (r, row) in enumerate(dfref.iterrows()):
-        cycles[i] = int(lookup[r + 1][1:])
-    dfref['cycle'] = cycles
-
     ocol_ncol_type = [
         ('cycle', 'cycle', int),
         ('TIME [h]', 'time', float),
@@ -215,7 +274,6 @@ def extract_references(dfraw):
     dfref['amp_2'] = numpy.nan
     df = utils.__to_typed_cols__(dfref, ocol_ncol_type)
     return df.set_index(['cycle', 'filterset'])
-
 
 def extract_measurements(dfraw):
     dfmes = dfraw[dfraw['READING'].str.startswith('C')].copy()
@@ -239,7 +297,6 @@ def extract_measurements(dfraw):
     df = utils.__to_typed_cols__(dfmes, ocol_ncol_type)
     df = df.set_index(['filterset', 'cycle', 'well'])
     return df
-
 
 def extract_environment(dfraw):
     ocol_ncol_type = [
