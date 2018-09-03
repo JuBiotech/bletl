@@ -13,4 +13,4 @@ If you want to contribute, you should...
 3. make changes on your feature-branch
 4. open a Merge Request
 
-Also see the PowerPoint ["BioProz Software Development"](file://\\ibtfilesrv3\bioproz-geschuetzt\DigInBio\Tutorials)
+Also see the PowerPoint "BioProz Software Development" at `\\ibtfilesrv3\bioproz-geschuetzt\DigInBio\Tutorials`
