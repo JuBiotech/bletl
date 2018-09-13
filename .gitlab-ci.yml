@@ -1,7 +1,28 @@
-py36:
+stages:
+  - build
+  - test
+  - release
+
+
+python-test:
+  stage: test
   image: python:3.6
   script:
-    - apt-get update -q -y
     - cd bletl
     - python setup.py develop
     - python -m unittest -v
+
+python-release:
+  stage: release
+  image: python:3.6
+  script:
+    - cd bletl
+    - python setup.py bdist_wheel
+    - cp dist/*.whl ..
+  artifacts:
+    paths:
+      - ./*.whl
+  only:
+    - tags
+  only:
+    - master
