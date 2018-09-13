@@ -4,8 +4,8 @@ import datetime
 import io
 import pandas
 
-from bletl import core
-from bletl import utils
+from .. import core
+from .. import utils
 
 
 class BioLectorProParser(core.BLDParser):

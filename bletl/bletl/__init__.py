@@ -2,10 +2,10 @@
 BioLector files, applying calibration transformations and representing them in a standardized
 format.
 """
-from bletl.core import BioLectorModel, BLData, BLDParser
-from bletl import parsing
+from . core import BioLectorModel, BLData, BLDParser
+from . import parsing
 
-__version__ = '0.1'
+__version__ = '0.2'
 
 parsers = {
     (BioLectorModel.BL1, '3.3') : parsing.bl1.BioLector1Parser,

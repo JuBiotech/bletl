@@ -6,8 +6,8 @@ import pathlib
 import pandas
 
 
-from bletl import core
-from bletl import utils
+from .. import core
+from .. import utils
 
 
 class BioLector1Parser(core.BLDParser):
@@ -31,7 +31,7 @@ class BioLector1Parser(core.BLDParser):
 
         data.calibrated_data = dict()
         data.metadata = metadata
-        
+
         return data
 
 
@@ -39,7 +39,7 @@ class BL1Data(core.BLData):
     def calibrate(self, calibration_dict):
         def process_backscatter(raw_data_df, cycle_ref_df, global_ref):
             """
-            Calculation of referenced BS signal: 
+            Calculation of referenced BS signal:
             (global_ref / cycle_ref) * amplitude
             """
             BS = pandas.DataFrame().reindex_like(raw_data_df)
@@ -50,7 +50,7 @@ class BL1Data(core.BLData):
                 current_values = (global_ref / current_cycle_ref) * current_raw_measurements
                 BS.loc[current_cycle, :] = current_values
             return BS
-            
+
         def process_pH(raw_data_df, cal_data):
             """
             Calculation of pH:
@@ -62,7 +62,7 @@ class BL1Data(core.BLData):
 
         def process_DO(raw_data_df, cal_data):
             """
-            Calculation of DO: 
+            Calculation of DO:
             S_cal_0 = tan(cal_0 * pi / 180)
             S_cal_100 = tan(cal_100 * pi / 180)
             ksv = 0.01 * ((S_cal_0 / S_cal_100) - 1)
@@ -79,7 +79,7 @@ class BL1Data(core.BLData):
             filter_name = row[1]['filter_name']
             gain = row[1]['gain']
             ref_value = row[1]['reference_value']
-            
+
             if filter_name == 'Biomass':
                 raw_bs = self.measurements.xs(filter_number, level='filterset')['amp_1'].unstack()
                 bs_times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
@@ -87,19 +87,19 @@ class BL1Data(core.BLData):
                 bs_values = process_backscatter(raw_bs, cycle_ref_bs, ref_value)
                 self.calibrated_data.update({'BS' + f'{gain:.0f}':
                     core.FilterTimeSeries(bs_times, bs_values)})
-            
+
             elif filter_name == 'pH-hc':
                 raw_ph = self.measurements.xs(filter_number, level='filterset')['phase'].unstack()
                 ph_times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
                 ph_values = process_pH(raw_ph, calibration_dict)
                 self.calibrated_data.update({'pH': core.FilterTimeSeries(ph_times, ph_values)})
-                
+
             elif filter_name == 'pO2-hc':
                 raw_do = self.measurements.xs(filter_number, level='filterset')['phase'].unstack()
                 do_times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
                 do_values = process_DO(raw_do, calibration_dict)
                 self.calibrated_data.update({'DO': core.FilterTimeSeries(do_times, do_values)})
-                
+
             else:
                 raw_values = self.measurements.xs(filter_number, level='filterset')['amp_1'].unstack()
                 times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()

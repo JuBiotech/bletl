@@ -1,5 +1,4 @@
-
-from setuptools import setup
+import setuptools
 
 __packagename__ = 'bletl'
 
@@ -17,8 +16,8 @@ def get_version():
 __version__ = get_version()
 
 
-setup(name = __packagename__,
-        packages = [__packagename__], # this must be the same as the name above
+setuptools.setup(name = __packagename__,
+        packages = setuptools.find_packages(), # this must be the same as the name above
         version=__version__,
         description='Package for parsing and transforming BioLector raw data.',
         url='https://gitlab.com/diginbio/bletl',
