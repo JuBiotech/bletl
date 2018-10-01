@@ -23,6 +23,7 @@ python-release:
     paths:
       - ./*.whl
   only:
-    - tags
-  only:
-    - master
+    # only run on refs that are named like v1.2 or v1.2.3
+    - /^v(\d+\.)?(\d+\.)?(\*|\d+)$/
+  except:
+    - branches
