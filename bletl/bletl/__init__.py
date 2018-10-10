@@ -5,7 +5,7 @@ format.
 from . core import BioLectorModel, BLData, BLDParser
 from . import parsing
 
-__version__ = '0.2'
+__version__ = '0.3'
 
 parsers = {
     (BioLectorModel.BL1, '3.3') : parsing.bl1.BioLector1Parser,
