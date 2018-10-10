@@ -4,6 +4,7 @@ import io
 import numpy
 import pathlib
 import pandas
+import warnings
 
 
 from .. import core
@@ -89,16 +90,22 @@ class BL1Data(core.BLData):
                     core.FilterTimeSeries(bs_times, bs_values)})
 
             elif filter_name == 'pH-hc':
-                raw_ph = self.measurements.xs(filter_number, level='filterset')['phase'].unstack()
-                ph_times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
-                ph_values = process_pH(raw_ph, calibration_dict)
-                self.calibrated_data.update({'pH': core.FilterTimeSeries(ph_times, ph_values)})
+                if set(('pH_0', 'dpH', 'phi_min', 'phi_max')) <= calibration_dict.keys():
+                    raw_ph = self.measurements.xs(filter_number, level='filterset')['phase'].unstack()
+                    ph_times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
+                    ph_values = process_pH(raw_ph, calibration_dict)
+                    self.calibrated_data.update({'pH': core.FilterTimeSeries(ph_times, ph_values)})
+                else:
+                    warnings.warn('Calibration values for pH signal are missing. Skipping calibration.')
 
             elif filter_name == 'pO2-hc':
-                raw_do = self.measurements.xs(filter_number, level='filterset')['phase'].unstack()
-                do_times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
-                do_values = process_DO(raw_do, calibration_dict)
-                self.calibrated_data.update({'DO': core.FilterTimeSeries(do_times, do_values)})
+                if set(('cal_0', 'cal_100')) <= calibration_dict.keys():
+                    raw_do = self.measurements.xs(filter_number, level='filterset')['phase'].unstack()
+                    do_times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
+                    do_values = process_DO(raw_do, calibration_dict)
+                    self.calibrated_data.update({'DO': core.FilterTimeSeries(do_times, do_values)})
+                else:
+                    warnings.warn('Calibration values for DO signal are missing. Skipping calibration.')
 
             else:
                 raw_values = self.measurements.xs(filter_number, level='filterset')['amp_1'].unstack()
