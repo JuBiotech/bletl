@@ -2,6 +2,7 @@
 
 ## For Users
 Download a recent release and unpack the `.whl` file somewhere.
++ [Download v0.3](https://gitlab.fz-juelich.de/IBG-1/biopro/bletl/-/jobs/artifacts/v0.3/download?job=python-release)
 + [Download v0.2](https://gitlab.fz-juelich.de/IBG-1/biopro/bletl/-/jobs/artifacts/v0.2/download?job=python-release)
 
 Then install via pip:
