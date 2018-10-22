@@ -175,15 +175,19 @@ def extract_environment(dfraw):
     ocol_ncol_type = [
         ('Cycle', 'cycle', int),
         ('Time', 'time', float),
+        (None, 'temp_setpoint', float),
         ('Temp_up', 'temp_up', float),
         ('Temp_down', 'temp_down', float),
         ('Temp_water', 'temp_water', float),
         ('O2', 'o2', float),
         ('CO2', 'co2', float),
         ('Humidity', 'humidity', float),
-        ('Shaker', 'shaker', float),
+        (None, 'shaker_setpoint', float),
+        ('Shaker', 'shaker_actual', float),
     ]
     df = utils.__to_typed_cols__(dfraw[dfraw['Type'] == 'R'], ocol_ncol_type)
+    # TODO: write initial setpoints (temp & shaker) into df
+    # TODO: parse setpoint changes (temp & shaker) from comments
     # TODO: clean up -9999.0 values in co2 column
     return standardize(df)
 
