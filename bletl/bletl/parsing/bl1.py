@@ -23,7 +23,7 @@ class BioLector1Parser(core.BLDParser):
         measurements = extract_measurements(data)
 
         data = BL1Data(
-            environment = extract_environment(data),
+            environment = extract_environment(data, process_parameters, comments),
             filtersets=filtersets,
             references=references,
             measurements=measurements,
@@ -245,7 +245,7 @@ def extract_process_parameters(headerlines):
             fs_start = l
             break
 
-    proccess_parameters = {
+    process_parameters = {
         'temperature': float(headerlines[fs_start + 1].split(';')[13].strip()),
         'humidity': float(headerlines[fs_start + 2].split(';')[13].strip()),
         'O2': float(headerlines[fs_start + 3].split(';')[13].strip()),
@@ -254,7 +254,7 @@ def extract_process_parameters(headerlines):
         'cycle_time': float(headerlines[fs_start + 6].split(';')[13].strip()),
         'exp_time': float(headerlines[fs_start + 7].split(';')[13].strip()),
     }
-    return proccess_parameters
+    return process_parameters
 
 def extract_comments(dfraw):
     ocol_ncol_type = [
@@ -282,6 +282,7 @@ def extract_references(dfraw):
     df = utils.__to_typed_cols__(dfref, ocol_ncol_type)
     return df.set_index(['cycle', 'filterset'])
 
+
 def extract_measurements(dfraw):
     dfmes = dfraw[dfraw['READING'].str.startswith('C')].copy()
     dfmes['cycle'] = dfmes['READING'].str.replace('C', '').astype(int)
@@ -305,17 +306,38 @@ def extract_measurements(dfraw):
     df = df.set_index(['filterset', 'cycle', 'well'])
     return df
 
-def extract_environment(dfraw):
+
+def extract_environment(dfraw, process_parameters:dict, comments:pandas.DataFrame):
     ocol_ncol_type = [
         ('cycle', 'cycle', int),
         ('TIME [h]', 'time', float),
+        (None, 'temp_setpoint', float),
         ('ACT TEMP [°C]', 'temp_up', float),
         (None, 'temp_down', float),
         (None, 'temp_water', float),
         ('ACT O2 [%]', 'o2', float),
         ('ACT CO2 [%]', 'co2', float),
         ('ACT HUMIDITY [rH]', 'humidity', float),
-        (None, 'shaker', float),
+        (None, 'shaker_setpoint', float),
+        (None, 'shaker_actual', float),
     ]
     df = utils.__to_typed_cols__(dfraw, ocol_ncol_type)
+    df['shaker_setpoint'] = process_parameters['shaking']
+    df['temp_setpoint'] = process_parameters['temperature']
+    # process the comments column to extract setpoint changes
+    for t_comment, cmts in zip(comments['time'], comments['user_comment']):
+        # multiple comments may be ,-separated in one line
+        cmts = [
+            c.strip()
+            for c in cmts.split(',')
+            if c.strip()
+        ]
+        # process each comment in this line
+        for comment in cmts:
+            if comment.startswith('SWITCH SETPOINT:Freq.='):
+                rpm = float(comment.split('=')[1])
+                df.loc[(df['time'] >= t_comment), 'shaker_setpoint'] = rpm
+            elif comment.startswith('SWITCH SETPOINT:Temp.='):
+                temp = float(comment.split('=')[1])
+                df.loc[(df['time'] >= t_comment), 'temp_setpoint'] = temp
     return df

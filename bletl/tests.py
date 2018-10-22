@@ -1,4 +1,5 @@
 """Contains unit tests for the `bletl` package"""
+import numpy
 import pathlib
 import pandas
 import unittest
@@ -9,6 +10,8 @@ from bletl import parsing
 
 
 BL1_files =  [
+    pathlib.Path('data', 'BL1', 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv'),
+    pathlib.Path('data', 'BL1', 'JH_ShakerSteps_20170302_070206.csv'),
     pathlib.Path('data', 'BL1', 'NT_1400_BS20BS10_15min_20160222_151645.csv'),
     pathlib.Path('data', 'BL1', 'rj-cg-res_20170927_084112.csv'),
     pathlib.Path('data', 'BL1', 'incremental', 'NT_1400rpm_30C_BS15_5min_20180503_132133.csv'),
@@ -72,7 +75,35 @@ class TestBL1Parsing(unittest.TestCase):
             self.assertIsInstance(data.comments, pandas.DataFrame)
             self.assertIsInstance(data.measurements, pandas.DataFrame)
             self.assertIsInstance(data.references, pandas.DataFrame)
+        return
 
+    def test_temp_setpoint_parsing(self):
+        fp = pathlib.Path('data', 'BL1', 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv')
+        data = bletl.parse(fp)
+        df = data.environment
+        temps = set(df['temp_setpoint'].unique())
+        self.assertSetEqual(temps, set([30., 25., 31., 32., 33., 34., 35., 36., 37., 38., 39., 40.]))
+        # test some individual values
+        self.assertEqual(list(df.loc[numpy.isclose(df['time'], 0.00778), 'temp_setpoint'])[0], 30.)
+        self.assertEqual(list(df.loc[numpy.isclose(df['time'], 55.30764), 'temp_setpoint'])[0], 37.)
+        self.assertEqual(list(df.loc[numpy.isclose(df['time'], 55.44867), 'temp_setpoint'])[0], 38.)
+        self.assertEqual(list(df.loc[numpy.isclose(df['time'], 126.74621), 'temp_setpoint'])[0], 40.)
+        return
+
+    def test_shaker_setpoint_parsing(self):
+        fp = pathlib.Path('data', 'BL1', 'JH_ShakerSteps_20170302_070206.csv')
+        data = bletl.parse(fp)
+        df = data.environment
+        rpms = set(df['shaker_setpoint'].unique())
+        self.assertSetEqual(rpms, set([
+           500.,  600.,  700.,  800.,  900., 1000.,
+           1100., 1200., 1300., 1400., 1500.
+        ]))
+        # test some individual values
+        self.assertEqual(list(df.loc[numpy.isclose(df['time'], 0.06265), 'shaker_setpoint'])[0], 500.)
+        self.assertEqual(list(df.loc[numpy.isclose(df['time'], 2.49103), 'shaker_setpoint'])[0], 900.)
+        self.assertEqual(list(df.loc[numpy.isclose(df['time'], 2.50949), 'shaker_setpoint'])[0], 1000.)
+        self.assertEqual(list(df.loc[numpy.isclose(df['time'], 5.65632), 'shaker_setpoint'])[0], 500.)
         return
 
 
@@ -81,21 +112,22 @@ class TestBL1Calibration(unittest.TestCase):
         parsed_data = bletl.parse(calibration_test_file)
         parsed_data.calibrate(calibration_test_cal_data)
         data = parsed_data.calibrated_data
-        
+
         for key, item in data.items():
             self.assertIsInstance(item, core.FilterTimeSeries)
-    
+
     def test_calibration(self):
         parsed_data = bletl.parse(calibration_test_file)
         parsed_data.calibrate(calibration_test_cal_data)
         data = parsed_data.calibrated_data
-        
+
         for key, (cycle, well, value) in calibration_test_times.items():
             self.assertAlmostEqual(data[key].time.loc[cycle, well], value, places=4)
-            
+
         for key, (cycle, well, value) in calibration_test_values.items():
-            self.assertAlmostEqual(data[key].value.loc[cycle, well], value, places=4) 
-        
+            self.assertAlmostEqual(data[key].value.loc[cycle, well], value, places=4)
+
+
 class TestBLProParsing(unittest.TestCase):
     def test_parse_metadata_data(self):
         for fp in BLPro_files:
