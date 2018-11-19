@@ -1,14 +1,16 @@
 # Installation
 
 ## For Users
-Download a recent release and unpack the `.whl` file somewhere.
-+ [Download v0.3](https://gitlab.fz-juelich.de/IBG-1/biopro/bletl/-/jobs/artifacts/v0.3/download?job=python-release)
-+ [Download v0.2](https://gitlab.fz-juelich.de/IBG-1/biopro/bletl/-/jobs/artifacts/v0.2/download?job=python-release)
+1. Got to [Repository/Tags](https://gitlab.fz-juelich.de/IBG-1/biopro/bletl/tags) to view the
+   list of releases & their release notes.
+2. To download the Python wheel, click the _download_ button on the right and select `python-release`:
 
-Then install via pip:
+![Release Download](docs/ReleaseDownload.png)
+
+Unpack to `*.whl` file to somewhere and install it via pip. After that you can delete the `*.whl`.
 
 ```bash
-pip install bletl-0.2-py3-none-any.whl
+pip install bletl-x.x-py3-none-any.whl
 ```
 
 ## For Developers
