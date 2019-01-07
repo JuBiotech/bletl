@@ -77,6 +77,16 @@ class TestBL1Parsing(unittest.TestCase):
             self.assertIsInstance(data.references, pandas.DataFrame)
         return
 
+    def test_concat_parsing(self):
+        filepaths = BL1_files[:3]
+        data = bletl.parse_and_concatenate(filepaths)
+        self.assertIsInstance(data.metadata, dict)
+        self.assertIsInstance(data.environment, pandas.DataFrame)
+        self.assertIsInstance(data.comments, pandas.DataFrame)
+        self.assertIsInstance(data.measurements, pandas.DataFrame)
+        self.assertIsInstance(data.references, pandas.DataFrame)
+        return
+
     def test_temp_setpoint_parsing(self):
         fp = pathlib.Path('data', 'BL1', 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv')
         data = bletl.parse(fp)

@@ -2,10 +2,13 @@
 BioLector files, applying calibration transformations and representing them in a standardized
 format.
 """
+import pandas
+
 from . core import BioLectorModel, BLData, BLDParser
 from . import parsing
+from . import utils
 
-__version__ = '0.4'
+__version__ = '0.5'
 
 parsers = {
     (BioLectorModel.BL1, '3.3') : parsing.bl1.BioLector1Parser,
@@ -52,6 +55,7 @@ def get_parser(filepath) -> BLDParser:
     parser_cls = parsers[(model, version)]
     return parser_cls()
 
+
 def parse(filepath) -> BLData:
     """Parses a raw BioLector CSV file into a BLData object.
 
@@ -67,3 +71,36 @@ def parse(filepath) -> BLData:
     parser = get_parser(filepath)
     return parser.parse(filepath)
 
+
+def parse_and_concatenate(filepaths:list) -> BLData:
+    """Parses multiple BioLector raw data files and concatenates them into one.
+
+    Args:
+        filepaths (list): list of filepaths
+
+    Returns:
+        bldata (BLData): object containing all the measurements, as if they would have
+            originated from the same file
+    """
+    fragments = [
+        parse(filepath)
+        for filepath in filepaths
+    ]
+    head = fragments[0]
+
+    # iterate over all DataFrame-attributes
+    for attr, stack in head.__dict__.items():
+        if isinstance(stack, pandas.DataFrame):
+            # time/cycle aware concatenation of all fragments
+            fragment_frames = [
+                getattr(fragment, attr)
+                for fragment in fragments
+            ]
+            start_times = [
+                fragment.metadata['date_start']
+                for fragment in fragments
+            ]
+            stack = utils._concatenate_fragments(fragment_frames, start_times)
+            setattr(head, attr, stack)
+
+    return head
