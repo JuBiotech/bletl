@@ -7,6 +7,7 @@ import unittest
 import bletl
 from bletl import core
 from bletl import parsing
+from bletl import utils
 
 
 BL1_files =  [
@@ -55,6 +56,38 @@ class TestParserSelection(unittest.TestCase):
         return
 
 
+class TestUtils(unittest.TestCase):
+    def test_last_well_in_cycle(self):
+        measurements = pandas.DataFrame(data={
+            'cycle': [1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2],
+            'filterset': [1,1,1,1,2,2,2,2,3,3,3,3] * 2,
+            'well': ['A01', 'A02', 'A03', 'A04'] * 3 * 2
+        })
+        last_well = utils._last_well_in_cycle(measurements)
+        self.assertEqual(last_well, 'A04')
+
+        # cut off the last two measurements
+        measurements = measurements.iloc[:-2]
+        return
+
+    def test_last_full_cycle(self):
+        measurements = pandas.DataFrame(data={
+            'cycle': [1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2],
+            'filterset': [1,1,1,1,2,2,2,2,3,3,3,3] * 2,
+            'well': ['A01', 'A02', 'A03', 'A04'] * 3 * 2
+        })
+
+        last_cycle = utils._last_full_cycle(measurements)
+        self.assertEqual(last_cycle, 2)
+
+        # cut off the last two measurements
+        measurements = measurements.iloc[:-2]
+
+        last_cycle = utils._last_full_cycle(measurements)
+        self.assertEqual(last_cycle, 1)
+        return
+
+
 class TestBL1Parsing(unittest.TestCase):
     def test_splitting(self):
         for fp in BL1_files:
@@ -75,6 +108,25 @@ class TestBL1Parsing(unittest.TestCase):
             self.assertIsInstance(data.comments, pandas.DataFrame)
             self.assertIsInstance(data.measurements, pandas.DataFrame)
             self.assertIsInstance(data.references, pandas.DataFrame)
+        return
+
+    def test_concat_parsing(self):
+        filepaths = BL1_files[:3]
+        data = bletl.parse_and_concatenate(filepaths)
+        self.assertIsInstance(data.metadata, dict)
+        self.assertIsInstance(data.environment, pandas.DataFrame)
+        self.assertIsInstance(data.comments, pandas.DataFrame)
+        self.assertIsInstance(data.measurements, pandas.DataFrame)
+        self.assertIsInstance(data.references, pandas.DataFrame)
+        return
+
+    def test_incomplete_cycle_drop(self):
+        filepath = BL1_files[3]
+        data = bletl.parse(filepath, drop_incomplete_cycles=False)
+        self.assertEquals(data.measurements.index[-1], (3, 179, 'C08'))
+
+        data = bletl.parse(filepath, drop_incomplete_cycles=True)
+        self.assertEquals(data.measurements.index[-1], (3, 178, 'F01'))
         return
 
     def test_temp_setpoint_parsing(self):
