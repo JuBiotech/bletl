@@ -80,3 +80,46 @@ def _concatenate_fragments(fragments:list, start_times:list) -> pandas.DataFrame
 
     # re-apply the original indexing scheme
     return _reindex(stack, index_names)
+
+
+def _last_well_in_cycle(measurements:pandas.DataFrame) -> str:
+    """Finds the name of the last well measured in a cycle.
+
+    Args:
+        measurements (pandas.DataFrame): measurements data
+
+    Returns:
+        well (str): name of the last well measured in the first cycle
+            if the cycle was incomplete, the last measured well is returned!
+    """
+    previous_well = None
+    previous_cycle = None
+    for cycle, well in zip(measurements.cycle, measurements.well):
+        if previous_cycle and cycle > previous_cycle:
+            return previous_well
+        else:
+            previous_cycle, previous_well = cycle, well
+    return previous_well
+
+
+def _last_full_cycle(measurements:pandas.DataFrame) -> int:
+    """Find the number of the last cycle that was measured for all wells and filters.
+
+    Args:
+        measurements (pandas.DataFrame): measurements data
+
+    Returns:
+        last_cycle (int): number of the last complete cycle
+            NOTE: if the data contains only one cycle, it will always be considered "completed"
+    """
+    max_filter = max(measurements.filterset)
+    max_well = _last_well_in_cycle(measurements)
+
+    last_filter = measurements.iloc[-1].filterset
+    last_cycle = measurements.iloc[-1].cycle
+    last_well = measurements.iloc[-1].well
+
+    if (last_filter, last_well) != (max_filter, max_well):
+        return last_cycle  - 1
+    else:
+        return last_cycle

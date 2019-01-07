@@ -56,11 +56,13 @@ def get_parser(filepath) -> BLDParser:
     return parser_cls()
 
 
-def parse(filepath) -> BLData:
+def parse(filepath, drop_incomplete_cycles:bool=True) -> BLData:
     """Parses a raw BioLector CSV file into a BLData object.
 
     Args:
         filepath (str or pathlib.Path): path pointing to the file of interest
+        drop_incomplete_cycles (bool): if True, incomplete cycles at the end are discarded
+            IMPORTANT: if the file contains only one cycle, it will always be considered "completed"
 
     Returns:
         BLData: parsed data object
@@ -69,14 +71,23 @@ def parse(filepath) -> BLData:
         NotImlementedError: when the file contents do not match with a known BioLector CSV style
     """
     parser = get_parser(filepath)
-    return parser.parse(filepath)
+    data = parser.parse(filepath)
+
+    if drop_incomplete_cycles:
+        index_names, measurements = utils._unindex(data.measurements)
+        latest_full_cycle = utils._last_full_cycle(measurements)
+        measurements = measurements[measurements.cycle <= latest_full_cycle]
+        data.measurements = utils._reindex(measurements, index_names)
+    return data
 
 
-def parse_and_concatenate(filepaths:list) -> BLData:
+def parse_and_concatenate(filepaths:list, drop_incomplete_cycles:bool=True) -> BLData:
     """Parses multiple BioLector raw data files and concatenates them into one.
 
     Args:
         filepaths (list): list of filepaths
+        drop_incomplete_cycles (bool): if True, incomplete cycles at the end are discarded
+            IMPORTANT: all fragments should have at least one FULL cycle!
 
     Returns:
         bldata (BLData): object containing all the measurements, as if they would have
