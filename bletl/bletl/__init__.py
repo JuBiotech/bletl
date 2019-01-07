@@ -85,7 +85,7 @@ def parse_and_concatenate(filepaths:list, drop_incomplete_cycles:bool=True) -> B
     """Parses multiple BioLector raw data files and concatenates them into one.
 
     Args:
-        filepaths (list): list of filepaths
+        filepaths (list): list of filepaths. Files should be in chronological order.
         drop_incomplete_cycles (bool): if True, incomplete cycles at the end are discarded
             IMPORTANT: all fragments should have at least one FULL cycle!
 
@@ -113,5 +113,7 @@ def parse_and_concatenate(filepaths:list, drop_incomplete_cycles:bool=True) -> B
             ]
             stack = utils._concatenate_fragments(fragment_frames, start_times)
             setattr(head, attr, stack)
+
+    head._metadata['end_date'] = fragments[-1].metadata['end_date']
 
     return head
