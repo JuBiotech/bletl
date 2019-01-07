@@ -114,6 +114,6 @@ def parse_and_concatenate(filepaths:list, drop_incomplete_cycles:bool=True) -> B
             stack = utils._concatenate_fragments(fragment_frames, start_times)
             setattr(head, attr, stack)
 
-    head._metadata['date_end'] = fragments[-1].metadata['date_end']
+    head.metadata['date_end'] = fragments[-1].metadata['date_end']
 
     return head
