@@ -234,3 +234,19 @@ class TestDataEquivalence(unittest.TestCase):
 
         self.assertSequenceEqual(list(d_1.comments.columns), list(d_p.comments.columns))
         return
+
+
+class TestOnlineMethods(unittest.TestCase):
+    def test_get_calibration_dict(self):
+        manual_cal_dict = {
+            'cal_0': 72.35,
+            'cal_100': 42.33,
+            'phi_min': 57.29,
+            'phi_max': 16.01,
+            'pH_0': 6.48,
+            'dpH': 0.54,
+        }
+        
+        cal_dict_fetched = bletl.get_calibration_dict(1820, 30)
+        self.assertDictEqual(manual_cal_dict, cal_dict_fetched)
+        return
