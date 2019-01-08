@@ -120,7 +120,18 @@ def parse_and_concatenate(filepaths:list, drop_incomplete_cycles:bool=True) -> B
 
     return head
 
+
 def get_calibration_dict(lot_number:int, temp:int) -> dict:
+    """Loads calibration data from M2P-labs website
+
+    Args:
+        lot_number (int): Lot number of plate to be used for calibration.
+        temp (int): Temperature to be used for calibration.
+
+    Returns:
+        calibration_dict (dict): Dictionary containing calibration data. 
+            Can be readily used in calibration function.
+    """
     lookup_string = f"{lot_number}-hc-Temp{temp}"
     url = 'http://updates.m2p-labs.com/CalibrationLot.ini'
     content = urllib.request.urlopen(url).read().decode()
