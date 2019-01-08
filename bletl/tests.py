@@ -35,6 +35,8 @@ calibration_test_values = {'BS10': (5, 'A04', 11.7175),
                                  'pH': (39, 'D08', 7.06787),
                                  'GFP75': (81, 'F07', 216.99),
                                  }
+calibration_test_lot_number = 1515
+calibration_test_temp = 30
 
 class TestParserSelection(unittest.TestCase):
     def test_selects_parsers(self):
@@ -233,4 +235,11 @@ class TestDataEquivalence(unittest.TestCase):
         d_p = bletl.parse(BLPro_files[0])
 
         self.assertSequenceEqual(list(d_1.comments.columns), list(d_p.comments.columns))
+        return
+
+
+class TestOnlineMethods(unittest.TestCase):
+    def test_get_calibration_dict(self):
+        cal_dict_fetched = bletl.get_calibration_dict(1515, 30)
+        self.assertDictEqual(cal_dict_fetched, calibration_test_cal_data)
         return

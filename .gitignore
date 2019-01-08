@@ -6,6 +6,7 @@
 **/.idea
 **/__pycache__
 **/.ipynb_checkpoints
+**/.vscode
 *.egg-info
 *.pyperf
 /examples/Sandbox.ipynb

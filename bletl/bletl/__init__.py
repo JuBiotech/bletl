@@ -3,6 +3,8 @@ BioLector files, applying calibration transformations and representing them in a
 format.
 """
 import pandas
+import urllib.request
+import configparser
 
 from . core import BioLectorModel, BLData, BLDParser
 from . import parsing
@@ -117,3 +119,33 @@ def parse_and_concatenate(filepaths:list, drop_incomplete_cycles:bool=True) -> B
     head.metadata['date_end'] = fragments[-1].metadata['date_end']
 
     return head
+
+
+def get_calibration_dict(lot_number:int, temp:int) -> dict:
+    """Loads calibration data from M2P-labs website
+
+    Args:
+        lot_number (int): Lot number of plate to be used for calibration.
+        temp (int): Temperature to be used for calibration.
+
+    Returns:
+        calibration_dict (dict): Dictionary containing calibration data. 
+            Can be readily used in calibration function.
+    """
+    lookup_string = f"{lot_number}-hc-Temp{temp}"
+    url = 'http://updates.m2p-labs.com/CalibrationLot.ini'
+    content = urllib.request.urlopen(url).read().decode()
+
+    parser = configparser.ConfigParser(strict=False)
+    parser.read_string(content)
+
+    calibration_dict = {
+        'cal_0': float(parser[lookup_string]['k0']),
+        'cal_100': float(parser[lookup_string]['k100']),
+        'phi_min': float(parser[lookup_string]['irmin']),
+        'phi_max': float(parser[lookup_string]['irmax']),
+        'pH_0': float(parser[lookup_string]['ph0']),
+        'dpH': float(parser[lookup_string]['dph']),
+    }
+
+    return calibration_dict
