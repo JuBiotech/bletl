@@ -10,11 +10,10 @@ from . core import BioLectorModel, BLData, BLDParser
 from . import parsing
 from . import utils
 
-__version__ = '0.6'
+__version__ = '0.7'
 
 parsers = {
     (BioLectorModel.BL1, '3.3') : parsing.bl1.BioLector1Parser,
-    (BioLectorModel.BLPro, '0.0.0') : parsing.blpro.BioLectorProParser,
 }
 
 
@@ -129,7 +128,7 @@ def get_calibration_dict(lot_number:int, temp:int) -> dict:
         temp (int): Temperature to be used for calibration.
 
     Returns:
-        calibration_dict (dict): Dictionary containing calibration data. 
+        calibration_dict (dict): Dictionary containing calibration data.
             Can be readily used in calibration function.
     """
     lookup_string = f"{lot_number}-hc-Temp{temp}"

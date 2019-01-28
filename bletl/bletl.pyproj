@@ -4,7 +4,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>928d9c1d-ec3d-49b3-ab01-1f6f2775396b</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>benchmark.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,14 +22,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="benchmark.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="bletl\core.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="bletl\parsing\bl1.py" />
-    <Compile Include="bletl\parsing\blpro.py" />
     <Compile Include="bletl\parsing\__init__.py" />
     <Compile Include="bletl\utils.py">
       <SubType>Code</SubType>
