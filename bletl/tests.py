@@ -17,26 +17,28 @@ BL1_files =  [
     pathlib.Path('data', 'BL1', 'rj-cg-res_20170927_084112.csv'),
     pathlib.Path('data', 'BL1', 'incremental', 'NT_1400rpm_30C_BS15_5min_20180503_132133.csv'),
 ]
-BLPro_files = list(pathlib.Path('data', 'BLPro').iterdir())
+
 not_a_bl_file = pathlib.Path('data', 'BL1', 'incremental', 'C42.tmp')
 
 calibration_test_file = pathlib.Path('data', 'BL1', 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
 calibration_test_cal_data = {
-        'cal_0': 65.91,
-        'cal_100': 40.60,
-        'phi_min': 57.45,
-        'phi_max': 18.99,
-        'pH_0': 6.46,
-        'dpH': 0.56,
-        }
+    'cal_0': 65.91,
+    'cal_100': 40.60,
+    'phi_min': 57.45,
+    'phi_max': 18.99,
+    'pH_0': 6.46,
+    'dpH': 0.56,
+}
 calibration_test_times = {'BS10': (52, 'D03', 10.5221)}
-calibration_test_values = {'BS10': (5, 'A04', 11.7175),
-                                 'DO': (13, 'A05', 99.4285),
-                                 'pH': (39, 'D08', 7.06787),
-                                 'GFP75': (81, 'F07', 216.99),
-                                 }
+calibration_test_values = {
+    'BS10': (5, 'A04', 11.7175),
+    'DO': (13, 'A05', 99.4285),
+    'pH': (39, 'D08', 7.06787),
+    'GFP75': (81, 'F07', 216.99),
+}
 calibration_test_lot_number = 1515
 calibration_test_temp = 30
+
 
 class TestParserSelection(unittest.TestCase):
     def test_selects_parsers(self):
@@ -45,11 +47,6 @@ class TestParserSelection(unittest.TestCase):
             parser = bletl.get_parser(fp)
             self.assertIsInstance(parser, core.BLDParser)
             self.assertIsInstance(parser, parsing.bl1.BioLector1Parser)
-
-        for fp in BLPro_files:
-            parser = bletl.get_parser(fp)
-            self.assertIsInstance(parser, core.BLDParser)
-            self.assertIsInstance(parser, parsing.blpro.BioLectorProParser)
 
         return
 
@@ -125,10 +122,10 @@ class TestBL1Parsing(unittest.TestCase):
     def test_incomplete_cycle_drop(self):
         filepath = BL1_files[3]
         data = bletl.parse(filepath, drop_incomplete_cycles=False)
-        self.assertEquals(data.measurements.index[-1], (3, 179, 'C08'))
+        self.assertEqual(data.measurements.index[-1], (3, 179, 'C08'))
 
         data = bletl.parse(filepath, drop_incomplete_cycles=True)
-        self.assertEquals(data.measurements.index[-1], (3, 178, 'F01'))
+        self.assertEqual(data.measurements.index[-1], (3, 178, 'F01'))
         return
 
     def test_temp_setpoint_parsing(self):
@@ -180,62 +177,6 @@ class TestBL1Calibration(unittest.TestCase):
 
         for key, (cycle, well, value) in calibration_test_values.items():
             self.assertAlmostEqual(data[key].value.loc[cycle, well], value, places=4)
-
-
-class TestBLProParsing(unittest.TestCase):
-    def test_parse_metadata_data(self):
-        for fp in BLPro_files:
-            metadata, data = parsing.blpro.parse_metadata_data(fp)
-
-            self.assertIsInstance(metadata, dict)
-            self.assertIsInstance(data, pandas.DataFrame)
-        return
-
-    def test_parsing(self):
-        for fp in BLPro_files:
-            try:
-                data = bletl.parse(fp)
-            except:
-                print('parsing failed for: {}'.format(fp))
-                raise
-        return
-
-
-class TestDataEquivalence(unittest.TestCase):
-    def test_environment(self):
-        d_1 = bletl.parse(BL1_files[0])
-        d_p = bletl.parse(BLPro_files[0])
-
-        self.assertSequenceEqual(list(d_1.environment.columns), list(d_p.environment.columns))
-        return
-
-    def test_filtersets(self):
-        d_1 = bletl.parse(BL1_files[0])
-        d_p = bletl.parse(BLPro_files[0])
-
-        self.assertSequenceEqual(list(d_1.filtersets.columns), list(d_p.filtersets.columns))
-        return
-
-    def test_references(self):
-        d_1 = bletl.parse(BL1_files[0])
-        d_p = bletl.parse(BLPro_files[0])
-
-        self.assertSequenceEqual(list(d_1.references.columns), list(d_p.references.columns))
-        return
-
-    def test_measurements(self):
-        d_1 = bletl.parse(BL1_files[0])
-        d_p = bletl.parse(BLPro_files[0])
-
-        self.assertSequenceEqual(list(d_1.measurements.columns), list(d_p.measurements.columns))
-        return
-
-    def test_comments(self):
-        d_1 = bletl.parse(BL1_files[0])
-        d_p = bletl.parse(BLPro_files[0])
-
-        self.assertSequenceEqual(list(d_1.comments.columns), list(d_p.comments.columns))
-        return
 
 
 class TestOnlineMethods(unittest.TestCase):

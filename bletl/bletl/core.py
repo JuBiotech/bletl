@@ -55,14 +55,14 @@ class BLData(object):
     @comments.setter
     def comments(self, value:pandas.DataFrame):
         self._comments = value
-    
+
     def calibrate(self, calibration_dict):
         raise NotImplementedError()
 
 
 class FilterTimeSeries():
     """Generalizable data type for calibrated timeseries."""
-    
+
     def __init__(self, time_df, value_df):
         self.time = time_df
         self.value = value_df

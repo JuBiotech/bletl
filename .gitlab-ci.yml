@@ -4,26 +4,45 @@ stages:
   - release
 
 
-python-test:
+test-bletl:
   stage: test
   image: python:3.6
   script:
-    - cd bletl
-    - python setup.py develop
-    - python -m unittest -v
+    - cd bletl && python setup.py develop && python -m unittest -v
 
-python-release:
+test-bletl-pro:
+  stage: test
+  image: python:3.6
+  script:
+    - cd bletl && python setup.py develop && cd ..
+    - cd bletl_pro && python setup.py develop && python -m unittest -v
+
+
+release-bletl:
   stage: release
   image: python:3.6
   script:
-    - cd bletl
-    - python setup.py bdist_wheel
-    - cp dist/*.whl ..
+    - cd bletl && python setup.py bdist_wheel && cp dist/*.whl ..
   artifacts:
     paths:
       - ./*.whl
   only:
     # only run on refs that are named like v1.2 or v1.2.3
-    - /^v(\d+\.)?(\d+\.)?(\*|\d+)$/
+    - /^bletl_v(\d+\.)?(\d+\.)?(\*|\d+)$/
+  except:
+    - branches
+
+release-bletl-pro:
+  stage: release
+  image: python:3.6
+  script:
+    - cd bletl && python setup.py develop && cd ..
+    - cd bletl_pro && python setup.py bdist_wheel && cp dist/*.whl ..
+  artifacts:
+    paths:
+      - ./*.whl
+  only:
+    # only run on refs that are named like v1.2 or v1.2.3
+    - /^bletl_pro_v(\d+\.)?(\d+\.)?(\*|\d+)$/
   except:
     - branches
