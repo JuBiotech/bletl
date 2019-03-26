@@ -26,6 +26,7 @@ release-bletl:
   artifacts:
     paths:
       - ./*.whl
+    expire_in: 30 yrs
   only:
     # only run on refs that are named like v1.2 or v1.2.3
     - /^bletl_v(\d+\.)?(\d+\.)?(\*|\d+)$/
@@ -41,6 +42,7 @@ release-bletl-pro:
   artifacts:
     paths:
       - ./*.whl
+    expire_in: 30 yrs
   only:
     # only run on refs that are named like v1.2 or v1.2.3
     - /^bletl_pro_v(\d+\.)?(\d+\.)?(\*|\d+)$/
