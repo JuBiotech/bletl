@@ -13,6 +13,7 @@ class BioLectorProParser(core.BLDParser):
         metadata, data = parse_metadata_data(filepath)
 
         bld = core.BLData(
+            model=core.BioLectorModel.BLPro,
             environment=extract_environment(data),
             filtersets=extract_filtersets(metadata),
             references=extract_references(data),

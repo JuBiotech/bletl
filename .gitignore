@@ -13,3 +13,4 @@
 /~$*.xlsx
 /bletl/build/lib/bletl
 /bletl/dist
+/bletl/bletl/cache

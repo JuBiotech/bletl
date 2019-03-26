@@ -4,13 +4,16 @@ format.
 """
 import pandas
 import urllib.request
+import urllib.error
 import configparser
+import pathlib
+from collections.abc import Iterable
 
-from . core import BioLectorModel, BLData, BLDParser
+from . core import BioLectorModel, BLData, BLDParser, LotInformationError, LotInformationMismatch, InvalidLotNumberError, LotInformationNotFound
 from . import parsing
 from . import utils
 
-__version__ = '0.7'
+__version__ = '0.8'
 
 parsers = {
     (BioLectorModel.BL1, '3.3') : parsing.bl1.BioLector1Parser,
@@ -57,7 +60,7 @@ def get_parser(filepath) -> BLDParser:
     return parser_cls()
 
 
-def parse(filepath, drop_incomplete_cycles:bool=True) -> BLData:
+def _parse_without_calibration(filepath:str, drop_incomplete_cycles:bool) -> BLData:
     """Parses a raw BioLector CSV file into a BLData object.
 
     Args:
@@ -70,7 +73,7 @@ def parse(filepath, drop_incomplete_cycles:bool=True) -> BLData:
 
     Raises:
         NotImlementedError: when the file contents do not match with a known BioLector CSV style
-    """
+    """ 
     parser = get_parser(filepath)
     data = parser.parse(filepath)
 
@@ -79,72 +82,237 @@ def parse(filepath, drop_incomplete_cycles:bool=True) -> BLData:
         latest_full_cycle = utils._last_full_cycle(measurements)
         measurements = measurements[measurements.cycle <= latest_full_cycle]
         data.measurements = utils._reindex(measurements, index_names)
+
     return data
 
 
-def parse_and_concatenate(filepaths:list, drop_incomplete_cycles:bool=True) -> BLData:
-    """Parses multiple BioLector raw data files and concatenates them into one.
+def _apply_calibration(data:BLData, lot_number:int=None, temp:int=None) -> BLData:
+    """Applies calibration to an BLdata object.
 
     Args:
-        filepaths (list): list of filepaths. Files should be in chronological order.
-        drop_incomplete_cycles (bool): if True, incomplete cycles at the end are discarded
-            IMPORTANT: all fragments should have at least one FULL cycle!
+        data (BLdata): BLdata object to calibrate
+        lot_number (int or None): lot number of the microtiter plate used
+        temp (int or None): Temperature to be used for calibration
 
     Returns:
-        bldata (BLData): object containing all the measurements, as if they would have
-            originated from the same file
+        BLData: calibrated data object
+
+    Raises:
+        TypeError: when either lot number or temperature, but not both, are None
+        NotImplementedError: when the file contents do not match with a known BioLector CSV style
+        LotInformationError: when no information about the lot can be found
+        LotInformationMismatch: when lot information given as parameters is not equal to lot information found in data file
     """
-    fragments = [
-        parse(filepath)
-        for filepath in filepaths
-    ]
-    head = fragments[0]
+    if data.model is BioLectorModel.BL1:
+        if (lot_number is None) ^ (temp is None):
+            raise TypeError('Lot number and temperature should be either left None or be set to an appropriate value.')
+        
+        if (lot_number is None) and (temp is None):
+            if (data.metadata['lot'] in {'UNKNOWN', 'UNKOWN'}):
+                data.calibrate()
+            else:
+                cal_data = fetch_calibration_data(*utils._parse_calibration_info(data.metadata['lot']))
+                if cal_data is None:
+                    raise LotInformationNotFound("""Lot information was found in the CSV file,
+                        but the calibration data was not found in the cache and the cache could not be updated.
+                        No calibration for pH and DO is applied.""")
+                data.calibrate(cal_data)
 
-    # iterate over all DataFrame-attributes
-    for attr, stack in head.__dict__.items():
-        if isinstance(stack, pandas.DataFrame):
-            # time/cycle aware concatenation of all fragments
-            fragment_frames = [
-                getattr(fragment, attr)
-                for fragment in fragments
-            ]
-            start_times = [
-                fragment.metadata['date_start']
-                for fragment in fragments
-            ]
-            stack = utils._concatenate_fragments(fragment_frames, start_times)
-            setattr(head, attr, stack)
-
-    head.metadata['date_end'] = fragments[-1].metadata['date_end']
-
-    return head
+        if isinstance(lot_number, int) and isinstance(temp, int):
+            if not (data.metadata['lot'] in {'UNKNOWN', 'UNKOWN'}):
+                lot_from_csv, temp_from_csv = utils._parse_calibration_info(data.metadata['lot'])
+                if (lot_number != lot_from_csv) or (temp != temp_from_csv):
+                    raise LotInformationMismatch('The lot information provided mismatches with lot information found in the data file.\
+                        The provided lot information is used for calibration.')
+            cal_data = fetch_calibration_data(lot_number, temp)
+            if cal_data is None:
+                raise LotInformationError('Data for the lot information provided was not found in the cached file \
+                    and we were unable to update it. If you want to proceed without calibration, pass no lot number and temperature')
+            data.calibrate(cal_data)
+                
+    return data
 
 
-def get_calibration_dict(lot_number:int, temp:int) -> dict:
+def parse(filepaths, lot_number:int=None, temp:int=None, drop_incomplete_cycles:bool=True) -> BLData:
+    """Parses a raw BioLector CSV file into a BLData object and applies calibration.
+
+    Args:
+        filepaths (str or pathlib.Path or iterable): path pointing to the file(s) of interest. If an iterable is provided, files are concatenated
+        lot_number (int or None): lot number of the microtiter plate used
+        temp (int or None): Temperature to be used for calibration
+        drop_incomplete_cycles (bool): if True, incomplete cycles at the end are discarded
+            IMPORTANT: if the file contains only one cycle, it will always be considered "completed"
+
+    Returns:
+        BLData: parsed data object
+
+    Raises:
+        TypeError: when either lot number or temperature, but not both, are None
+        NotImplementedError: when the file contents do not match with a known BioLector CSV style
+        LotInformationError: when no information about the lot can be found
+        LotInformationMismatch: when lot information given as parameters is not equal to lot information found in data file
+    """
+    if isinstance(filepaths, Iterable):
+        fragments = []
+        for filepath in filepaths:
+            fragment = _parse_without_calibration(filepath, drop_incomplete_cycles)
+            fragments.append(fragment)
+        
+        data = fragments[0]
+
+        # iterate over all DataFrame-attributes
+        for attr, stack in data.__dict__.items():
+            if isinstance(stack, pandas.DataFrame):
+                # time/cycle aware concatenation of all fragments
+                fragment_frames = [
+                    getattr(fragment, attr)
+                    for fragment in fragments
+                ]
+                start_times = [
+                    fragment.metadata['date_start']
+                    for fragment in fragments
+                ]
+                stack = utils._concatenate_fragments(fragment_frames, start_times)
+                setattr(data, attr, stack)
+
+        data.metadata['date_end'] = fragments[-1].metadata['date_end']
+    else:
+        data = _parse_without_calibration(filepaths, drop_incomplete_cycles)
+    
+    data = _apply_calibration(data, lot_number, temp)
+
+    return data
+
+
+def parse_with_calibration_parameters(
+    filepaths,
+    cal_0:float=None,
+    cal_100:float=None,
+    phi_min:float=None,
+    phi_max:float=None,
+    pH_0:float=None,
+    dpH:float=None,
+    drop_incomplete_cycles:bool=True,
+    ) -> BLData:
+    """Parses a raw BioLector CSV file into a BLData object while using explicit calibration parameters.
+
+    Args:
+        filepaths (str or pathlib.Path or iterable): path pointing to the file(s) of interest. If an iterable is provided, files are concatenated
+        cal_0 (float or None): Calibration parameter cal_0 or k0 for oxygen saturation measurement
+        cal_100 (float or None): Calibration parameter cal_100 or k100 for oxygen saturation measurement
+        phi_min (float or None): Calibration parameter phi_min or irmin for pH measurement
+        phi_max (float or None): Calibration parameter phi_max or irmax for pH measurement
+        pH_0 (float or None): Calibration parameter ph0 for pH measurement
+        dpH (float or None): Calibration parameter dpH for pH measurement
+        drop_incomplete_cycles (bool): if True, incomplete cycles at the end are discarded
+            IMPORTANT: if the file contains only one cycle, it will always be considered "completed"
+
+    Returns:
+        BLData: parsed data object
+
+    Raises:
+        NotImlementedError: when the file contents do not match with a known BioLector CSV style
+    """
+    calibration_dict = {
+        'cal_0': cal_0,
+        'cal_100': cal_100,
+        'phi_min': phi_min,
+        'phi_max': phi_max,
+        'pH_0': pH_0,
+        'dpH': dpH,
+    }
+
+    if isinstance(filepaths, Iterable):
+        fragments = []
+        for filepath in filepaths:
+            fragment = _parse_without_calibration(filepath, drop_incomplete_cycles)
+            fragments.append(fragment)
+        
+        data = fragments[0]
+
+        # iterate over all DataFrame-attributes
+        for attr, stack in data.__dict__.items():
+            if isinstance(stack, pandas.DataFrame):
+                # time/cycle aware concatenation of all fragments
+                fragment_frames = [
+                    getattr(fragment, attr)
+                    for fragment in fragments
+                ]
+                start_times = [
+                    fragment.metadata['date_start']
+                    for fragment in fragments
+                ]
+                stack = utils._concatenate_fragments(fragment_frames, start_times)
+                setattr(data, attr, stack)
+
+        data.metadata['date_end'] = fragments[-1].metadata['date_end']
+    else:
+        data = _parse_without_calibration(filepaths, drop_incomplete_cycles)
+
+    data.calibrate(calibration_dict)
+
+    return data
+
+
+def fetch_calibration_data(lot_number:int, temp:int):
     """Loads calibration data from M2P-labs website
 
     Args:
-        lot_number (int): Lot number of plate to be used for calibration.
-        temp (int): Temperature to be used for calibration.
+        lot_number (int): Lot number to be used for calibration data lookup
+        temp (int): Temperature to be used for calibration data lookup
 
     Returns:
         calibration_dict (dict): Dictionary containing calibration data.
             Can be readily used in calibration function.
+        None (None): 
     """
-    lookup_string = f"{lot_number}-hc-Temp{temp}"
-    url = 'http://updates.m2p-labs.com/CalibrationLot.ini'
-    content = urllib.request.urlopen(url).read().decode()
+    module_path = __path__[0]
+    calibration_file = pathlib.Path(module_path, 'cache', 'CalibrationLot.ini')
+
+    if not calibration_file.is_file():
+        if not download_calibration_data():
+            return None
+
+    with open(calibration_file, 'r') as file:
+        content = file.read()
 
     parser = configparser.ConfigParser(strict=False)
     parser.read_string(content)
+    calibration_info = f'{lot_number}-hc-Temp{temp}'
 
-    calibration_dict = {
-        'cal_0': float(parser[lookup_string]['k0']),
-        'cal_100': float(parser[lookup_string]['k100']),
-        'phi_min': float(parser[lookup_string]['irmin']),
-        'phi_max': float(parser[lookup_string]['irmax']),
-        'pH_0': float(parser[lookup_string]['ph0']),
-        'dpH': float(parser[lookup_string]['dph']),
-    }
+    if not calibration_info in parser:
+        if not download_calibration_data():
+            return None
+    
+    if calibration_info in parser:
+        calibration_dict = {
+            'cal_0': float(parser[calibration_info]['k0']),
+            'cal_100': float(parser[calibration_info]['k100']),
+            'phi_min': float(parser[calibration_info]['irmin']),
+            'phi_max': float(parser[calibration_info]['irmax']),
+            'pH_0': float(parser[calibration_info]['ph0']),
+            'dpH': float(parser[calibration_info]['dph']),
+        }
+        return calibration_dict
+    else:
+        raise InvalidLotNumberError("""Latest calibration information was downloaded from m2p-labs, 
+            but the provided lot number/temperature combination could not be found. Please check the parameters.""")
 
-    return calibration_dict
+def download_calibration_data():
+    """Loads calibration data from m2p-labs website
+
+    Returns:
+        success (bool): True if calibration data was downloaded successfully, False otherwise
+    """
+    try:
+        url = 'http://updates.m2p-labs.com/CalibrationLot.ini'
+        module_path = __path__[0]
+        filepath = pathlib.Path(module_path, 'cache', 'CalibrationLot.ini')
+        filepath.parents[0].mkdir(exist_ok=True)
+        urllib.request.urlretrieve(url, filepath)
+        return True
+    
+    except urllib.error.HTTPError:
+        return False
+    
+    

@@ -5,17 +5,29 @@ import enum
 import pandas
 
 
+class BioLectorModel(enum.Enum):
+    BL1 = 'bl1'
+    BL2 = 'bl2'
+    BLPro = 'blpro'
+
+
 class BLData(object):
     """Standardized data type for BioLector data.
     """
-    def __init__(self, environment, filtersets, references, measurements, comments):
+    def __init__(self, model, environment, filtersets, references, measurements, comments):
+        self._model = model
         self.environment = environment
         self.filtersets = filtersets
         self.references = references
         self.measurements = measurements
         self.comments = comments
-        return super().__init__()
+        super().__init__()
+        return 
 
+    @property
+    def model(self) -> BioLectorModel:
+    	return self._model
+    
     @property
     def environment(self) -> str:
     	return self._environment
@@ -83,7 +95,14 @@ class BLDParser(object):
         raise NotImplementedError('Whoever implemented {} screwed up.'.format(self.__class__.__name__))
 
 
-class BioLectorModel(enum.Enum):
-    BL1 = 'bl1'
-    BL2 = 'bl2'
-    BLPro = 'blpro'
+class LotInformationError(Exception):
+    pass
+
+class InvalidLotNumberError(Exception):
+    pass
+
+class LotInformationMismatch(Warning):
+    pass
+
+class LotInformationNotFound(Warning):
+    pass
