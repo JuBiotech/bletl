@@ -23,6 +23,7 @@ class BioLector1Parser(core.BLDParser):
         measurements = extract_measurements(data)
 
         data = BL1Data(
+            model=core.BioLectorModel.BL1,
             environment = extract_environment(data, process_parameters, comments),
             filtersets=filtersets,
             references=references,
@@ -37,7 +38,10 @@ class BioLector1Parser(core.BLDParser):
 
 
 class BL1Data(core.BLData):
-    def calibrate(self, calibration_dict):
+    def calibrate(self, calibration_dict:dict=None):
+        if not calibration_dict:
+            calibration_dict = dict()
+
         def process_backscatter(raw_data_df, cycle_ref_df, global_ref):
             """
             Calculation of referenced BS signal:
@@ -57,8 +61,11 @@ class BL1Data(core.BLData):
             Calculation of pH:
             pH_0 + dpH * log((phi_min - phase_shift) / (phase_shift - phi_max))
             """
+            kappa = raw_data_df - cal_data['phi_max']
+            kappa[kappa <= 0] = numpy.nan
+
             pH = cal_data['pH_0'] + cal_data['dpH'] * \
-                numpy.log((cal_data['phi_min'] - raw_data_df) / (raw_data_df - cal_data['phi_max']))
+                numpy.log((cal_data['phi_min'] - raw_data_df) / kappa)
             return pH
 
         def process_DO(raw_data_df, cal_data):
@@ -202,7 +209,7 @@ def extract_metadata(headerlines):
 def extract_filtersets(headerlines):
     filterlines = []
     filter_start = False
-    for l, line in enumerate(headerlines):
+    for _, line in enumerate(headerlines):
         if line.startswith('FILTERSET;'):
             filter_start = True
             filterlines.append(line)

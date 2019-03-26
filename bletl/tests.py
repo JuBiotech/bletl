@@ -13,9 +13,18 @@ from bletl import utils
 BL1_files =  [
     pathlib.Path('data', 'BL1', 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv'),
     pathlib.Path('data', 'BL1', 'JH_ShakerSteps_20170302_070206.csv'),
-    pathlib.Path('data', 'BL1', 'NT_1400_BS20BS10_15min_20160222_151645.csv'),
     pathlib.Path('data', 'BL1', 'rj-cg-res_20170927_084112.csv'),
     pathlib.Path('data', 'BL1', 'incremental', 'NT_1400rpm_30C_BS15_5min_20180503_132133.csv'),
+]
+
+BL1_fragment_files = [
+    pathlib.Path('data', 'BL1', 'fragments', 'fragment0.csv'),
+    pathlib.Path('data', 'BL1', 'fragments', 'fragment1.csv'),
+    pathlib.Path('data', 'BL1', 'fragments', 'fragment2.csv'),
+]
+
+BL1_files_without_calibration_info = [
+    pathlib.Path('data', 'BL1', 'NT_1400_BS20BS10_15min_20160222_151645.csv'),
 ]
 
 not_a_bl_file = pathlib.Path('data', 'BL1', 'incremental', 'C42.tmp')
@@ -39,6 +48,7 @@ calibration_test_values = {
 calibration_test_lot_number = 1515
 calibration_test_temp = 30
 
+file_with_lot_info = pathlib.Path('data', 'BL1', 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
 
 class TestParserSelection(unittest.TestCase):
     def test_selects_parsers(self):
@@ -86,6 +96,12 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(last_cycle, 1)
         return
 
+    def test_cal_info_parsing(self):
+        example = '1724-hc-Temp37'
+        lot_number, temp = utils._parse_calibration_info(example)
+        self.assertEqual(lot_number, 1724)
+        self.assertEqual(temp, 37)
+        return
 
 class TestBL1Parsing(unittest.TestCase):
     def test_splitting(self):
@@ -102,6 +118,8 @@ class TestBL1Parsing(unittest.TestCase):
         for fp in BL1_files:
             data = bletl.parse(fp)
 
+            self.assertIsInstance(data.model, core.BioLectorModel)
+            self.assertEqual(data.model, core.BioLectorModel.BL1)
             self.assertIsInstance(data.metadata, dict)
             self.assertIsInstance(data.environment, pandas.DataFrame)
             self.assertIsInstance(data.comments, pandas.DataFrame)
@@ -110,8 +128,8 @@ class TestBL1Parsing(unittest.TestCase):
         return
 
     def test_concat_parsing(self):
-        filepaths = BL1_files[:3]
-        data = bletl.parse_and_concatenate(filepaths)
+        filepaths = BL1_fragment_files
+        data = bletl.parse(filepaths)
         self.assertIsInstance(data.metadata, dict)
         self.assertIsInstance(data.environment, pandas.DataFrame)
         self.assertIsInstance(data.comments, pandas.DataFrame)
@@ -120,7 +138,7 @@ class TestBL1Parsing(unittest.TestCase):
         return
 
     def test_incomplete_cycle_drop(self):
-        filepath = BL1_files[3]
+        filepath = BL1_files[2]
         data = bletl.parse(filepath, drop_incomplete_cycles=False)
         self.assertEqual(data.measurements.index[-1], (3, 179, 'C08'))
 
@@ -160,16 +178,16 @@ class TestBL1Parsing(unittest.TestCase):
 
 class TestBL1Calibration(unittest.TestCase):
     def test_calibration_data_type(self):
-        parsed_data = bletl.parse(calibration_test_file)
-        parsed_data.calibrate(calibration_test_cal_data)
+        parsed_data = bletl.parse(calibration_test_file, calibration_test_lot_number, calibration_test_temp)
         data = parsed_data.calibrated_data
 
-        for key, item in data.items():
+        for _, item in data.items():
             self.assertIsInstance(item, core.FilterTimeSeries)
 
-    def test_calibration(self):
-        parsed_data = bletl.parse(calibration_test_file)
-        parsed_data.calibrate(calibration_test_cal_data)
+        return
+
+    def test_single_file_with_lot(self):
+        parsed_data = bletl.parse(calibration_test_file, calibration_test_lot_number, calibration_test_temp)
         data = parsed_data.calibrated_data
 
         for key, (cycle, well, value) in calibration_test_times.items():
@@ -178,9 +196,66 @@ class TestBL1Calibration(unittest.TestCase):
         for key, (cycle, well, value) in calibration_test_values.items():
             self.assertAlmostEqual(data[key].value.loc[cycle, well], value, places=4)
 
+        return
+
+    def test_single_file_with_caldata(self):
+        parsed_data = bletl.parse_with_calibration_parameters(calibration_test_file, **calibration_test_cal_data)
+        data = parsed_data.calibrated_data
+
+        for key, (cycle, well, value) in calibration_test_times.items():
+            self.assertAlmostEqual(data[key].time.loc[cycle, well], value, places=4)
+
+        for key, (cycle, well, value) in calibration_test_values.items():
+            self.assertAlmostEqual(data[key].value.loc[cycle, well], value, places=4)
+
+        return
+
+    def test_fragments_with_lot(self):
+        filepaths = BL1_fragment_files
+        parsed_data = bletl.parse(filepaths, 1846, 37)
+        data = parsed_data.calibrated_data
+
+        self.assertAlmostEqual(data['DO'].value.loc[666, 'F07'], 12.1887, places=4)
+        self.assertAlmostEqual(data['pH'].value.loc[507, 'E06'], 6.6435, places=4)
+
+        return
+
+    def test_fragments_with_cal_data(self):
+        filepaths = BL1_fragment_files
+        parsed_data = bletl.parse_with_calibration_parameters(
+            filepaths=filepaths,
+            cal_0=71.93,
+            cal_100=38.64,
+            phi_min=55.36,
+            phi_max=11.91,
+            pH_0=6.05,
+            dpH=0.53,
+            drop_incomplete_cycles=True,
+        )
+        data = parsed_data.calibrated_data
+
+        self.assertAlmostEqual(data['DO'].value.loc[666, 'F07'], 12.1887, places=4)
+        self.assertAlmostEqual(data['pH'].value.loc[507, 'E06'], 6.6435, places=4)
+
+        return
+
+    def test_mismatch_warning(self):
+        with self.assertRaises(core.LotInformationMismatch):
+            bletl.parse(file_with_lot_info, 1818, 37)
+        return
+
 
 class TestOnlineMethods(unittest.TestCase):
     def test_get_calibration_dict(self):
-        cal_dict_fetched = bletl.get_calibration_dict(1515, 30)
+        cal_dict_fetched = bletl.fetch_calibration_data(1515, 30)
         self.assertDictEqual(cal_dict_fetched, calibration_test_cal_data)
+        return
+
+    def test_invalid_lot_number(self):
+        with self.assertRaises(core.InvalidLotNumberError):
+            bletl.fetch_calibration_data(99, 99)
+        return
+
+    def test_download_calibration_data(self):
+        bletl.download_calibration_data()        
         return

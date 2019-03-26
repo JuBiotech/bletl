@@ -1,5 +1,6 @@
 """Contains helper functions that do not depend on other modules within this package."""
 import pandas
+import re
 
 
 def __to_typed_cols__(dfin:pandas.DataFrame, ocol_ncol_type:list):
@@ -123,3 +124,19 @@ def _last_full_cycle(measurements:pandas.DataFrame) -> int:
         return last_cycle  - 1
     else:
         return last_cycle
+
+def _parse_calibration_info(calibration_info:str):
+    """Find the number of the last cycle that was measured for all wells and filters.
+
+        Args:
+            calibration_info (str): Calibration info e. g. from CSV file such as '1818-hc-Temp30'
+
+        Returns:
+            lot_number (int): Lot number
+            temp (int): Temperature
+    """
+    result = re.findall(r'(\d{4})-hc-Temp(\d{2})', calibration_info)
+    lot_number = int(result[0][0])
+    temp = int(result[0][1])
+
+    return lot_number, temp
