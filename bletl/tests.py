@@ -50,6 +50,7 @@ calibration_test_temp = 30
 
 file_with_lot_info = pathlib.Path('data', 'BL1', 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
 
+
 class TestParserSelection(unittest.TestCase):
     def test_selects_parsers(self):
 
@@ -102,6 +103,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(lot_number, 1724)
         self.assertEqual(temp, 37)
         return
+
 
 class TestBL1Parsing(unittest.TestCase):
     def test_splitting(self):
@@ -173,6 +175,14 @@ class TestBL1Parsing(unittest.TestCase):
         self.assertEqual(list(df.loc[numpy.isclose(df['time'], 2.49103), 'shaker_setpoint'])[0], 900.)
         self.assertEqual(list(df.loc[numpy.isclose(df['time'], 2.50949), 'shaker_setpoint'])[0], 1000.)
         self.assertEqual(list(df.loc[numpy.isclose(df['time'], 5.65632), 'shaker_setpoint'])[0], 500.)
+        return
+
+    def test_get_timeseries(self):
+        fp = pathlib.Path('data', 'BL1', 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
+        data = bletl.parse(fp, lot_number=calibration_test_lot_number, temp=30)
+        x, y = data['pH'].get_timeseries('A03')
+        self.assertEqual(numpy.sum(x), 1098.50712)
+        self.assertEqual(numpy.sum(y), 746.2625060506602)
         return
 
 

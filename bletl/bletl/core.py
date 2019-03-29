@@ -1,8 +1,9 @@
 """Specifies the base types for parsing and representing BioLector CSV files."""
 import abc
-import pathlib
 import enum
+import numpy
 import pandas
+import pathlib
 
 
 class BioLectorModel(enum.Enum):
@@ -78,6 +79,20 @@ class FilterTimeSeries():
     def __init__(self, time_df, value_df):
         self.time = time_df
         self.value = value_df
+
+    def get_timeseries(self, well:str) -> tuple:
+        """Retrieves (time, value) for a specific well.
+        
+        Args:
+            well (str): Well id to retrieve
+
+        Returns:
+            x (numpy.ndarray): timepoints of measurements
+            y (numpy.ndarray): measured values
+        """
+        x = numpy.array(self.time[well])
+        y = numpy.array(self.value[well])
+        return x, y
 
 
 class BLDParser(object):
