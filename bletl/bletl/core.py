@@ -11,7 +11,7 @@ class BioLectorModel(enum.Enum):
     BLPro = 'blpro'
 
 
-class BLData(object):
+class BLData(dict):
     """Standardized data type for BioLector data.
     """
     def __init__(self, model, environment, filtersets, references, measurements, comments):

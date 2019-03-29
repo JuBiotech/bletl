@@ -178,18 +178,16 @@ class TestBL1Parsing(unittest.TestCase):
 
 class TestBL1Calibration(unittest.TestCase):
     def test_calibration_data_type(self):
-        parsed_data = bletl.parse(calibration_test_file, calibration_test_lot_number, calibration_test_temp)
-        data = parsed_data.calibrated_data
-
+        data = bletl.parse(calibration_test_file, calibration_test_lot_number, calibration_test_temp)
+        
         for _, item in data.items():
             self.assertIsInstance(item, core.FilterTimeSeries)
 
         return
 
     def test_single_file_with_lot(self):
-        parsed_data = bletl.parse(calibration_test_file, calibration_test_lot_number, calibration_test_temp)
-        data = parsed_data.calibrated_data
-
+        data = bletl.parse(calibration_test_file, calibration_test_lot_number, calibration_test_temp)
+       
         for key, (cycle, well, value) in calibration_test_times.items():
             self.assertAlmostEqual(data[key].time.loc[cycle, well], value, places=4)
 
@@ -199,9 +197,8 @@ class TestBL1Calibration(unittest.TestCase):
         return
 
     def test_single_file_with_caldata(self):
-        parsed_data = bletl.parse_with_calibration_parameters(calibration_test_file, **calibration_test_cal_data)
-        data = parsed_data.calibrated_data
-
+        data = bletl.parse_with_calibration_parameters(calibration_test_file, **calibration_test_cal_data)
+        
         for key, (cycle, well, value) in calibration_test_times.items():
             self.assertAlmostEqual(data[key].time.loc[cycle, well], value, places=4)
 
@@ -212,9 +209,8 @@ class TestBL1Calibration(unittest.TestCase):
 
     def test_fragments_with_lot(self):
         filepaths = BL1_fragment_files
-        parsed_data = bletl.parse(filepaths, 1846, 37)
-        data = parsed_data.calibrated_data
-
+        data = bletl.parse(filepaths, 1846, 37)
+        
         self.assertAlmostEqual(data['DO'].value.loc[666, 'F07'], 12.1887, places=4)
         self.assertAlmostEqual(data['pH'].value.loc[507, 'E06'], 6.6435, places=4)
 
@@ -222,7 +218,7 @@ class TestBL1Calibration(unittest.TestCase):
 
     def test_fragments_with_cal_data(self):
         filepaths = BL1_fragment_files
-        parsed_data = bletl.parse_with_calibration_parameters(
+        data = bletl.parse_with_calibration_parameters(
             filepaths=filepaths,
             cal_0=71.93,
             cal_100=38.64,
@@ -232,8 +228,7 @@ class TestBL1Calibration(unittest.TestCase):
             dpH=0.53,
             drop_incomplete_cycles=True,
         )
-        data = parsed_data.calibrated_data
-
+        
         self.assertAlmostEqual(data['DO'].value.loc[666, 'F07'], 12.1887, places=4)
         self.assertAlmostEqual(data['pH'].value.loc[507, 'E06'], 6.6435, places=4)
 
