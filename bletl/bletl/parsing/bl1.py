@@ -31,7 +31,6 @@ class BioLector1Parser(core.BLDParser):
             comments=comments,
         )
 
-        data.calibrated_data = dict()
         data.metadata = metadata
 
         return data
@@ -93,15 +92,14 @@ class BL1Data(core.BLData):
                 bs_times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
                 cycle_ref_bs = self.references.xs(filter_number, level='filterset')
                 bs_values = process_backscatter(raw_bs, cycle_ref_bs, ref_value)
-                self.calibrated_data.update({'BS' + f'{gain:.0f}':
-                    core.FilterTimeSeries(bs_times, bs_values)})
+                self['BS' + f'{gain:.0f}'] = core.FilterTimeSeries(bs_times, bs_values)
 
             elif filter_name == 'pH-hc':
                 if set(('pH_0', 'dpH', 'phi_min', 'phi_max')) <= calibration_dict.keys():
                     raw_ph = self.measurements.xs(filter_number, level='filterset')['phase'].unstack()
                     ph_times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
                     ph_values = process_pH(raw_ph, calibration_dict)
-                    self.calibrated_data.update({'pH': core.FilterTimeSeries(ph_times, ph_values)})
+                    self['pH'] = core.FilterTimeSeries(ph_times, ph_values)
                 else:
                     warnings.warn('Calibration values for pH signal are missing. Skipping calibration.')
 
@@ -110,15 +108,16 @@ class BL1Data(core.BLData):
                     raw_do = self.measurements.xs(filter_number, level='filterset')['phase'].unstack()
                     do_times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
                     do_values = process_DO(raw_do, calibration_dict)
-                    self.calibrated_data.update({'DO': core.FilterTimeSeries(do_times, do_values)})
+                    self['DO'] = core.FilterTimeSeries(do_times, do_values)
                 else:
                     warnings.warn('Calibration values for DO signal are missing. Skipping calibration.')
 
             else:
                 raw_values = self.measurements.xs(filter_number, level='filterset')['amp_1'].unstack()
                 times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
-                self.calibrated_data.update({filter_name + f'{gain:.0f}':
-                    core.FilterTimeSeries(times, raw_values)})
+                self[filter_name + f'{gain:.0f}'] = core.FilterTimeSeries(times, raw_values)
+        return
+
 
 def read_header_loglines(dir_incremental):
     fp_header = pathlib.Path(dir_incremental, 'header.csv')
@@ -132,6 +131,7 @@ def read_header_loglines(dir_incremental):
             with open(tmpfile, 'r', encoding='utf-8') as f:
                 loglines += f.readlines()
     return headerlines, loglines
+
 
 def split_header_data(fp):
     """Splits the raw data into the header and data sections.
@@ -178,6 +178,7 @@ def split_header_data(fp):
 
     return headerlines, dfraw
 
+
 def extract_metadata(headerlines):
     L4 = headerlines[4].split(';')
     L6 = headerlines[6].split(';')
@@ -205,6 +206,7 @@ def extract_metadata(headerlines):
         metadata['date_end'] = None
 
     return metadata
+
 
 def extract_filtersets(headerlines):
     filterlines = []
@@ -245,6 +247,7 @@ def extract_filtersets(headerlines):
 
     return utils.__to_typed_cols__(df_filtersets, ocol_ncol_type)
 
+
 def extract_process_parameters(headerlines):
     fs_start = None
     for l, line in enumerate(headerlines):
@@ -262,6 +265,7 @@ def extract_process_parameters(headerlines):
         'exp_time': float(headerlines[fs_start + 7].split(';')[13].strip()),
     }
     return process_parameters
+
 
 def extract_comments(dfraw):
     ocol_ncol_type = [
