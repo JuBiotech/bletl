@@ -103,8 +103,15 @@ class FilterTimeSeries():
         Returns:
             unified_df (pd.DataFrame): Dataframe with unified time on index.
         """
-        
-        return
+        if not well is None:
+            if not well in self.time.columns:
+                raise ValueError('Could not find well id')
+            time = self.time.loc[:, well]
+        else:
+            time = self.time.iloc[:, 0]
+
+        unified_df = pandas.DataFrame(self.value, index=time)
+        return unified_df
 
 
 class BLDParser(object):
