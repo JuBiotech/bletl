@@ -110,7 +110,8 @@ class FilterTimeSeries():
         else:
             time = self.time.iloc[:, 0]
 
-        unified_df = pandas.DataFrame(self.value, index=time)
+        new_index = pandas.Index(time, name='time in h')
+        unified_df = self.value.set_index(new_index)
         return unified_df
 
 
