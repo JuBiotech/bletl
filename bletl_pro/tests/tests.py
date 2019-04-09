@@ -85,3 +85,6 @@ class TestDataEquivalence(unittest.TestCase):
 
         self.assertSequenceEqual(list(d_1.comments.columns), list(d_p.comments.columns))
         return
+
+if __name__ == '__main__':
+    unittest.main()

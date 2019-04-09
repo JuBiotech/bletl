@@ -54,7 +54,6 @@ file_with_lot_info = pathlib.Path(dir_testfiles, 'example_with_cal_data_NT_1400r
 
 class TestParserSelection(unittest.TestCase):
     def test_selects_parsers(self):
-
         for fp in BL1_files:
             parser = bletl.get_parser(fp)
             self.assertIsInstance(parser, core.BLDParser)
@@ -280,3 +279,7 @@ class TestOnlineMethods(unittest.TestCase):
     def test_download_calibration_data(self):
         bletl.download_calibration_data()        
         return
+
+
+if __name__ == '__main__':
+    unittest.main()
