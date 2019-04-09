@@ -187,10 +187,19 @@ class TestBL1Parsing(unittest.TestCase):
         return
 
     def test_get_unified_dataframe(self):
-        fp = pathlib.Path(dir_testfiles, 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
-        data = bletl.parse(fp, lot_number=calibration_test_lot_number, temp=30)
-        unified_df = data['BS10'].get_unified_dataframe()
+        fp = pathlib.Path(dir_testfiles, 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
+        data = bletl.parse(fp)
+        unified_df = data['BS20'].get_unified_dataframe()
         self.assertIsInstance(unified_df, pandas.DataFrame)
+        self.assertAlmostEqual(unified_df.index[2], 0.35313, places=4)
+        self.assertAlmostEqual(
+            unified_df.iloc[
+                unified_df.index.get_loc(5, method='nearest'),
+                unified_df.columns.get_loc('A05')
+                ],
+            63.8517,
+            places=4,
+        )
 
 
 class TestBL1Calibration(unittest.TestCase):
