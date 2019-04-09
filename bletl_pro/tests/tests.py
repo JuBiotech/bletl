@@ -9,9 +9,10 @@ from bletl import core
 from bletl import utils
 from bletl_pro import parsing
 
+dir_testfiles = pathlib.Path(pathlib.Path(__file__).absolute().parent, 'data')
 
-BL1_file = pathlib.Path('data', 'BL1', 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv')
-BLPro_files = list(pathlib.Path('data', 'BLPro').iterdir())
+BL1_file = pathlib.Path(dir_testfiles, 'BL1', 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv')
+BLPro_files = list(pathlib.Path(dir_testfiles, 'BLPro').iterdir())
 
 
 class TestParserSelection(unittest.TestCase):
