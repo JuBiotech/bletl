@@ -94,6 +94,26 @@ class FilterTimeSeries():
         y = numpy.array(self.value[well])
         return x, y
 
+    def get_unified_dataframe(self, well:str=None) -> pandas.DataFrame:
+        """Retrieves a DataFrame with unified time on index.
+
+        Args:
+            well (str, optional): Well id from which time is taken. If None, the first well is used.
+
+        Returns:
+            unified_df (pd.DataFrame): Dataframe with unified time on index.
+        """
+        if not well is None:
+            if not well in self.time.columns:
+                raise KeyError('Could not find well id')
+            time = self.time.loc[:, well]
+        else:
+            time = self.time.iloc[:, 0]
+
+        new_index = pandas.Index(time, name='time in h')
+        unified_df = self.value.set_index(new_index)
+        return unified_df
+
 
 class BLDParser(object):
     """Abstract type for parsers that read BioLector CSV files."""

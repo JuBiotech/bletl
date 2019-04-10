@@ -9,27 +9,28 @@ from bletl import core
 from bletl import parsing
 from bletl import utils
 
+dir_testfiles = pathlib.Path(pathlib.Path(__file__).absolute().parent, 'data', 'BL1')
 
 BL1_files =  [
-    pathlib.Path('data', 'BL1', 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv'),
-    pathlib.Path('data', 'BL1', 'JH_ShakerSteps_20170302_070206.csv'),
-    pathlib.Path('data', 'BL1', 'rj-cg-res_20170927_084112.csv'),
-    pathlib.Path('data', 'BL1', 'incremental', 'NT_1400rpm_30C_BS15_5min_20180503_132133.csv'),
+    pathlib.Path(dir_testfiles, 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv'),
+    pathlib.Path(dir_testfiles, 'JH_ShakerSteps_20170302_070206.csv'),
+    pathlib.Path(dir_testfiles, 'rj-cg-res_20170927_084112.csv'),
+    pathlib.Path(dir_testfiles, 'incremental', 'NT_1400rpm_30C_BS15_5min_20180503_132133.csv'),
 ]
 
 BL1_fragment_files = [
-    pathlib.Path('data', 'BL1', 'fragments', 'fragment0.csv'),
-    pathlib.Path('data', 'BL1', 'fragments', 'fragment1.csv'),
-    pathlib.Path('data', 'BL1', 'fragments', 'fragment2.csv'),
+    pathlib.Path(dir_testfiles, 'fragments', 'fragment0.csv'),
+    pathlib.Path(dir_testfiles, 'fragments', 'fragment1.csv'),
+    pathlib.Path(dir_testfiles, 'fragments', 'fragment2.csv'),
 ]
 
 BL1_files_without_calibration_info = [
-    pathlib.Path('data', 'BL1', 'NT_1400_BS20BS10_15min_20160222_151645.csv'),
+    pathlib.Path(dir_testfiles, 'NT_1400_BS20BS10_15min_20160222_151645.csv'),
 ]
 
-not_a_bl_file = pathlib.Path('data', 'BL1', 'incremental', 'C42.tmp')
+not_a_bl_file = pathlib.Path(dir_testfiles, 'incremental', 'C42.tmp')
 
-calibration_test_file = pathlib.Path('data', 'BL1', 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
+calibration_test_file = pathlib.Path(dir_testfiles, 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
 calibration_test_cal_data = {
     'cal_0': 65.91,
     'cal_100': 40.60,
@@ -48,12 +49,11 @@ calibration_test_values = {
 calibration_test_lot_number = 1515
 calibration_test_temp = 30
 
-file_with_lot_info = pathlib.Path('data', 'BL1', 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
+file_with_lot_info = pathlib.Path(dir_testfiles, 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
 
 
 class TestParserSelection(unittest.TestCase):
     def test_selects_parsers(self):
-
         for fp in BL1_files:
             parser = bletl.get_parser(fp)
             self.assertIsInstance(parser, core.BLDParser)
@@ -149,7 +149,7 @@ class TestBL1Parsing(unittest.TestCase):
         return
 
     def test_temp_setpoint_parsing(self):
-        fp = pathlib.Path('data', 'BL1', 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv')
+        fp = pathlib.Path(dir_testfiles, 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv')
         data = bletl.parse(fp)
         df = data.environment
         temps = set(df['temp_setpoint'].unique())
@@ -162,7 +162,7 @@ class TestBL1Parsing(unittest.TestCase):
         return
 
     def test_shaker_setpoint_parsing(self):
-        fp = pathlib.Path('data', 'BL1', 'JH_ShakerSteps_20170302_070206.csv')
+        fp = pathlib.Path(dir_testfiles, 'JH_ShakerSteps_20170302_070206.csv')
         data = bletl.parse(fp)
         df = data.environment
         rpms = set(df['shaker_setpoint'].unique())
@@ -178,12 +178,27 @@ class TestBL1Parsing(unittest.TestCase):
         return
 
     def test_get_timeseries(self):
-        fp = pathlib.Path('data', 'BL1', 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
+        fp = pathlib.Path(dir_testfiles, 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
         data = bletl.parse(fp, lot_number=calibration_test_lot_number, temp=30)
         x, y = data['pH'].get_timeseries('A03')
         self.assertEqual(numpy.sum(x), 1098.50712)
         self.assertEqual(numpy.sum(y), 746.2625060506602)
         return
+
+    def test_get_unified_dataframe(self):
+        fp = pathlib.Path(dir_testfiles, 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
+        data = bletl.parse(fp)
+        unified_df = data['BS20'].get_unified_dataframe()
+        self.assertIsInstance(unified_df, pandas.DataFrame)
+        self.assertAlmostEqual(unified_df.index[2], 0.35313, places=4)
+        self.assertAlmostEqual(
+            unified_df.iloc[
+                unified_df.index.get_loc(5, method='nearest'),
+                unified_df.columns.get_loc('A05')
+                ],
+            63.8517,
+            places=4,
+        )
 
 
 class TestBL1Calibration(unittest.TestCase):
@@ -264,3 +279,7 @@ class TestOnlineMethods(unittest.TestCase):
     def test_download_calibration_data(self):
         bletl.download_calibration_data()        
         return
+
+
+if __name__ == '__main__':
+    unittest.main()
