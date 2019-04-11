@@ -13,6 +13,7 @@ dir_testfiles = pathlib.Path(pathlib.Path(__file__).absolute().parent, 'data')
 
 BL1_file = pathlib.Path(dir_testfiles, 'BL1', 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv')
 BLPro_files = list(pathlib.Path(dir_testfiles, 'BLPro').iterdir())
+calibration_test_file = pathlib.Path(dir_testfiles, 'BLPro', '18-FZJ-Test2--2018-02-07-10-01-11.csv')
 
 
 class TestParserSelection(unittest.TestCase):
@@ -37,9 +38,35 @@ class TestBLProParsing(unittest.TestCase):
         for fp in BLPro_files:
             try:
                 data = bletl.parse(fp)
+                self.assertIsInstance(data, dict)
             except:
                 print('parsing failed for: {}'.format(fp))
                 raise
+        return
+
+
+class TestBLProCalibration(unittest.TestCase):
+    def test_filtertimeseries_presence(self):
+        bd = bletl.parse(calibration_test_file)
+        self.assertIsInstance(bd, dict)
+        self.assertTrue('BS2' in bd)
+        self.assertTrue('BS5' in bd)
+        self.assertTrue('pH' in bd)
+        self.assertTrue('DO' in bd)
+        return
+
+    def test_correct_well_association(self):
+        bd = bletl.parse(calibration_test_file)
+        
+        # F01
+        x, y = bd['pH'].get_timeseries('F01')
+        self.assertTrue(numpy.allclose(x[:3], [0.07972222,  0.16166667,  0.24472222]))
+        self.assertTrue(numpy.allclose(y[:3], [8.15, 7.93, 7.78]))
+
+        # D02
+        x, y = bd['DO'].get_timeseries('D02')
+        self.assertTrue(numpy.allclose(x[:3], [0.09166667,  0.17305556,  0.25611111]))
+        self.assertTrue(numpy.allclose(y[:3], [92.09, 93.84, 94.65]))
         return
 
 
@@ -85,6 +112,7 @@ class TestDataEquivalence(unittest.TestCase):
 
         self.assertSequenceEqual(list(d_1.comments.columns), list(d_p.comments.columns))
         return
+
 
 if __name__ == '__main__':
     unittest.main()

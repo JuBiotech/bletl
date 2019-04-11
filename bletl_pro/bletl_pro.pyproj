@@ -12,6 +12,7 @@
     <OutputPath>.</OutputPath>
     <Name>bletl_pro</Name>
     <RootNamespace>bletl_pro</RootNamespace>
+    <InterpreterId>CondaEnv|CondaEnv|bletl-dev</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,6 +57,9 @@
     <Content Include="tests\data\BLPro\3-RobertHansen-RobertHansen-2018-04-04-16-14-10.csv" />
     <Content Include="tests\data\BLPro\6-HM_CoryneBatch-HM-2018-04-06-14-55-50.csv" />
     <Content Include="tests\data\BLPro\8-HM_CoryneBatch-HM-2018-04-11-14-52-54.csv" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="CondaEnv|CondaEnv|bletl-dev" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

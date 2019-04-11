@@ -26,6 +26,9 @@ class BioLectorProParser(core.BLDParser):
         bld.valves, bld.module = extract_valves_module(data)
         bld.diagnostics = extract_diagnostics(data)
 
+        for key, fts in transform_into_filtertimeseries(bld.metadata, bld.measurements, bld.filtersets):
+            bld[key] = fts
+
         return bld
 
 
@@ -60,9 +63,10 @@ def parse_metadata_data(fp):
     datalines[0] = datalines[0].strip() + ';IGNORE\n'
 
     # parse the data as a DataFrame
-    dfraw = pandas.read_csv(io.StringIO(''.join(datalines)), sep=';', low_memory=False)
-
-    # TODO: convert well numbers to MF-conditional well ids
+    dfraw = pandas.read_csv(io.StringIO(''.join(datalines)), sep=';', low_memory=False,
+                            converters={
+                                'Filterset': str
+                            })
 
     return metadata, dfraw[list(dfraw.columns)[:-1]]
 
@@ -266,3 +270,36 @@ def extract_diagnostics(dfraw):
     ]
     df = utils.__to_typed_cols__(dff, ocol_ncol_type)
     return standardize(df)
+
+
+def transform_into_filtertimeseries(metadata:dict, measurements:pandas.DataFrame, filtersets:pandas.DataFrame):
+    no_to_id = {
+        int(k.split('_')[0]) : v
+        for k, v in metadata['fermentation'].items()
+        if k.endswith('_well')
+    }
+    for fs in filtersets.itertuples():
+        filter_number = f'{fs.filter_number:02d}'
+        key = None
+        times = None
+        values = None
+        if fs.filter_type == 'Intensity' and fs.filter_name == 'Biomass':
+            key = f'BS{int(fs.gain_1)}'
+            times = measurements.xs(filter_number, level='filterset')['time'].unstack()
+            values = measurements.xs(filter_number, level='filterset')['amp_ref_1'].unstack()       
+        elif fs.filter_type in {'pH', 'DO'}:
+            key = fs.filter_type
+            times = measurements.xs(filter_number, level='filterset')['time'].unstack()
+            values = measurements.xs(filter_number, level='filterset')['cal'].unstack()
+        else:
+            raise NotImplementedError(f'Unsupported filter type: {fs.filter_type}')
+
+        # transform into nicely formatted DataFrames for FilterTimeSeries
+        times.columns = [no_to_id[c] for c in times.columns]
+        times = times.reindex(sorted(times.columns), axis=1)
+        times.columns.name = 'well'
+        values.columns = [no_to_id[c] for c in values.columns]
+        values = values.reindex(sorted(values.columns), axis=1)
+        values.columns.name = 'well'
+        fts = core.FilterTimeSeries(times, values)
+        yield (key, fts)
