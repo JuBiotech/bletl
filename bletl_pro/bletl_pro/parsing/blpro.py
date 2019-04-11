@@ -63,7 +63,10 @@ def parse_metadata_data(fp):
     datalines[0] = datalines[0].strip() + ';IGNORE\n'
 
     # parse the data as a DataFrame
-    dfraw = pandas.read_csv(io.StringIO(''.join(datalines)), sep=';', low_memory=False)
+    dfraw = pandas.read_csv(io.StringIO(''.join(datalines)), sep=';', low_memory=False,
+                            converters={
+                                'Filterset': str
+                            })
 
     return metadata, dfraw[list(dfraw.columns)[:-1]]
 
