@@ -4,7 +4,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>9788c718-ceb7-42fb-b2ad-d7d86d57c353</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>tests.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -29,11 +30,32 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="setup.py" />
-    <Compile Include="tests.py" />
+    <Compile Include="tests\tests.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bletl_pro\" />
     <Folder Include="bletl_pro\parsing\" />
+    <Folder Include="tests\" />
+    <Folder Include="tests\data\" />
+    <Folder Include="tests\data\BL1\" />
+    <Folder Include="tests\data\BLPro\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="tests\data\BL1\JH_ShakerSteps_20170302_070206.csv" />
+    <Content Include="tests\data\BL1\NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv" />
+    <Content Include="tests\data\BL1\NT_1400rpm_30C_BS15_5min_20180618_102917.csv" />
+    <Content Include="tests\data\BL1\NT_1400_BS20BS10_15min_20160222_151645.csv" />
+    <Content Include="tests\data\BL1\NT_1400_BS20BS10_15min_20160222_151645_TRANSFORM_CALIBIOMASS_CALIPH_CALI....csv" />
+    <Content Include="tests\data\BL1\rj-cg-res_20170927_084112.csv" />
+    <Content Include="tests\data\BLPro\18-FZJ-Test2--2018-02-07-10-01-11.csv" />
+    <Content Include="tests\data\BLPro\18-HM_CoryneBatch-HM-2018-04-26-07-27-33.csv" />
+    <Content Include="tests\data\BLPro\19-HM_Coryne_Batch_O2Up-HM-2018-05-04-08-27-49.csv" />
+    <Content Include="tests\data\BLPro\20-CN pH Test-Christian Neuendorf-2018-05-08-08-36-47.csv" />
+    <Content Include="tests\data\BLPro\21-CN pH Test-Christian Neuendorf-2018-05-08-11-17-15.csv" />
+    <Content Include="tests\data\BLPro\22-HM_Coryne_Batch_O2Up-HM-2018-05-09-08-56-27.csv" />
+    <Content Include="tests\data\BLPro\3-RobertHansen-RobertHansen-2018-04-04-16-14-10.csv" />
+    <Content Include="tests\data\BLPro\6-HM_CoryneBatch-HM-2018-04-06-14-55-50.csv" />
+    <Content Include="tests\data\BLPro\8-HM_CoryneBatch-HM-2018-04-11-14-52-54.csv" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

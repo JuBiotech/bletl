@@ -4,7 +4,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a5e8d0bf-c83a-4d74-97d4-e85d63ddbdf5</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>tests.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,10 +24,11 @@
   <ItemGroup>
     <Compile Include="setup.py" />
     <Compile Include="bletl_analysis\__init__.py" />
-    <Compile Include="tests.py" />
+    <Compile Include="tests\tests.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bletl_analysis\" />
+    <Folder Include="tests\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
