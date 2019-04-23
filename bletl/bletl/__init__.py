@@ -152,7 +152,7 @@ def parse(filepaths, lot_number:int=None, temp:int=None, drop_incomplete_cycles:
         LotInformationError: when no information about the lot can be found
         LotInformationMismatch: when lot information given as parameters is not equal to lot information found in data file
     """
-    if isinstance(filepaths, Iterable):
+    if isinstance(filepaths, Iterable) and not isinstance(filepaths, str):
         fragments = []
         for filepath in filepaths:
             fragment = _parse_without_calibration(filepath, drop_incomplete_cycles)
