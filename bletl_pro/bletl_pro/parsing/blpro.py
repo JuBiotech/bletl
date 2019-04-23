@@ -60,7 +60,10 @@ def parse_metadata_data(fp):
                 metadata[section][key] = value.strip()
     datalines = lines[data_start:data_end]
     # append a ; to the header line because the P lines contain a trailing ;
-    datalines[0] = datalines[0].strip() + ';IGNORE\n'
+    datalines[0] = 'Type;Cycle;Well;Filterset;Time;Amp_1;Amp_2;AmpRef_1;AmpRef_2;Phase;Cal;' \
+        'Temp_up;Temp_down;Temp_water;O2;CO2;Humidity;Shaker;Service;User_Comment;Sys_Comment;' \
+        'Reservoir;MF_Volume;Temp_Ch4;T_144;T_180;T_181_1;T_192;P_Ch1;P_Ch2;P_Ch3;T_Hum;T_CO2;' \
+        'X-Pos;Y-Pos;T_LED;Ref_Int;Ref_Phase;Ref_Gain;Ch1-MP;Ch2-MF;Ch3-FA;Ch4-OP;Ch5-FB;IGNORE\n'
 
     # parse the data as a DataFrame
     dfraw = pandas.read_csv(io.StringIO(''.join(datalines)), sep=';', low_memory=False,

@@ -48,6 +48,7 @@
     <Content Include="tests\data\BL1\NT_1400_BS20BS10_15min_20160222_151645.csv" />
     <Content Include="tests\data\BL1\NT_1400_BS20BS10_15min_20160222_151645_TRANSFORM_CALIBIOMASS_CALIPH_CALI....csv" />
     <Content Include="tests\data\BL1\rj-cg-res_20170927_084112.csv" />
+    <Content Include="tests\data\BLPro\107-AR_Coryne-AR-2019-04-15-12-39-30.csv" />
     <Content Include="tests\data\BLPro\18-FZJ-Test2--2018-02-07-10-01-11.csv" />
     <Content Include="tests\data\BLPro\18-HM_CoryneBatch-HM-2018-04-26-07-27-33.csv" />
     <Content Include="tests\data\BLPro\19-HM_Coryne_Batch_O2Up-HM-2018-05-04-08-27-49.csv" />
