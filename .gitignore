@@ -15,3 +15,5 @@
 /bletl/dist
 /bletl/bletl/cache
 **/.coverage
+/bletl_pro/build/lib/bletl_pro
+/bletl_pro/dist
