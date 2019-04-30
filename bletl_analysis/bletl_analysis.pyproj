@@ -30,9 +30,13 @@
   <ItemGroup>
     <Folder Include="bletl_analysis\" />
     <Folder Include="tests\" />
+    <Folder Include="tests\data\" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="CondaEnv|CondaEnv|bletl-dev" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="tests\data\107-AR_Coryne-AR-2019-04-15-12-39-30.csv" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
