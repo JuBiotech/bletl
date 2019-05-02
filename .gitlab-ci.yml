@@ -19,6 +19,15 @@ test-bletl-pro:
     - cd bletl_pro && python setup.py develop 
     - python -m unittest discover -s tests -v
 
+test-bletl-analysis:
+  stage: test
+  image: python:3.6
+  script:
+    - cd bletl && python setup.py develop && cd ..
+    - cd bletl_pro && python setup.py develop && cd ..
+    - cd bletl_analysis && python setup.py develop
+    - python -m unittest discover -s tests -v
+
 coverage-bletl:
   stage: test
   image: python:3.6
@@ -33,6 +42,16 @@ coverage-bletl-pro:
   script:
     - cd bletl && python setup.py develop && cd ..
     - cd bletl_pro && python setup.py develop 
+    - pip install coverage
+    - coverage run tests/tests.py && coverage report -m
+
+coverage-bletl-analysis:
+  stage: test
+  image: python:3.6
+  script:
+    - cd bletl && python setup.py develop && cd ..
+    - cd bletl_pro && python setup.py develop && cd ..
+    - cd bletl_analysis && python setup.py develop
     - pip install coverage
     - coverage run tests/tests.py && coverage report -m
 
@@ -64,5 +83,22 @@ release-bletl-pro:
   only:
     # only run on refs that are named like v1.2 or v1.2.3
     - /^bletl_pro_v(\d+\.)?(\d+\.)?(\*|\d+)$/
+  except:
+    - branches
+
+release-bletl-analysis:
+  stage: release
+  image: python:3.6
+  script:
+    - cd bletl && python setup.py develop && cd ..
+    - cd bletl_pro && python setup.py develop && cp ..
+    - cd bletl_analysis && python setup.py bdist_wheel && cp dist/*.whl ..
+  artifacts:
+    paths:
+      - ./*.whl
+    expire_in: 30 yrs
+  only:
+    # only run on refs that are named like v1.2 or v1.2.3
+    - /^bletl_analysis_v(\d+\.)?(\d+\.)?(\*|\d+)$/
   except:
     - branches
