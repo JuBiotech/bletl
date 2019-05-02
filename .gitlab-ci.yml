@@ -91,7 +91,7 @@ release-bletl-analysis:
   image: python:3.6
   script:
     - cd bletl && python setup.py develop && cd ..
-    - cd bletl_pro && python setup.py develop && cp ..
+    - cd bletl_pro && python setup.py develop && cd ..
     - cd bletl_analysis && python setup.py bdist_wheel && cp dist/*.whl ..
   artifacts:
     paths:
