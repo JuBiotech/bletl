@@ -2,10 +2,14 @@
 import collections
 import datetime
 import io
+import logging
 import pandas
 
 from .. import core
 from .. import utils
+
+
+logger = logging.getLogger('blpro')
 
 
 class BioLectorProParser(core.BLDParser):
@@ -30,7 +34,6 @@ class BioLectorProParser(core.BLDParser):
             bld[key] = fts
 
         return bld
-
 
 
 def parse_metadata_data(fp):
@@ -286,7 +289,7 @@ def transform_into_filtertimeseries(metadata:dict, measurements:pandas.DataFrame
         key = None
         times = None
         values = None
-        if fs.filter_type == 'Intensity' and fs.filter_name == 'Biomass':
+        if fs.filter_type == 'Intensity' and ('Biomass' in fs.filter_name or 'BS' in fs.filter_name):
             key = f'BS{int(fs.gain_1)}'
             times = measurements.xs(filter_number, level='filterset')['time'].unstack()
             values = measurements.xs(filter_number, level='filterset')['amp_ref_1'].unstack()       
@@ -295,7 +298,14 @@ def transform_into_filtertimeseries(metadata:dict, measurements:pandas.DataFrame
             times = measurements.xs(filter_number, level='filterset')['time'].unstack()
             values = measurements.xs(filter_number, level='filterset')['cal'].unstack()
         else:
-            raise NotImplementedError(f'Unsupported filter type: {fs.filter_type}')
+            if fs.filter_type == 'Intensity':
+                logger.warn(
+                    f'Skipping Intensity channel because no processing method could be chosen from its name {fs.filter_name}.' + 
+                    ' Biomass filters should contain "Biomass" or "BS" in their name.'
+                )
+            else:
+                logger.warn(f'Skipped {fs.filter_type} channel with name "{fs.filter_name}" because no processing routine is implemented.')
+            continue
 
         # transform into nicely formatted DataFrames for FilterTimeSeries
         times.columns = [no_to_id[c] for c in times.columns]
