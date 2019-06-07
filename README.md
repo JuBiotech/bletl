@@ -1,3 +1,6 @@
+[![pipeline status](https://gitlab.fz-juelich.de/IBG-1/micropro/bletl/badges/master/pipeline.svg)](https://gitlab.fz-juelich.de/IBG-1/micropro/bletl/commits/master)
+[![coverage report](https://gitlab.fz-juelich.de/IBG-1/micropro/bletl/badges/master/coverage.svg)](https://gitlab.fz-juelich.de/IBG-1/micropro/bletl/commits/master)
+
 # Installation
 
 ## For Users
