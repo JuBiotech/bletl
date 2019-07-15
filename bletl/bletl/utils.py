@@ -73,7 +73,7 @@ def _concatenate_fragments(fragments:list, start_times:list) -> pandas.DataFrame
         # shift time and cycle columns in the fragment
         if 'time' in columns:
             fragment['time'] += (fragment_start - start_times[0]).total_seconds() / 3600
-        if 'cycle' in columns:
+        if 'cycle' in columns and len(stack) > 0:
             fragment['cycle'] += max(stack['cycle'])
 
         # append the fragment to the stack
@@ -124,6 +124,7 @@ def _last_full_cycle(measurements:pandas.DataFrame) -> int:
         return last_cycle  - 1
     else:
         return last_cycle
+
 
 def _parse_calibration_info(calibration_info:str):
     """Find the number of the last cycle that was measured for all wells and filters.
