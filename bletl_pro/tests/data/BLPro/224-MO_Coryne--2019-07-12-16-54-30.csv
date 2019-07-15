@@ -1,0 +1,2749 @@
+=====process=====
+[process] 224
+[start_date_time] 2019-07-12, 16:54:30
+[hardware_id] B2-10-1004-0060
+[file_version_number] 0.0.0
+[internal_referencing] 1
+[hmi_version] 1.133
+[is_compressed] 0
+[referencing] 2
+[01_reference_value_Biomass] 181.110641
+[02_reference_value_pH(HP8)] 100.000000
+[03_reference_value_DO(PSt3)] 100.000000
+[01_reference_gain_Biomass] 5
+[02_gain_pH(HP8)] 7
+[03_gain_DO(PSt3)] 7
+=====protocol=====
+====== main ======
+[name] MO_Coryne
+[final] False
+[user]
+[comment]
+[mtp] MTP_48-FlowerPlate
+[mtp-rows] 6
+[mtp-columns] 8
+[mtp-lot] 1846
+[layout] 48MTP
+[biolection_version] 3.18.1.0-746697759d48c40e1cb0e265c2ae1dad9f6256a7
+====== channels ======
+[no_filterset] 3
+===== measurement channels =====
+[01_no] 1
+[01_name] BS5
+[01_filter_id] 201
+[01_filter_type] Intensity
+[01_gain_1] 5
+[01_gain_2] 1
+[01_calibration]
+===== measurement channels =====
+[02_no] 2
+[02_name] pH
+[02_filter_id] 202
+[02_filter_type] pH
+[02_gain_1] 7
+[02_gain_2] 1
+[02_calibration] 1846_comp
+===== measurement channels =====
+[03_no] 3
+[03_name] DO
+[03_filter_id] 203
+[03_filter_type] DO
+[03_gain_1] 7
+[03_gain_2] 1
+[03_calibration] 1846_comp
+====== process ======
+[temperature] 30
+[humidity] 85
+[frequency] 1400
+[cycle-time] 600
+[exp-time] 0
+[temp-after-exp] -1
+[o2] -1
+[co2] -1
+[evacuation-time] -1
+=====temperature-profile=====
+[no_temperature_points] 0
+=====humidity-profile=====
+[no_humidity_points] 0
+=====shaker-profile=====
+[no_shaker_points] 0
+=====co2-profile=====
+[no_co2_points] 0
+=====o2-profile=====
+[no_o2_points] 0
+=====cover-profile=====
+[no_cover_points] 0
+=====pause-profile=====
+[no_pause_points] 0
+=====LAM=====
+[lam_mode] 0
+====== microfluidics settings ======
+[microfluidics] 0
+====== fermentations ======
+[no_fermentation] 48
+===== fermentation =====
+[001_well] A01
+[001_content] X1
+[001_description]
+[001_s_vol] 0
+==== measurements ====
+=== measurement ===
+[001_01_measure] 1
+[001_01_x] 16
+[001_01_y] 9.5
+== calibration ==
+[001_01_cal-mode] NONE
+=== measurement ===
+[001_02_measure] 1
+[001_02_x] 18.5
+[001_02_y] 7
+== calibration ==
+[001_02_cal-mode] PH
+[001_02_temp-comp] 1
+[001_02_temp_min] 20
+[001_02_temp_max] 40
+[001_02_fmin_a] 64.5241
+[001_02_fmin_m] -0.0387
+[001_02_fmax_a] 12.7927
+[001_02_fmax_m] -0.0045
+[001_02_ph0_a] 6.1718
+[001_02_ph0_m] -0.0032
+[001_02_dph_a] 0.5179
+[001_02_dph_m] 0.0002
+=== measurement ===
+[001_03_measure] 1
+[001_03_x] 18.5
+[001_03_y] 12
+== calibration ==
+[001_03_cal-mode] DO
+[001_03_temp-comp] 1
+[001_03_temp_min] 20
+[001_03_temp_max] 40
+[001_03_k0_m] -0.0309
+[001_03_k0_a] 72.5095
+[001_03_k100_m] -0.1005
+[001_03_k100_a] 44.5783
+===== fermentation =====
+[002_well] A02
+[002_content] X2
+[002_description]
+[002_s_vol] 0
+==== measurements ====
+=== measurement ===
+[002_01_measure] 1
+[002_01_x] 29
+[002_01_y] 9.5
+== calibration ==
+[002_01_cal-mode] NONE
+=== measurement ===
+[002_02_measure] 1
+[002_02_x] 31.5
+[002_02_y] 7
+== calibration ==
+[002_02_cal-mode] PH
+[002_02_temp-comp] 1
+[002_02_temp_min] 20
+[002_02_temp_max] 40
+[002_02_fmin_a] 64.5241
+[002_02_fmin_m] -0.0387
+[002_02_fmax_a] 12.7927
+[002_02_fmax_m] -0.0045
+[002_02_ph0_a] 6.1718
+[002_02_ph0_m] -0.0032
+[002_02_dph_a] 0.5179
+[002_02_dph_m] 0.0002
+=== measurement ===
+[002_03_measure] 1
+[002_03_x] 31.5
+[002_03_y] 12
+== calibration ==
+[002_03_cal-mode] DO
+[002_03_temp-comp] 1
+[002_03_temp_min] 20
+[002_03_temp_max] 40
+[002_03_k0_m] -0.0309
+[002_03_k0_a] 72.5095
+[002_03_k100_m] -0.1005
+[002_03_k100_a] 44.5783
+===== fermentation =====
+[003_well] A03
+[003_content] X3
+[003_description]
+[003_s_vol] 0
+==== measurements ====
+=== measurement ===
+[003_01_measure] 1
+[003_01_x] 42
+[003_01_y] 9.5
+== calibration ==
+[003_01_cal-mode] NONE
+=== measurement ===
+[003_02_measure] 1
+[003_02_x] 44.5
+[003_02_y] 7
+== calibration ==
+[003_02_cal-mode] PH
+[003_02_temp-comp] 1
+[003_02_temp_min] 20
+[003_02_temp_max] 40
+[003_02_fmin_a] 64.5241
+[003_02_fmin_m] -0.0387
+[003_02_fmax_a] 12.7927
+[003_02_fmax_m] -0.0045
+[003_02_ph0_a] 6.1718
+[003_02_ph0_m] -0.0032
+[003_02_dph_a] 0.5179
+[003_02_dph_m] 0.0002
+=== measurement ===
+[003_03_measure] 1
+[003_03_x] 44.5
+[003_03_y] 12
+== calibration ==
+[003_03_cal-mode] DO
+[003_03_temp-comp] 1
+[003_03_temp_min] 20
+[003_03_temp_max] 40
+[003_03_k0_m] -0.0309
+[003_03_k0_a] 72.5095
+[003_03_k100_m] -0.1005
+[003_03_k100_a] 44.5783
+===== fermentation =====
+[004_well] A04
+[004_content] X4
+[004_description]
+[004_s_vol] 0
+==== measurements ====
+=== measurement ===
+[004_01_measure] 1
+[004_01_x] 55
+[004_01_y] 9.5
+== calibration ==
+[004_01_cal-mode] NONE
+=== measurement ===
+[004_02_measure] 1
+[004_02_x] 57.5
+[004_02_y] 7
+== calibration ==
+[004_02_cal-mode] PH
+[004_02_temp-comp] 1
+[004_02_temp_min] 20
+[004_02_temp_max] 40
+[004_02_fmin_a] 64.5241
+[004_02_fmin_m] -0.0387
+[004_02_fmax_a] 12.7927
+[004_02_fmax_m] -0.0045
+[004_02_ph0_a] 6.1718
+[004_02_ph0_m] -0.0032
+[004_02_dph_a] 0.5179
+[004_02_dph_m] 0.0002
+=== measurement ===
+[004_03_measure] 1
+[004_03_x] 57.5
+[004_03_y] 12
+== calibration ==
+[004_03_cal-mode] DO
+[004_03_temp-comp] 1
+[004_03_temp_min] 20
+[004_03_temp_max] 40
+[004_03_k0_m] -0.0309
+[004_03_k0_a] 72.5095
+[004_03_k100_m] -0.1005
+[004_03_k100_a] 44.5783
+===== fermentation =====
+[005_well] A05
+[005_content] X5
+[005_description]
+[005_s_vol] 0
+==== measurements ====
+=== measurement ===
+[005_01_measure] 1
+[005_01_x] 68
+[005_01_y] 9.5
+== calibration ==
+[005_01_cal-mode] NONE
+=== measurement ===
+[005_02_measure] 1
+[005_02_x] 70.5
+[005_02_y] 7
+== calibration ==
+[005_02_cal-mode] PH
+[005_02_temp-comp] 1
+[005_02_temp_min] 20
+[005_02_temp_max] 40
+[005_02_fmin_a] 64.5241
+[005_02_fmin_m] -0.0387
+[005_02_fmax_a] 12.7927
+[005_02_fmax_m] -0.0045
+[005_02_ph0_a] 6.1718
+[005_02_ph0_m] -0.0032
+[005_02_dph_a] 0.5179
+[005_02_dph_m] 0.0002
+=== measurement ===
+[005_03_measure] 1
+[005_03_x] 70.5
+[005_03_y] 12
+== calibration ==
+[005_03_cal-mode] DO
+[005_03_temp-comp] 1
+[005_03_temp_min] 20
+[005_03_temp_max] 40
+[005_03_k0_m] -0.0309
+[005_03_k0_a] 72.5095
+[005_03_k100_m] -0.1005
+[005_03_k100_a] 44.5783
+===== fermentation =====
+[006_well] A06
+[006_content] X6
+[006_description]
+[006_s_vol] 0
+==== measurements ====
+=== measurement ===
+[006_01_measure] 1
+[006_01_x] 81
+[006_01_y] 9.5
+== calibration ==
+[006_01_cal-mode] NONE
+=== measurement ===
+[006_02_measure] 1
+[006_02_x] 83.5
+[006_02_y] 7
+== calibration ==
+[006_02_cal-mode] PH
+[006_02_temp-comp] 1
+[006_02_temp_min] 20
+[006_02_temp_max] 40
+[006_02_fmin_a] 64.5241
+[006_02_fmin_m] -0.0387
+[006_02_fmax_a] 12.7927
+[006_02_fmax_m] -0.0045
+[006_02_ph0_a] 6.1718
+[006_02_ph0_m] -0.0032
+[006_02_dph_a] 0.5179
+[006_02_dph_m] 0.0002
+=== measurement ===
+[006_03_measure] 1
+[006_03_x] 83.5
+[006_03_y] 12
+== calibration ==
+[006_03_cal-mode] DO
+[006_03_temp-comp] 1
+[006_03_temp_min] 20
+[006_03_temp_max] 40
+[006_03_k0_m] -0.0309
+[006_03_k0_a] 72.5095
+[006_03_k100_m] -0.1005
+[006_03_k100_a] 44.5783
+===== fermentation =====
+[007_well] A07
+[007_content] X7
+[007_description]
+[007_s_vol] 0
+==== measurements ====
+=== measurement ===
+[007_01_measure] 1
+[007_01_x] 94
+[007_01_y] 9.5
+== calibration ==
+[007_01_cal-mode] NONE
+=== measurement ===
+[007_02_measure] 1
+[007_02_x] 96.5
+[007_02_y] 7
+== calibration ==
+[007_02_cal-mode] PH
+[007_02_temp-comp] 1
+[007_02_temp_min] 20
+[007_02_temp_max] 40
+[007_02_fmin_a] 64.5241
+[007_02_fmin_m] -0.0387
+[007_02_fmax_a] 12.7927
+[007_02_fmax_m] -0.0045
+[007_02_ph0_a] 6.1718
+[007_02_ph0_m] -0.0032
+[007_02_dph_a] 0.5179
+[007_02_dph_m] 0.0002
+=== measurement ===
+[007_03_measure] 1
+[007_03_x] 96.5
+[007_03_y] 12
+== calibration ==
+[007_03_cal-mode] DO
+[007_03_temp-comp] 1
+[007_03_temp_min] 20
+[007_03_temp_max] 40
+[007_03_k0_m] -0.0309
+[007_03_k0_a] 72.5095
+[007_03_k100_m] -0.1005
+[007_03_k100_a] 44.5783
+===== fermentation =====
+[008_well] A08
+[008_content] X8
+[008_description]
+[008_s_vol] 0
+==== measurements ====
+=== measurement ===
+[008_01_measure] 1
+[008_01_x] 107
+[008_01_y] 9.5
+== calibration ==
+[008_01_cal-mode] NONE
+=== measurement ===
+[008_02_measure] 1
+[008_02_x] 109.5
+[008_02_y] 7
+== calibration ==
+[008_02_cal-mode] PH
+[008_02_temp-comp] 1
+[008_02_temp_min] 20
+[008_02_temp_max] 40
+[008_02_fmin_a] 64.5241
+[008_02_fmin_m] -0.0387
+[008_02_fmax_a] 12.7927
+[008_02_fmax_m] -0.0045
+[008_02_ph0_a] 6.1718
+[008_02_ph0_m] -0.0032
+[008_02_dph_a] 0.5179
+[008_02_dph_m] 0.0002
+=== measurement ===
+[008_03_measure] 1
+[008_03_x] 109.5
+[008_03_y] 12
+== calibration ==
+[008_03_cal-mode] DO
+[008_03_temp-comp] 1
+[008_03_temp_min] 20
+[008_03_temp_max] 40
+[008_03_k0_m] -0.0309
+[008_03_k0_a] 72.5095
+[008_03_k100_m] -0.1005
+[008_03_k100_a] 44.5783
+===== fermentation =====
+[009_well] B08
+[009_content] X16
+[009_description]
+[009_s_vol] 0
+==== measurements ====
+=== measurement ===
+[009_01_measure] 1
+[009_01_x] 107
+[009_01_y] 22.5
+== calibration ==
+[009_01_cal-mode] NONE
+=== measurement ===
+[009_02_measure] 1
+[009_02_x] 109.5
+[009_02_y] 20
+== calibration ==
+[009_02_cal-mode] PH
+[009_02_temp-comp] 1
+[009_02_temp_min] 20
+[009_02_temp_max] 40
+[009_02_fmin_a] 64.5241
+[009_02_fmin_m] -0.0387
+[009_02_fmax_a] 12.7927
+[009_02_fmax_m] -0.0045
+[009_02_ph0_a] 6.1718
+[009_02_ph0_m] -0.0032
+[009_02_dph_a] 0.5179
+[009_02_dph_m] 0.0002
+=== measurement ===
+[009_03_measure] 1
+[009_03_x] 109.5
+[009_03_y] 25
+== calibration ==
+[009_03_cal-mode] DO
+[009_03_temp-comp] 1
+[009_03_temp_min] 20
+[009_03_temp_max] 40
+[009_03_k0_m] -0.0309
+[009_03_k0_a] 72.5095
+[009_03_k100_m] -0.1005
+[009_03_k100_a] 44.5783
+===== fermentation =====
+[010_well] B07
+[010_content] X15
+[010_description]
+[010_s_vol] 0
+==== measurements ====
+=== measurement ===
+[010_01_measure] 1
+[010_01_x] 94
+[010_01_y] 22.5
+== calibration ==
+[010_01_cal-mode] NONE
+=== measurement ===
+[010_02_measure] 1
+[010_02_x] 96.5
+[010_02_y] 20
+== calibration ==
+[010_02_cal-mode] PH
+[010_02_temp-comp] 1
+[010_02_temp_min] 20
+[010_02_temp_max] 40
+[010_02_fmin_a] 64.5241
+[010_02_fmin_m] -0.0387
+[010_02_fmax_a] 12.7927
+[010_02_fmax_m] -0.0045
+[010_02_ph0_a] 6.1718
+[010_02_ph0_m] -0.0032
+[010_02_dph_a] 0.5179
+[010_02_dph_m] 0.0002
+=== measurement ===
+[010_03_measure] 1
+[010_03_x] 96.5
+[010_03_y] 25
+== calibration ==
+[010_03_cal-mode] DO
+[010_03_temp-comp] 1
+[010_03_temp_min] 20
+[010_03_temp_max] 40
+[010_03_k0_m] -0.0309
+[010_03_k0_a] 72.5095
+[010_03_k100_m] -0.1005
+[010_03_k100_a] 44.5783
+===== fermentation =====
+[011_well] B06
+[011_content] X14
+[011_description]
+[011_s_vol] 0
+==== measurements ====
+=== measurement ===
+[011_01_measure] 1
+[011_01_x] 81
+[011_01_y] 22.5
+== calibration ==
+[011_01_cal-mode] NONE
+=== measurement ===
+[011_02_measure] 1
+[011_02_x] 83.5
+[011_02_y] 20
+== calibration ==
+[011_02_cal-mode] PH
+[011_02_temp-comp] 1
+[011_02_temp_min] 20
+[011_02_temp_max] 40
+[011_02_fmin_a] 64.5241
+[011_02_fmin_m] -0.0387
+[011_02_fmax_a] 12.7927
+[011_02_fmax_m] -0.0045
+[011_02_ph0_a] 6.1718
+[011_02_ph0_m] -0.0032
+[011_02_dph_a] 0.5179
+[011_02_dph_m] 0.0002
+=== measurement ===
+[011_03_measure] 1
+[011_03_x] 83.5
+[011_03_y] 25
+== calibration ==
+[011_03_cal-mode] DO
+[011_03_temp-comp] 1
+[011_03_temp_min] 20
+[011_03_temp_max] 40
+[011_03_k0_m] -0.0309
+[011_03_k0_a] 72.5095
+[011_03_k100_m] -0.1005
+[011_03_k100_a] 44.5783
+===== fermentation =====
+[012_well] B05
+[012_content] X13
+[012_description]
+[012_s_vol] 0
+==== measurements ====
+=== measurement ===
+[012_01_measure] 1
+[012_01_x] 68
+[012_01_y] 22.5
+== calibration ==
+[012_01_cal-mode] NONE
+=== measurement ===
+[012_02_measure] 1
+[012_02_x] 70.5
+[012_02_y] 20
+== calibration ==
+[012_02_cal-mode] PH
+[012_02_temp-comp] 1
+[012_02_temp_min] 20
+[012_02_temp_max] 40
+[012_02_fmin_a] 64.5241
+[012_02_fmin_m] -0.0387
+[012_02_fmax_a] 12.7927
+[012_02_fmax_m] -0.0045
+[012_02_ph0_a] 6.1718
+[012_02_ph0_m] -0.0032
+[012_02_dph_a] 0.5179
+[012_02_dph_m] 0.0002
+=== measurement ===
+[012_03_measure] 1
+[012_03_x] 70.5
+[012_03_y] 25
+== calibration ==
+[012_03_cal-mode] DO
+[012_03_temp-comp] 1
+[012_03_temp_min] 20
+[012_03_temp_max] 40
+[012_03_k0_m] -0.0309
+[012_03_k0_a] 72.5095
+[012_03_k100_m] -0.1005
+[012_03_k100_a] 44.5783
+===== fermentation =====
+[013_well] B04
+[013_content] X12
+[013_description]
+[013_s_vol] 0
+==== measurements ====
+=== measurement ===
+[013_01_measure] 1
+[013_01_x] 55
+[013_01_y] 22.5
+== calibration ==
+[013_01_cal-mode] NONE
+=== measurement ===
+[013_02_measure] 1
+[013_02_x] 57.5
+[013_02_y] 20
+== calibration ==
+[013_02_cal-mode] PH
+[013_02_temp-comp] 1
+[013_02_temp_min] 20
+[013_02_temp_max] 40
+[013_02_fmin_a] 64.5241
+[013_02_fmin_m] -0.0387
+[013_02_fmax_a] 12.7927
+[013_02_fmax_m] -0.0045
+[013_02_ph0_a] 6.1718
+[013_02_ph0_m] -0.0032
+[013_02_dph_a] 0.5179
+[013_02_dph_m] 0.0002
+=== measurement ===
+[013_03_measure] 1
+[013_03_x] 57.5
+[013_03_y] 25
+== calibration ==
+[013_03_cal-mode] DO
+[013_03_temp-comp] 1
+[013_03_temp_min] 20
+[013_03_temp_max] 40
+[013_03_k0_m] -0.0309
+[013_03_k0_a] 72.5095
+[013_03_k100_m] -0.1005
+[013_03_k100_a] 44.5783
+===== fermentation =====
+[014_well] B03
+[014_content] X11
+[014_description]
+[014_s_vol] 0
+==== measurements ====
+=== measurement ===
+[014_01_measure] 1
+[014_01_x] 42
+[014_01_y] 22.5
+== calibration ==
+[014_01_cal-mode] NONE
+=== measurement ===
+[014_02_measure] 1
+[014_02_x] 44.5
+[014_02_y] 20
+== calibration ==
+[014_02_cal-mode] PH
+[014_02_temp-comp] 1
+[014_02_temp_min] 20
+[014_02_temp_max] 40
+[014_02_fmin_a] 64.5241
+[014_02_fmin_m] -0.0387
+[014_02_fmax_a] 12.7927
+[014_02_fmax_m] -0.0045
+[014_02_ph0_a] 6.1718
+[014_02_ph0_m] -0.0032
+[014_02_dph_a] 0.5179
+[014_02_dph_m] 0.0002
+=== measurement ===
+[014_03_measure] 1
+[014_03_x] 44.5
+[014_03_y] 25
+== calibration ==
+[014_03_cal-mode] DO
+[014_03_temp-comp] 1
+[014_03_temp_min] 20
+[014_03_temp_max] 40
+[014_03_k0_m] -0.0309
+[014_03_k0_a] 72.5095
+[014_03_k100_m] -0.1005
+[014_03_k100_a] 44.5783
+===== fermentation =====
+[015_well] B02
+[015_content] X10
+[015_description]
+[015_s_vol] 0
+==== measurements ====
+=== measurement ===
+[015_01_measure] 1
+[015_01_x] 29
+[015_01_y] 22.5
+== calibration ==
+[015_01_cal-mode] NONE
+=== measurement ===
+[015_02_measure] 1
+[015_02_x] 31.5
+[015_02_y] 20
+== calibration ==
+[015_02_cal-mode] PH
+[015_02_temp-comp] 1
+[015_02_temp_min] 20
+[015_02_temp_max] 40
+[015_02_fmin_a] 64.5241
+[015_02_fmin_m] -0.0387
+[015_02_fmax_a] 12.7927
+[015_02_fmax_m] -0.0045
+[015_02_ph0_a] 6.1718
+[015_02_ph0_m] -0.0032
+[015_02_dph_a] 0.5179
+[015_02_dph_m] 0.0002
+=== measurement ===
+[015_03_measure] 1
+[015_03_x] 31.5
+[015_03_y] 25
+== calibration ==
+[015_03_cal-mode] DO
+[015_03_temp-comp] 1
+[015_03_temp_min] 20
+[015_03_temp_max] 40
+[015_03_k0_m] -0.0309
+[015_03_k0_a] 72.5095
+[015_03_k100_m] -0.1005
+[015_03_k100_a] 44.5783
+===== fermentation =====
+[016_well] B01
+[016_content] X9
+[016_description]
+[016_s_vol] 0
+==== measurements ====
+=== measurement ===
+[016_01_measure] 1
+[016_01_x] 16
+[016_01_y] 22.5
+== calibration ==
+[016_01_cal-mode] NONE
+=== measurement ===
+[016_02_measure] 1
+[016_02_x] 18.5
+[016_02_y] 20
+== calibration ==
+[016_02_cal-mode] PH
+[016_02_temp-comp] 1
+[016_02_temp_min] 20
+[016_02_temp_max] 40
+[016_02_fmin_a] 64.5241
+[016_02_fmin_m] -0.0387
+[016_02_fmax_a] 12.7927
+[016_02_fmax_m] -0.0045
+[016_02_ph0_a] 6.1718
+[016_02_ph0_m] -0.0032
+[016_02_dph_a] 0.5179
+[016_02_dph_m] 0.0002
+=== measurement ===
+[016_03_measure] 1
+[016_03_x] 18.5
+[016_03_y] 25
+== calibration ==
+[016_03_cal-mode] DO
+[016_03_temp-comp] 1
+[016_03_temp_min] 20
+[016_03_temp_max] 40
+[016_03_k0_m] -0.0309
+[016_03_k0_a] 72.5095
+[016_03_k100_m] -0.1005
+[016_03_k100_a] 44.5783
+===== fermentation =====
+[017_well] C01
+[017_content] X17
+[017_description]
+[017_s_vol] 0
+==== measurements ====
+=== measurement ===
+[017_01_measure] 1
+[017_01_x] 16
+[017_01_y] 35.5
+== calibration ==
+[017_01_cal-mode] NONE
+=== measurement ===
+[017_02_measure] 1
+[017_02_x] 18.5
+[017_02_y] 33
+== calibration ==
+[017_02_cal-mode] PH
+[017_02_temp-comp] 1
+[017_02_temp_min] 20
+[017_02_temp_max] 40
+[017_02_fmin_a] 64.5241
+[017_02_fmin_m] -0.0387
+[017_02_fmax_a] 12.7927
+[017_02_fmax_m] -0.0045
+[017_02_ph0_a] 6.1718
+[017_02_ph0_m] -0.0032
+[017_02_dph_a] 0.5179
+[017_02_dph_m] 0.0002
+=== measurement ===
+[017_03_measure] 1
+[017_03_x] 18.5
+[017_03_y] 38
+== calibration ==
+[017_03_cal-mode] DO
+[017_03_temp-comp] 1
+[017_03_temp_min] 20
+[017_03_temp_max] 40
+[017_03_k0_m] -0.0309
+[017_03_k0_a] 72.5095
+[017_03_k100_m] -0.1005
+[017_03_k100_a] 44.5783
+===== fermentation =====
+[018_well] C02
+[018_content] X18
+[018_description]
+[018_s_vol] 0
+==== measurements ====
+=== measurement ===
+[018_01_measure] 1
+[018_01_x] 29
+[018_01_y] 35.5
+== calibration ==
+[018_01_cal-mode] NONE
+=== measurement ===
+[018_02_measure] 1
+[018_02_x] 31.5
+[018_02_y] 33
+== calibration ==
+[018_02_cal-mode] PH
+[018_02_temp-comp] 1
+[018_02_temp_min] 20
+[018_02_temp_max] 40
+[018_02_fmin_a] 64.5241
+[018_02_fmin_m] -0.0387
+[018_02_fmax_a] 12.7927
+[018_02_fmax_m] -0.0045
+[018_02_ph0_a] 6.1718
+[018_02_ph0_m] -0.0032
+[018_02_dph_a] 0.5179
+[018_02_dph_m] 0.0002
+=== measurement ===
+[018_03_measure] 1
+[018_03_x] 31.5
+[018_03_y] 38
+== calibration ==
+[018_03_cal-mode] DO
+[018_03_temp-comp] 1
+[018_03_temp_min] 20
+[018_03_temp_max] 40
+[018_03_k0_m] -0.0309
+[018_03_k0_a] 72.5095
+[018_03_k100_m] -0.1005
+[018_03_k100_a] 44.5783
+===== fermentation =====
+[019_well] C03
+[019_content] X19
+[019_description]
+[019_s_vol] 0
+==== measurements ====
+=== measurement ===
+[019_01_measure] 1
+[019_01_x] 42
+[019_01_y] 35.5
+== calibration ==
+[019_01_cal-mode] NONE
+=== measurement ===
+[019_02_measure] 1
+[019_02_x] 44.5
+[019_02_y] 33
+== calibration ==
+[019_02_cal-mode] PH
+[019_02_temp-comp] 1
+[019_02_temp_min] 20
+[019_02_temp_max] 40
+[019_02_fmin_a] 64.5241
+[019_02_fmin_m] -0.0387
+[019_02_fmax_a] 12.7927
+[019_02_fmax_m] -0.0045
+[019_02_ph0_a] 6.1718
+[019_02_ph0_m] -0.0032
+[019_02_dph_a] 0.5179
+[019_02_dph_m] 0.0002
+=== measurement ===
+[019_03_measure] 1
+[019_03_x] 44.5
+[019_03_y] 38
+== calibration ==
+[019_03_cal-mode] DO
+[019_03_temp-comp] 1
+[019_03_temp_min] 20
+[019_03_temp_max] 40
+[019_03_k0_m] -0.0309
+[019_03_k0_a] 72.5095
+[019_03_k100_m] -0.1005
+[019_03_k100_a] 44.5783
+===== fermentation =====
+[020_well] C04
+[020_content] X20
+[020_description]
+[020_s_vol] 0
+==== measurements ====
+=== measurement ===
+[020_01_measure] 1
+[020_01_x] 55
+[020_01_y] 35.5
+== calibration ==
+[020_01_cal-mode] NONE
+=== measurement ===
+[020_02_measure] 1
+[020_02_x] 57.5
+[020_02_y] 33
+== calibration ==
+[020_02_cal-mode] PH
+[020_02_temp-comp] 1
+[020_02_temp_min] 20
+[020_02_temp_max] 40
+[020_02_fmin_a] 64.5241
+[020_02_fmin_m] -0.0387
+[020_02_fmax_a] 12.7927
+[020_02_fmax_m] -0.0045
+[020_02_ph0_a] 6.1718
+[020_02_ph0_m] -0.0032
+[020_02_dph_a] 0.5179
+[020_02_dph_m] 0.0002
+=== measurement ===
+[020_03_measure] 1
+[020_03_x] 57.5
+[020_03_y] 38
+== calibration ==
+[020_03_cal-mode] DO
+[020_03_temp-comp] 1
+[020_03_temp_min] 20
+[020_03_temp_max] 40
+[020_03_k0_m] -0.0309
+[020_03_k0_a] 72.5095
+[020_03_k100_m] -0.1005
+[020_03_k100_a] 44.5783
+===== fermentation =====
+[021_well] C05
+[021_content] X21
+[021_description]
+[021_s_vol] 0
+==== measurements ====
+=== measurement ===
+[021_01_measure] 1
+[021_01_x] 68
+[021_01_y] 35.5
+== calibration ==
+[021_01_cal-mode] NONE
+=== measurement ===
+[021_02_measure] 1
+[021_02_x] 70.5
+[021_02_y] 33
+== calibration ==
+[021_02_cal-mode] PH
+[021_02_temp-comp] 1
+[021_02_temp_min] 20
+[021_02_temp_max] 40
+[021_02_fmin_a] 64.5241
+[021_02_fmin_m] -0.0387
+[021_02_fmax_a] 12.7927
+[021_02_fmax_m] -0.0045
+[021_02_ph0_a] 6.1718
+[021_02_ph0_m] -0.0032
+[021_02_dph_a] 0.5179
+[021_02_dph_m] 0.0002
+=== measurement ===
+[021_03_measure] 1
+[021_03_x] 70.5
+[021_03_y] 38
+== calibration ==
+[021_03_cal-mode] DO
+[021_03_temp-comp] 1
+[021_03_temp_min] 20
+[021_03_temp_max] 40
+[021_03_k0_m] -0.0309
+[021_03_k0_a] 72.5095
+[021_03_k100_m] -0.1005
+[021_03_k100_a] 44.5783
+===== fermentation =====
+[022_well] C06
+[022_content] X22
+[022_description]
+[022_s_vol] 0
+==== measurements ====
+=== measurement ===
+[022_01_measure] 1
+[022_01_x] 81
+[022_01_y] 35.5
+== calibration ==
+[022_01_cal-mode] NONE
+=== measurement ===
+[022_02_measure] 1
+[022_02_x] 83.5
+[022_02_y] 33
+== calibration ==
+[022_02_cal-mode] PH
+[022_02_temp-comp] 1
+[022_02_temp_min] 20
+[022_02_temp_max] 40
+[022_02_fmin_a] 64.5241
+[022_02_fmin_m] -0.0387
+[022_02_fmax_a] 12.7927
+[022_02_fmax_m] -0.0045
+[022_02_ph0_a] 6.1718
+[022_02_ph0_m] -0.0032
+[022_02_dph_a] 0.5179
+[022_02_dph_m] 0.0002
+=== measurement ===
+[022_03_measure] 1
+[022_03_x] 83.5
+[022_03_y] 38
+== calibration ==
+[022_03_cal-mode] DO
+[022_03_temp-comp] 1
+[022_03_temp_min] 20
+[022_03_temp_max] 40
+[022_03_k0_m] -0.0309
+[022_03_k0_a] 72.5095
+[022_03_k100_m] -0.1005
+[022_03_k100_a] 44.5783
+===== fermentation =====
+[023_well] C07
+[023_content] X23
+[023_description]
+[023_s_vol] 0
+==== measurements ====
+=== measurement ===
+[023_01_measure] 1
+[023_01_x] 94
+[023_01_y] 35.5
+== calibration ==
+[023_01_cal-mode] NONE
+=== measurement ===
+[023_02_measure] 1
+[023_02_x] 96.5
+[023_02_y] 33
+== calibration ==
+[023_02_cal-mode] PH
+[023_02_temp-comp] 1
+[023_02_temp_min] 20
+[023_02_temp_max] 40
+[023_02_fmin_a] 64.5241
+[023_02_fmin_m] -0.0387
+[023_02_fmax_a] 12.7927
+[023_02_fmax_m] -0.0045
+[023_02_ph0_a] 6.1718
+[023_02_ph0_m] -0.0032
+[023_02_dph_a] 0.5179
+[023_02_dph_m] 0.0002
+=== measurement ===
+[023_03_measure] 1
+[023_03_x] 96.5
+[023_03_y] 38
+== calibration ==
+[023_03_cal-mode] DO
+[023_03_temp-comp] 1
+[023_03_temp_min] 20
+[023_03_temp_max] 40
+[023_03_k0_m] -0.0309
+[023_03_k0_a] 72.5095
+[023_03_k100_m] -0.1005
+[023_03_k100_a] 44.5783
+===== fermentation =====
+[024_well] C08
+[024_content] X24
+[024_description]
+[024_s_vol] 0
+==== measurements ====
+=== measurement ===
+[024_01_measure] 1
+[024_01_x] 107
+[024_01_y] 35.5
+== calibration ==
+[024_01_cal-mode] NONE
+=== measurement ===
+[024_02_measure] 1
+[024_02_x] 109.5
+[024_02_y] 33
+== calibration ==
+[024_02_cal-mode] PH
+[024_02_temp-comp] 1
+[024_02_temp_min] 20
+[024_02_temp_max] 40
+[024_02_fmin_a] 64.5241
+[024_02_fmin_m] -0.0387
+[024_02_fmax_a] 12.7927
+[024_02_fmax_m] -0.0045
+[024_02_ph0_a] 6.1718
+[024_02_ph0_m] -0.0032
+[024_02_dph_a] 0.5179
+[024_02_dph_m] 0.0002
+=== measurement ===
+[024_03_measure] 1
+[024_03_x] 109.5
+[024_03_y] 38
+== calibration ==
+[024_03_cal-mode] DO
+[024_03_temp-comp] 1
+[024_03_temp_min] 20
+[024_03_temp_max] 40
+[024_03_k0_m] -0.0309
+[024_03_k0_a] 72.5095
+[024_03_k100_m] -0.1005
+[024_03_k100_a] 44.5783
+===== fermentation =====
+[025_well] D08
+[025_content] X32
+[025_description]
+[025_s_vol] 0
+==== measurements ====
+=== measurement ===
+[025_01_measure] 1
+[025_01_x] 107
+[025_01_y] 48.5
+== calibration ==
+[025_01_cal-mode] NONE
+=== measurement ===
+[025_02_measure] 1
+[025_02_x] 109.5
+[025_02_y] 46
+== calibration ==
+[025_02_cal-mode] PH
+[025_02_temp-comp] 1
+[025_02_temp_min] 20
+[025_02_temp_max] 40
+[025_02_fmin_a] 64.5241
+[025_02_fmin_m] -0.0387
+[025_02_fmax_a] 12.7927
+[025_02_fmax_m] -0.0045
+[025_02_ph0_a] 6.1718
+[025_02_ph0_m] -0.0032
+[025_02_dph_a] 0.5179
+[025_02_dph_m] 0.0002
+=== measurement ===
+[025_03_measure] 1
+[025_03_x] 109.5
+[025_03_y] 51
+== calibration ==
+[025_03_cal-mode] DO
+[025_03_temp-comp] 1
+[025_03_temp_min] 20
+[025_03_temp_max] 40
+[025_03_k0_m] -0.0309
+[025_03_k0_a] 72.5095
+[025_03_k100_m] -0.1005
+[025_03_k100_a] 44.5783
+===== fermentation =====
+[026_well] D07
+[026_content] X31
+[026_description]
+[026_s_vol] 0
+==== measurements ====
+=== measurement ===
+[026_01_measure] 1
+[026_01_x] 94
+[026_01_y] 48.5
+== calibration ==
+[026_01_cal-mode] NONE
+=== measurement ===
+[026_02_measure] 1
+[026_02_x] 96.5
+[026_02_y] 46
+== calibration ==
+[026_02_cal-mode] PH
+[026_02_temp-comp] 1
+[026_02_temp_min] 20
+[026_02_temp_max] 40
+[026_02_fmin_a] 64.5241
+[026_02_fmin_m] -0.0387
+[026_02_fmax_a] 12.7927
+[026_02_fmax_m] -0.0045
+[026_02_ph0_a] 6.1718
+[026_02_ph0_m] -0.0032
+[026_02_dph_a] 0.5179
+[026_02_dph_m] 0.0002
+=== measurement ===
+[026_03_measure] 1
+[026_03_x] 96.5
+[026_03_y] 51
+== calibration ==
+[026_03_cal-mode] DO
+[026_03_temp-comp] 1
+[026_03_temp_min] 20
+[026_03_temp_max] 40
+[026_03_k0_m] -0.0309
+[026_03_k0_a] 72.5095
+[026_03_k100_m] -0.1005
+[026_03_k100_a] 44.5783
+===== fermentation =====
+[027_well] D06
+[027_content] X30
+[027_description]
+[027_s_vol] 0
+==== measurements ====
+=== measurement ===
+[027_01_measure] 1
+[027_01_x] 81
+[027_01_y] 48.5
+== calibration ==
+[027_01_cal-mode] NONE
+=== measurement ===
+[027_02_measure] 1
+[027_02_x] 83.5
+[027_02_y] 46
+== calibration ==
+[027_02_cal-mode] PH
+[027_02_temp-comp] 1
+[027_02_temp_min] 20
+[027_02_temp_max] 40
+[027_02_fmin_a] 64.5241
+[027_02_fmin_m] -0.0387
+[027_02_fmax_a] 12.7927
+[027_02_fmax_m] -0.0045
+[027_02_ph0_a] 6.1718
+[027_02_ph0_m] -0.0032
+[027_02_dph_a] 0.5179
+[027_02_dph_m] 0.0002
+=== measurement ===
+[027_03_measure] 1
+[027_03_x] 83.5
+[027_03_y] 51
+== calibration ==
+[027_03_cal-mode] DO
+[027_03_temp-comp] 1
+[027_03_temp_min] 20
+[027_03_temp_max] 40
+[027_03_k0_m] -0.0309
+[027_03_k0_a] 72.5095
+[027_03_k100_m] -0.1005
+[027_03_k100_a] 44.5783
+===== fermentation =====
+[028_well] D05
+[028_content] X29
+[028_description]
+[028_s_vol] 0
+==== measurements ====
+=== measurement ===
+[028_01_measure] 1
+[028_01_x] 68
+[028_01_y] 48.5
+== calibration ==
+[028_01_cal-mode] NONE
+=== measurement ===
+[028_02_measure] 1
+[028_02_x] 70.5
+[028_02_y] 46
+== calibration ==
+[028_02_cal-mode] PH
+[028_02_temp-comp] 1
+[028_02_temp_min] 20
+[028_02_temp_max] 40
+[028_02_fmin_a] 64.5241
+[028_02_fmin_m] -0.0387
+[028_02_fmax_a] 12.7927
+[028_02_fmax_m] -0.0045
+[028_02_ph0_a] 6.1718
+[028_02_ph0_m] -0.0032
+[028_02_dph_a] 0.5179
+[028_02_dph_m] 0.0002
+=== measurement ===
+[028_03_measure] 1
+[028_03_x] 70.5
+[028_03_y] 51
+== calibration ==
+[028_03_cal-mode] DO
+[028_03_temp-comp] 1
+[028_03_temp_min] 20
+[028_03_temp_max] 40
+[028_03_k0_m] -0.0309
+[028_03_k0_a] 72.5095
+[028_03_k100_m] -0.1005
+[028_03_k100_a] 44.5783
+===== fermentation =====
+[029_well] D04
+[029_content] X28
+[029_description]
+[029_s_vol] 0
+==== measurements ====
+=== measurement ===
+[029_01_measure] 1
+[029_01_x] 55
+[029_01_y] 48.5
+== calibration ==
+[029_01_cal-mode] NONE
+=== measurement ===
+[029_02_measure] 1
+[029_02_x] 57.5
+[029_02_y] 46
+== calibration ==
+[029_02_cal-mode] PH
+[029_02_temp-comp] 1
+[029_02_temp_min] 20
+[029_02_temp_max] 40
+[029_02_fmin_a] 64.5241
+[029_02_fmin_m] -0.0387
+[029_02_fmax_a] 12.7927
+[029_02_fmax_m] -0.0045
+[029_02_ph0_a] 6.1718
+[029_02_ph0_m] -0.0032
+[029_02_dph_a] 0.5179
+[029_02_dph_m] 0.0002
+=== measurement ===
+[029_03_measure] 1
+[029_03_x] 57.5
+[029_03_y] 51
+== calibration ==
+[029_03_cal-mode] DO
+[029_03_temp-comp] 1
+[029_03_temp_min] 20
+[029_03_temp_max] 40
+[029_03_k0_m] -0.0309
+[029_03_k0_a] 72.5095
+[029_03_k100_m] -0.1005
+[029_03_k100_a] 44.5783
+===== fermentation =====
+[030_well] D03
+[030_content] X27
+[030_description]
+[030_s_vol] 0
+==== measurements ====
+=== measurement ===
+[030_01_measure] 1
+[030_01_x] 42
+[030_01_y] 48.5
+== calibration ==
+[030_01_cal-mode] NONE
+=== measurement ===
+[030_02_measure] 1
+[030_02_x] 44.5
+[030_02_y] 46
+== calibration ==
+[030_02_cal-mode] PH
+[030_02_temp-comp] 1
+[030_02_temp_min] 20
+[030_02_temp_max] 40
+[030_02_fmin_a] 64.5241
+[030_02_fmin_m] -0.0387
+[030_02_fmax_a] 12.7927
+[030_02_fmax_m] -0.0045
+[030_02_ph0_a] 6.1718
+[030_02_ph0_m] -0.0032
+[030_02_dph_a] 0.5179
+[030_02_dph_m] 0.0002
+=== measurement ===
+[030_03_measure] 1
+[030_03_x] 44.5
+[030_03_y] 51
+== calibration ==
+[030_03_cal-mode] DO
+[030_03_temp-comp] 1
+[030_03_temp_min] 20
+[030_03_temp_max] 40
+[030_03_k0_m] -0.0309
+[030_03_k0_a] 72.5095
+[030_03_k100_m] -0.1005
+[030_03_k100_a] 44.5783
+===== fermentation =====
+[031_well] D02
+[031_content] X26
+[031_description]
+[031_s_vol] 0
+==== measurements ====
+=== measurement ===
+[031_01_measure] 1
+[031_01_x] 29
+[031_01_y] 48.5
+== calibration ==
+[031_01_cal-mode] NONE
+=== measurement ===
+[031_02_measure] 1
+[031_02_x] 31.5
+[031_02_y] 46
+== calibration ==
+[031_02_cal-mode] PH
+[031_02_temp-comp] 1
+[031_02_temp_min] 20
+[031_02_temp_max] 40
+[031_02_fmin_a] 64.5241
+[031_02_fmin_m] -0.0387
+[031_02_fmax_a] 12.7927
+[031_02_fmax_m] -0.0045
+[031_02_ph0_a] 6.1718
+[031_02_ph0_m] -0.0032
+[031_02_dph_a] 0.5179
+[031_02_dph_m] 0.0002
+=== measurement ===
+[031_03_measure] 1
+[031_03_x] 31.5
+[031_03_y] 51
+== calibration ==
+[031_03_cal-mode] DO
+[031_03_temp-comp] 1
+[031_03_temp_min] 20
+[031_03_temp_max] 40
+[031_03_k0_m] -0.0309
+[031_03_k0_a] 72.5095
+[031_03_k100_m] -0.1005
+[031_03_k100_a] 44.5783
+===== fermentation =====
+[032_well] D01
+[032_content] X25
+[032_description]
+[032_s_vol] 0
+==== measurements ====
+=== measurement ===
+[032_01_measure] 1
+[032_01_x] 16
+[032_01_y] 48.5
+== calibration ==
+[032_01_cal-mode] NONE
+=== measurement ===
+[032_02_measure] 1
+[032_02_x] 18.5
+[032_02_y] 46
+== calibration ==
+[032_02_cal-mode] PH
+[032_02_temp-comp] 1
+[032_02_temp_min] 20
+[032_02_temp_max] 40
+[032_02_fmin_a] 64.5241
+[032_02_fmin_m] -0.0387
+[032_02_fmax_a] 12.7927
+[032_02_fmax_m] -0.0045
+[032_02_ph0_a] 6.1718
+[032_02_ph0_m] -0.0032
+[032_02_dph_a] 0.5179
+[032_02_dph_m] 0.0002
+=== measurement ===
+[032_03_measure] 1
+[032_03_x] 18.5
+[032_03_y] 51
+== calibration ==
+[032_03_cal-mode] DO
+[032_03_temp-comp] 1
+[032_03_temp_min] 20
+[032_03_temp_max] 40
+[032_03_k0_m] -0.0309
+[032_03_k0_a] 72.5095
+[032_03_k100_m] -0.1005
+[032_03_k100_a] 44.5783
+===== fermentation =====
+[033_well] E01
+[033_content] X33
+[033_description]
+[033_s_vol] 0
+==== measurements ====
+=== measurement ===
+[033_01_measure] 1
+[033_01_x] 16
+[033_01_y] 61.5
+== calibration ==
+[033_01_cal-mode] NONE
+=== measurement ===
+[033_02_measure] 1
+[033_02_x] 18.5
+[033_02_y] 59
+== calibration ==
+[033_02_cal-mode] PH
+[033_02_temp-comp] 1
+[033_02_temp_min] 20
+[033_02_temp_max] 40
+[033_02_fmin_a] 64.5241
+[033_02_fmin_m] -0.0387
+[033_02_fmax_a] 12.7927
+[033_02_fmax_m] -0.0045
+[033_02_ph0_a] 6.1718
+[033_02_ph0_m] -0.0032
+[033_02_dph_a] 0.5179
+[033_02_dph_m] 0.0002
+=== measurement ===
+[033_03_measure] 1
+[033_03_x] 18.5
+[033_03_y] 64
+== calibration ==
+[033_03_cal-mode] DO
+[033_03_temp-comp] 1
+[033_03_temp_min] 20
+[033_03_temp_max] 40
+[033_03_k0_m] -0.0309
+[033_03_k0_a] 72.5095
+[033_03_k100_m] -0.1005
+[033_03_k100_a] 44.5783
+===== fermentation =====
+[034_well] E02
+[034_content] X34
+[034_description]
+[034_s_vol] 0
+==== measurements ====
+=== measurement ===
+[034_01_measure] 1
+[034_01_x] 29
+[034_01_y] 61.5
+== calibration ==
+[034_01_cal-mode] NONE
+=== measurement ===
+[034_02_measure] 1
+[034_02_x] 31.5
+[034_02_y] 59
+== calibration ==
+[034_02_cal-mode] PH
+[034_02_temp-comp] 1
+[034_02_temp_min] 20
+[034_02_temp_max] 40
+[034_02_fmin_a] 64.5241
+[034_02_fmin_m] -0.0387
+[034_02_fmax_a] 12.7927
+[034_02_fmax_m] -0.0045
+[034_02_ph0_a] 6.1718
+[034_02_ph0_m] -0.0032
+[034_02_dph_a] 0.5179
+[034_02_dph_m] 0.0002
+=== measurement ===
+[034_03_measure] 1
+[034_03_x] 31.5
+[034_03_y] 64
+== calibration ==
+[034_03_cal-mode] DO
+[034_03_temp-comp] 1
+[034_03_temp_min] 20
+[034_03_temp_max] 40
+[034_03_k0_m] -0.0309
+[034_03_k0_a] 72.5095
+[034_03_k100_m] -0.1005
+[034_03_k100_a] 44.5783
+===== fermentation =====
+[035_well] E03
+[035_content] X35
+[035_description]
+[035_s_vol] 0
+==== measurements ====
+=== measurement ===
+[035_01_measure] 1
+[035_01_x] 42
+[035_01_y] 61.5
+== calibration ==
+[035_01_cal-mode] NONE
+=== measurement ===
+[035_02_measure] 1
+[035_02_x] 44.5
+[035_02_y] 59
+== calibration ==
+[035_02_cal-mode] PH
+[035_02_temp-comp] 1
+[035_02_temp_min] 20
+[035_02_temp_max] 40
+[035_02_fmin_a] 64.5241
+[035_02_fmin_m] -0.0387
+[035_02_fmax_a] 12.7927
+[035_02_fmax_m] -0.0045
+[035_02_ph0_a] 6.1718
+[035_02_ph0_m] -0.0032
+[035_02_dph_a] 0.5179
+[035_02_dph_m] 0.0002
+=== measurement ===
+[035_03_measure] 1
+[035_03_x] 44.5
+[035_03_y] 64
+== calibration ==
+[035_03_cal-mode] DO
+[035_03_temp-comp] 1
+[035_03_temp_min] 20
+[035_03_temp_max] 40
+[035_03_k0_m] -0.0309
+[035_03_k0_a] 72.5095
+[035_03_k100_m] -0.1005
+[035_03_k100_a] 44.5783
+===== fermentation =====
+[036_well] E04
+[036_content] X36
+[036_description]
+[036_s_vol] 0
+==== measurements ====
+=== measurement ===
+[036_01_measure] 1
+[036_01_x] 55
+[036_01_y] 61.5
+== calibration ==
+[036_01_cal-mode] NONE
+=== measurement ===
+[036_02_measure] 1
+[036_02_x] 57.5
+[036_02_y] 59
+== calibration ==
+[036_02_cal-mode] PH
+[036_02_temp-comp] 1
+[036_02_temp_min] 20
+[036_02_temp_max] 40
+[036_02_fmin_a] 64.5241
+[036_02_fmin_m] -0.0387
+[036_02_fmax_a] 12.7927
+[036_02_fmax_m] -0.0045
+[036_02_ph0_a] 6.1718
+[036_02_ph0_m] -0.0032
+[036_02_dph_a] 0.5179
+[036_02_dph_m] 0.0002
+=== measurement ===
+[036_03_measure] 1
+[036_03_x] 57.5
+[036_03_y] 64
+== calibration ==
+[036_03_cal-mode] DO
+[036_03_temp-comp] 1
+[036_03_temp_min] 20
+[036_03_temp_max] 40
+[036_03_k0_m] -0.0309
+[036_03_k0_a] 72.5095
+[036_03_k100_m] -0.1005
+[036_03_k100_a] 44.5783
+===== fermentation =====
+[037_well] E05
+[037_content] X37
+[037_description]
+[037_s_vol] 0
+==== measurements ====
+=== measurement ===
+[037_01_measure] 1
+[037_01_x] 68
+[037_01_y] 61.5
+== calibration ==
+[037_01_cal-mode] NONE
+=== measurement ===
+[037_02_measure] 1
+[037_02_x] 70.5
+[037_02_y] 59
+== calibration ==
+[037_02_cal-mode] PH
+[037_02_temp-comp] 1
+[037_02_temp_min] 20
+[037_02_temp_max] 40
+[037_02_fmin_a] 64.5241
+[037_02_fmin_m] -0.0387
+[037_02_fmax_a] 12.7927
+[037_02_fmax_m] -0.0045
+[037_02_ph0_a] 6.1718
+[037_02_ph0_m] -0.0032
+[037_02_dph_a] 0.5179
+[037_02_dph_m] 0.0002
+=== measurement ===
+[037_03_measure] 1
+[037_03_x] 70.5
+[037_03_y] 64
+== calibration ==
+[037_03_cal-mode] DO
+[037_03_temp-comp] 1
+[037_03_temp_min] 20
+[037_03_temp_max] 40
+[037_03_k0_m] -0.0309
+[037_03_k0_a] 72.5095
+[037_03_k100_m] -0.1005
+[037_03_k100_a] 44.5783
+===== fermentation =====
+[038_well] E06
+[038_content] X38
+[038_description]
+[038_s_vol] 0
+==== measurements ====
+=== measurement ===
+[038_01_measure] 1
+[038_01_x] 81
+[038_01_y] 61.5
+== calibration ==
+[038_01_cal-mode] NONE
+=== measurement ===
+[038_02_measure] 1
+[038_02_x] 83.5
+[038_02_y] 59
+== calibration ==
+[038_02_cal-mode] PH
+[038_02_temp-comp] 1
+[038_02_temp_min] 20
+[038_02_temp_max] 40
+[038_02_fmin_a] 64.5241
+[038_02_fmin_m] -0.0387
+[038_02_fmax_a] 12.7927
+[038_02_fmax_m] -0.0045
+[038_02_ph0_a] 6.1718
+[038_02_ph0_m] -0.0032
+[038_02_dph_a] 0.5179
+[038_02_dph_m] 0.0002
+=== measurement ===
+[038_03_measure] 1
+[038_03_x] 83.5
+[038_03_y] 64
+== calibration ==
+[038_03_cal-mode] DO
+[038_03_temp-comp] 1
+[038_03_temp_min] 20
+[038_03_temp_max] 40
+[038_03_k0_m] -0.0309
+[038_03_k0_a] 72.5095
+[038_03_k100_m] -0.1005
+[038_03_k100_a] 44.5783
+===== fermentation =====
+[039_well] E07
+[039_content] X39
+[039_description]
+[039_s_vol] 0
+==== measurements ====
+=== measurement ===
+[039_01_measure] 1
+[039_01_x] 94
+[039_01_y] 61.5
+== calibration ==
+[039_01_cal-mode] NONE
+=== measurement ===
+[039_02_measure] 1
+[039_02_x] 96.5
+[039_02_y] 59
+== calibration ==
+[039_02_cal-mode] PH
+[039_02_temp-comp] 1
+[039_02_temp_min] 20
+[039_02_temp_max] 40
+[039_02_fmin_a] 64.5241
+[039_02_fmin_m] -0.0387
+[039_02_fmax_a] 12.7927
+[039_02_fmax_m] -0.0045
+[039_02_ph0_a] 6.1718
+[039_02_ph0_m] -0.0032
+[039_02_dph_a] 0.5179
+[039_02_dph_m] 0.0002
+=== measurement ===
+[039_03_measure] 1
+[039_03_x] 96.5
+[039_03_y] 64
+== calibration ==
+[039_03_cal-mode] DO
+[039_03_temp-comp] 1
+[039_03_temp_min] 20
+[039_03_temp_max] 40
+[039_03_k0_m] -0.0309
+[039_03_k0_a] 72.5095
+[039_03_k100_m] -0.1005
+[039_03_k100_a] 44.5783
+===== fermentation =====
+[040_well] E08
+[040_content] X40
+[040_description]
+[040_s_vol] 0
+==== measurements ====
+=== measurement ===
+[040_01_measure] 1
+[040_01_x] 107
+[040_01_y] 61.5
+== calibration ==
+[040_01_cal-mode] NONE
+=== measurement ===
+[040_02_measure] 1
+[040_02_x] 109.5
+[040_02_y] 59
+== calibration ==
+[040_02_cal-mode] PH
+[040_02_temp-comp] 1
+[040_02_temp_min] 20
+[040_02_temp_max] 40
+[040_02_fmin_a] 64.5241
+[040_02_fmin_m] -0.0387
+[040_02_fmax_a] 12.7927
+[040_02_fmax_m] -0.0045
+[040_02_ph0_a] 6.1718
+[040_02_ph0_m] -0.0032
+[040_02_dph_a] 0.5179
+[040_02_dph_m] 0.0002
+=== measurement ===
+[040_03_measure] 1
+[040_03_x] 109.5
+[040_03_y] 64
+== calibration ==
+[040_03_cal-mode] DO
+[040_03_temp-comp] 1
+[040_03_temp_min] 20
+[040_03_temp_max] 40
+[040_03_k0_m] -0.0309
+[040_03_k0_a] 72.5095
+[040_03_k100_m] -0.1005
+[040_03_k100_a] 44.5783
+===== fermentation =====
+[041_well] F08
+[041_content] X48
+[041_description]
+[041_s_vol] 0
+==== measurements ====
+=== measurement ===
+[041_01_measure] 1
+[041_01_x] 107
+[041_01_y] 74.5
+== calibration ==
+[041_01_cal-mode] NONE
+=== measurement ===
+[041_02_measure] 1
+[041_02_x] 109.5
+[041_02_y] 72
+== calibration ==
+[041_02_cal-mode] PH
+[041_02_temp-comp] 1
+[041_02_temp_min] 20
+[041_02_temp_max] 40
+[041_02_fmin_a] 64.5241
+[041_02_fmin_m] -0.0387
+[041_02_fmax_a] 12.7927
+[041_02_fmax_m] -0.0045
+[041_02_ph0_a] 6.1718
+[041_02_ph0_m] -0.0032
+[041_02_dph_a] 0.5179
+[041_02_dph_m] 0.0002
+=== measurement ===
+[041_03_measure] 1
+[041_03_x] 109.5
+[041_03_y] 77
+== calibration ==
+[041_03_cal-mode] DO
+[041_03_temp-comp] 1
+[041_03_temp_min] 20
+[041_03_temp_max] 40
+[041_03_k0_m] -0.0309
+[041_03_k0_a] 72.5095
+[041_03_k100_m] -0.1005
+[041_03_k100_a] 44.5783
+===== fermentation =====
+[042_well] F07
+[042_content] X47
+[042_description]
+[042_s_vol] 0
+==== measurements ====
+=== measurement ===
+[042_01_measure] 1
+[042_01_x] 94
+[042_01_y] 74.5
+== calibration ==
+[042_01_cal-mode] NONE
+=== measurement ===
+[042_02_measure] 1
+[042_02_x] 96.5
+[042_02_y] 72
+== calibration ==
+[042_02_cal-mode] PH
+[042_02_temp-comp] 1
+[042_02_temp_min] 20
+[042_02_temp_max] 40
+[042_02_fmin_a] 64.5241
+[042_02_fmin_m] -0.0387
+[042_02_fmax_a] 12.7927
+[042_02_fmax_m] -0.0045
+[042_02_ph0_a] 6.1718
+[042_02_ph0_m] -0.0032
+[042_02_dph_a] 0.5179
+[042_02_dph_m] 0.0002
+=== measurement ===
+[042_03_measure] 1
+[042_03_x] 96.5
+[042_03_y] 77
+== calibration ==
+[042_03_cal-mode] DO
+[042_03_temp-comp] 1
+[042_03_temp_min] 20
+[042_03_temp_max] 40
+[042_03_k0_m] -0.0309
+[042_03_k0_a] 72.5095
+[042_03_k100_m] -0.1005
+[042_03_k100_a] 44.5783
+===== fermentation =====
+[043_well] F06
+[043_content] X46
+[043_description]
+[043_s_vol] 0
+==== measurements ====
+=== measurement ===
+[043_01_measure] 1
+[043_01_x] 81
+[043_01_y] 74.5
+== calibration ==
+[043_01_cal-mode] NONE
+=== measurement ===
+[043_02_measure] 1
+[043_02_x] 83.5
+[043_02_y] 72
+== calibration ==
+[043_02_cal-mode] PH
+[043_02_temp-comp] 1
+[043_02_temp_min] 20
+[043_02_temp_max] 40
+[043_02_fmin_a] 64.5241
+[043_02_fmin_m] -0.0387
+[043_02_fmax_a] 12.7927
+[043_02_fmax_m] -0.0045
+[043_02_ph0_a] 6.1718
+[043_02_ph0_m] -0.0032
+[043_02_dph_a] 0.5179
+[043_02_dph_m] 0.0002
+=== measurement ===
+[043_03_measure] 1
+[043_03_x] 83.5
+[043_03_y] 77
+== calibration ==
+[043_03_cal-mode] DO
+[043_03_temp-comp] 1
+[043_03_temp_min] 20
+[043_03_temp_max] 40
+[043_03_k0_m] -0.0309
+[043_03_k0_a] 72.5095
+[043_03_k100_m] -0.1005
+[043_03_k100_a] 44.5783
+===== fermentation =====
+[044_well] F05
+[044_content] X45
+[044_description]
+[044_s_vol] 0
+==== measurements ====
+=== measurement ===
+[044_01_measure] 1
+[044_01_x] 68
+[044_01_y] 74.5
+== calibration ==
+[044_01_cal-mode] NONE
+=== measurement ===
+[044_02_measure] 1
+[044_02_x] 70.5
+[044_02_y] 72
+== calibration ==
+[044_02_cal-mode] PH
+[044_02_temp-comp] 1
+[044_02_temp_min] 20
+[044_02_temp_max] 40
+[044_02_fmin_a] 64.5241
+[044_02_fmin_m] -0.0387
+[044_02_fmax_a] 12.7927
+[044_02_fmax_m] -0.0045
+[044_02_ph0_a] 6.1718
+[044_02_ph0_m] -0.0032
+[044_02_dph_a] 0.5179
+[044_02_dph_m] 0.0002
+=== measurement ===
+[044_03_measure] 1
+[044_03_x] 70.5
+[044_03_y] 77
+== calibration ==
+[044_03_cal-mode] DO
+[044_03_temp-comp] 1
+[044_03_temp_min] 20
+[044_03_temp_max] 40
+[044_03_k0_m] -0.0309
+[044_03_k0_a] 72.5095
+[044_03_k100_m] -0.1005
+[044_03_k100_a] 44.5783
+===== fermentation =====
+[045_well] F04
+[045_content] X44
+[045_description]
+[045_s_vol] 0
+==== measurements ====
+=== measurement ===
+[045_01_measure] 1
+[045_01_x] 55
+[045_01_y] 74.5
+== calibration ==
+[045_01_cal-mode] NONE
+=== measurement ===
+[045_02_measure] 1
+[045_02_x] 57.5
+[045_02_y] 72
+== calibration ==
+[045_02_cal-mode] PH
+[045_02_temp-comp] 1
+[045_02_temp_min] 20
+[045_02_temp_max] 40
+[045_02_fmin_a] 64.5241
+[045_02_fmin_m] -0.0387
+[045_02_fmax_a] 12.7927
+[045_02_fmax_m] -0.0045
+[045_02_ph0_a] 6.1718
+[045_02_ph0_m] -0.0032
+[045_02_dph_a] 0.5179
+[045_02_dph_m] 0.0002
+=== measurement ===
+[045_03_measure] 1
+[045_03_x] 57.5
+[045_03_y] 77
+== calibration ==
+[045_03_cal-mode] DO
+[045_03_temp-comp] 1
+[045_03_temp_min] 20
+[045_03_temp_max] 40
+[045_03_k0_m] -0.0309
+[045_03_k0_a] 72.5095
+[045_03_k100_m] -0.1005
+[045_03_k100_a] 44.5783
+===== fermentation =====
+[046_well] F03
+[046_content] X43
+[046_description]
+[046_s_vol] 0
+==== measurements ====
+=== measurement ===
+[046_01_measure] 1
+[046_01_x] 42
+[046_01_y] 74.5
+== calibration ==
+[046_01_cal-mode] NONE
+=== measurement ===
+[046_02_measure] 1
+[046_02_x] 44.5
+[046_02_y] 72
+== calibration ==
+[046_02_cal-mode] PH
+[046_02_temp-comp] 1
+[046_02_temp_min] 20
+[046_02_temp_max] 40
+[046_02_fmin_a] 64.5241
+[046_02_fmin_m] -0.0387
+[046_02_fmax_a] 12.7927
+[046_02_fmax_m] -0.0045
+[046_02_ph0_a] 6.1718
+[046_02_ph0_m] -0.0032
+[046_02_dph_a] 0.5179
+[046_02_dph_m] 0.0002
+=== measurement ===
+[046_03_measure] 1
+[046_03_x] 44.5
+[046_03_y] 77
+== calibration ==
+[046_03_cal-mode] DO
+[046_03_temp-comp] 1
+[046_03_temp_min] 20
+[046_03_temp_max] 40
+[046_03_k0_m] -0.0309
+[046_03_k0_a] 72.5095
+[046_03_k100_m] -0.1005
+[046_03_k100_a] 44.5783
+===== fermentation =====
+[047_well] F02
+[047_content] X42
+[047_description]
+[047_s_vol] 0
+==== measurements ====
+=== measurement ===
+[047_01_measure] 1
+[047_01_x] 29
+[047_01_y] 74.5
+== calibration ==
+[047_01_cal-mode] NONE
+=== measurement ===
+[047_02_measure] 1
+[047_02_x] 31.5
+[047_02_y] 72
+== calibration ==
+[047_02_cal-mode] PH
+[047_02_temp-comp] 1
+[047_02_temp_min] 20
+[047_02_temp_max] 40
+[047_02_fmin_a] 64.5241
+[047_02_fmin_m] -0.0387
+[047_02_fmax_a] 12.7927
+[047_02_fmax_m] -0.0045
+[047_02_ph0_a] 6.1718
+[047_02_ph0_m] -0.0032
+[047_02_dph_a] 0.5179
+[047_02_dph_m] 0.0002
+=== measurement ===
+[047_03_measure] 1
+[047_03_x] 31.5
+[047_03_y] 77
+== calibration ==
+[047_03_cal-mode] DO
+[047_03_temp-comp] 1
+[047_03_temp_min] 20
+[047_03_temp_max] 40
+[047_03_k0_m] -0.0309
+[047_03_k0_a] 72.5095
+[047_03_k100_m] -0.1005
+[047_03_k100_a] 44.5783
+===== fermentation =====
+[048_well] F01
+[048_content] X41
+[048_description]
+[048_s_vol] 0
+==== measurements ====
+=== measurement ===
+[048_01_measure] 1
+[048_01_x] 16
+[048_01_y] 74.5
+== calibration ==
+[048_01_cal-mode] NONE
+=== measurement ===
+[048_02_measure] 1
+[048_02_x] 18.5
+[048_02_y] 72
+== calibration ==
+[048_02_cal-mode] PH
+[048_02_temp-comp] 1
+[048_02_temp_min] 20
+[048_02_temp_max] 40
+[048_02_fmin_a] 64.5241
+[048_02_fmin_m] -0.0387
+[048_02_fmax_a] 12.7927
+[048_02_fmax_m] -0.0045
+[048_02_ph0_a] 6.1718
+[048_02_ph0_m] -0.0032
+[048_02_dph_a] 0.5179
+[048_02_dph_m] 0.0002
+=== measurement ===
+[048_03_measure] 1
+[048_03_x] 18.5
+[048_03_y] 77
+== calibration ==
+[048_03_cal-mode] DO
+[048_03_temp-comp] 1
+[048_03_temp_min] 20
+[048_03_temp_max] 40
+[048_03_k0_m] -0.0309
+[048_03_k0_a] 72.5095
+[048_03_k100_m] -0.1005
+[048_03_k100_a] 44.5783
+
+=====data=====
+Type;Cycle;Well;Filterset;Time;Amp_1;Amp_2;AmpRef_1;AmpRef_2;Phase;Cal;Temp_up;Temp_down;Temp_water;O2;CO2;Humidity;Shaker;Service;User_Comment;Sys_Comment;Reservoir;MF_Volume;Temp_Ch4;T_144;T_180;T_181_1;T_192;P_Ch1;P_Ch2;P_Ch3;T_Hum;T_CO2;X-Pos;Y-Pos;T_LED;Ref_Int;Ref_Phase;Ref_Gain;Ch1-MP;Ch2-MF;Ch3-FA;Ch4-OP;Ch5-FB
+C;0001;;;9;;;;;;;;;;;;;;;;COVER CLOSED;;;
+C;0001;;;14;;;;;;;;;;;;;;;;START SHAKER;;;
+C;0001;;;14;;;;;;;;;;;;;;;;TEMP REGULATION ON;;;
+P;0001;;;14;;;;;;;22.80;23.60;23.20;21.41;-9999.00;59.88;0;;;;;;32.10;29.90;24.81;26.25;0.00;0.00;0.00;0.00;22.36;-1000.00;-126.001;-69.326;23;;;;1.930;0.814;0.803;0.820;0.806
+P;0001;;;14;;;;;;;22.80;23.60;23.20;21.41;-9999.00;59.88;0;;;;;;32.10;29.90;24.81;26.25;0.00;0.00;0.00;0.00;22.36;-1000.00;-126.001;-69.326;0;;;;1.930;0.814;0.803;0.820;0.806
+R;0001;;01;45;241.30;0.00;;;;;23.70;25.60;23.90;21.36;-9999.00;72.73;1399;2050.44;;;;;41.30;29.90;24.19;26.25;0.00;100.00;100.00;80.00;22.45;-1000.00;-126.001;-69.326;30;2050.44;72.93;4
+M;0001;001;01;47;8.57;0.00;6.43;0.00;-1.49;0.00;23.80;25.80;23.90;21.36;-9999.00;73.18;1399;;;;;;41.40;30.00;24.19;26.25;0.00;100.00;100.00;80.00;22.48;-1000.00;-104.033;-69.837;32;2053.55;72.94;4
+M;0001;002;01;48;8.34;0.00;6.26;0.00;-1.29;0.00;23.90;26.00;23.90;21.35;-9999.00;73.37;1400;;;;;;41.30;30.00;24.25;26.25;0.00;100.00;100.00;80.00;22.49;-1000.00;-91.019;-69.837;32;2053.64;72.92;4
+M;0001;003;01;49;8.05;0.00;6.04;0.00;-1.15;0.00;23.90;26.00;23.90;21.34;-9999.00;73.54;1400;;;;;;41.30;30.00;24.22;26.25;0.00;100.00;100.00;80.00;22.51;-1000.00;-78.021;-69.837;32;2053.63;72.92;4
+M;0001;004;01;50;8.67;0.00;6.51;0.00;-1.54;0.00;24.10;26.20;24.00;21.34;-9999.00;73.69;1400;;;;;;41.50;30.00;24.22;26.25;0.00;100.00;100.00;80.00;22.53;-1000.00;-65.031;-69.837;32;2053.40;72.91;4
+M;0001;005;01;52;7.52;0.00;5.64;0.00;-1.52;0.00;24.20;26.40;24.00;21.34;-9999.00;73.97;1400;;;;;;41.50;30.00;24.25;26.25;0.00;100.00;100.00;80.00;22.56;-1000.00;-52.024;-69.837;32;2053.29;72.90;4
+M;0001;006;01;53;8.44;0.00;6.33;0.00;-1.67;0.00;24.30;26.50;24.00;21.33;-9999.00;74.10;1400;;;;;;41.60;30.10;24.22;26.25;0.00;100.00;100.00;80.00;22.58;-1000.00;-39.026;-69.837;32;2053.36;72.89;4
+M;0001;007;01;54;8.44;0.00;6.34;0.00;-1.49;0.00;24.30;26.50;24.00;21.33;-9999.00;74.20;1400;;;;;;41.60;30.10;24.22;26.25;0.00;100.00;100.00;80.00;22.60;-1000.00;-26.028;-69.837;32;2052.84;72.94;4
+M;0001;008;01;55;7.52;0.00;5.65;0.00;-1.52;0.00;24.50;26.70;24.00;21.32;-9999.00;74.28;1400;;;;;;41.60;30.10;24.25;26.25;0.00;100.00;100.00;80.00;22.62;-1000.00;-13.030;-69.837;32;2052.82;72.94;4
+M;0001;009;01;57;7.88;0.00;5.92;0.00;-1.78;0.00;24.50;26.70;24.00;21.32;-9999.00;74.34;1399;;;;;;41.60;30.10;24.25;26.25;0.00;100.00;100.00;80.00;22.63;-1000.00;-13.030;-56.853;32;2052.15;72.95;4
+M;0001;010;01;58;8.50;0.00;6.38;0.00;-1.31;0.00;24.60;26.80;24.00;21.31;-9999.00;74.49;1399;;;;;;41.80;30.20;24.16;26.25;0.00;100.00;100.00;80.00;22.69;-1000.00;-26.004;-56.853;32;2052.44;72.94;4
+M;0001;011;01;59;8.48;0.00;6.37;0.00;-1.92;0.00;24.80;27.00;24.10;21.31;-9999.00;74.53;1399;;;;;;42.00;30.20;24.25;26.25;0.00;100.00;100.00;80.00;22.72;-1000.00;-39.002;-56.853;32;2052.18;72.92;4
+M;0001;012;01;60;7.90;0.00;5.93;0.00;-1.64;0.00;24.80;27.00;24.10;21.30;-9999.00;74.56;1399;;;;;;42.00;30.20;24.25;26.25;0.00;100.00;100.00;80.00;22.75;-1000.00;-52.000;-56.853;32;2052.06;72.93;4
+M;0001;013;01;62;9.51;0.00;7.14;0.00;-1.65;0.00;24.90;27.10;24.10;21.29;-9999.00;74.61;1399;;;;;;42.30;30.30;24.19;26.25;0.00;100.00;100.00;80.00;22.78;-1000.00;-65.007;-56.853;32;2051.87;72.94;4
+M;0001;014;01;63;8.04;0.00;6.04;0.00;-1.66;0.00;24.90;27.10;24.10;21.29;-9999.00;74.62;1400;;;;;;42.30;30.30;24.25;26.25;0.00;100.00;100.00;80.00;22.81;-1000.00;-77.997;-56.853;32;2051.93;72.92;4
+M;0001;015;01;64;7.96;0.00;5.97;0.00;-1.68;0.00;25.10;27.30;24.10;21.28;-9999.00;74.65;1399;;;;;;42.40;30.30;24.25;26.25;0.00;100.00;98.50;80.00;22.87;-1000.00;-90.995;-56.853;32;2051.35;72.95;4
+M;0001;016;01;65;8.77;0.00;6.58;0.00;-1.56;0.00;25.20;27.40;24.10;21.28;-9999.00;74.66;1399;;;;;;42.40;30.30;24.19;26.25;0.00;100.00;93.50;80.00;22.90;-1000.00;-104.009;-56.853;32;2051.46;72.94;4
+M;0001;017;01;66;9.29;0.00;6.97;0.00;-1.71;0.00;25.20;27.40;24.10;21.27;-9999.00;74.66;1400;;;;;;42.40;30.30;24.19;26.25;0.00;100.00;93.50;80.00;22.92;-1000.00;-104.009;-43.862;32;2051.22;72.97;4
+M;0001;018;01;68;8.79;0.00;6.60;0.00;-1.21;0.00;25.40;27.60;24.20;21.27;-9999.00;74.61;1400;;;;;;42.40;30.40;24.22;26.25;0.00;100.00;91.00;80.00;22.95;-1000.00;-91.019;-43.862;32;2050.99;72.92;4
+M;0001;019;01;69;7.96;0.00;5.98;0.00;-1.70;0.00;25.60;27.80;24.20;21.26;-9999.00;74.57;1400;;;;;;42.30;30.40;24.22;26.25;0.00;100.00;85.50;80.00;22.98;-1000.00;-78.021;-43.862;32;2050.98;72.95;4
+M;0001;020;01;70;8.21;0.00;6.16;0.00;-1.23;0.00;25.60;27.80;24.20;21.26;-9999.00;74.49;1399;;;;;;42.30;30.40;24.22;26.25;0.00;100.00;85.50;80.00;23.06;-1000.00;-65.031;-43.854;32;2050.83;72.93;4
+M;0001;021;01;71;8.05;0.00;6.04;0.00;-1.71;0.00;25.70;27.90;24.20;21.25;-9999.00;74.44;1399;;;;;;42.40;30.40;24.25;26.25;0.00;100.00;81.50;80.00;23.08;-1000.00;-52.024;-43.862;32;2050.66;72.93;4
+M;0001;022;01;73;7.50;0.00;5.63;0.00;-1.51;0.00;25.90;28.00;24.20;21.25;-9999.00;74.38;1399;;;;;;42.30;30.50;24.25;26.25;0.00;100.00;79.00;80.00;23.12;-1000.00;-39.026;-43.862;32;2050.42;72.96;4
+M;0001;023;01;74;8.13;0.00;6.10;0.00;-1.77;0.00;25.90;28.00;24.20;21.24;-9999.00;74.31;1399;;;;;;42.30;30.50;24.22;26.25;0.00;100.00;79.00;80.00;23.16;-1000.00;-26.028;-43.862;32;2050.15;72.96;4
+M;0001;024;01;75;7.72;0.00;5.79;0.00;-1.73;0.00;26.00;28.10;24.20;21.24;-9999.00;74.25;1399;;;;;;42.40;30.50;24.16;26.25;0.00;100.00;75.50;80.00;23.20;-1000.00;-13.030;-43.854;32;2049.77;72.97;4
+M;0001;025;01;76;7.79;0.00;5.85;0.00;-1.58;0.00;26.00;28.10;24.20;21.23;-9999.00;74.19;1399;;;;;;42.40;30.60;24.16;26.25;0.00;100.00;75.50;80.00;23.23;-1000.00;-13.030;-30.871;32;2049.97;72.94;4
+M;0001;026;01;78;7.76;0.00;5.82;0.00;-1.28;0.00;26.20;28.20;24.30;21.23;-9999.00;74.06;1399;;;;;;42.30;30.60;24.25;26.25;0.00;100.00;72.00;80.00;23.31;-1000.00;-26.004;-30.871;32;2049.73;72.96;4
+M;0001;027;01;79;7.88;0.00;5.91;0.00;-1.45;0.00;26.30;28.40;24.30;21.23;-9999.00;73.95;1399;;;;;;42.40;30.60;24.25;26.25;0.00;100.00;68.50;80.00;23.35;-1000.00;-39.002;-30.871;32;2049.91;72.93;4
+M;0001;028;01;80;8.46;0.00;6.35;0.00;-1.43;0.00;26.30;28.40;24.30;21.22;-9999.00;73.84;1400;;;;;;42.40;30.60;24.25;26.25;0.00;100.00;68.50;80.00;23.39;-1000.00;-52.000;-30.871;32;2049.80;72.95;4
+M;0001;029;01;81;8.36;0.00;6.28;0.00;-1.53;0.00;26.50;28.50;24.30;21.22;-9999.00;73.73;1400;;;;;;42.60;30.60;24.16;26.25;0.00;100.00;64.50;80.00;23.43;-1000.00;-65.007;-30.871;32;2049.56;72.94;4
+M;0001;030;01;82;8.41;0.00;6.31;0.00;-1.65;0.00;26.50;28.50;24.30;21.21;-9999.00;73.67;1399;;;;;;42.60;30.70;24.16;26.25;0.00;100.00;64.50;80.00;23.46;-1000.00;-77.997;-30.871;32;2049.47;72.96;4
+M;0001;031;01;84;8.12;0.00;6.10;0.00;-1.63;0.00;26.60;28.60;24.30;21.21;-9999.00;73.50;1399;;;;;;42.70;30.70;24.22;26.25;0.00;100.00;60.00;80.00;23.54;-1000.00;-90.995;-30.871;32;2049.21;72.96;4
+M;0001;032;01;85;9.20;0.00;6.91;0.00;-1.60;0.00;26.80;28.70;24.30;21.21;-9999.00;73.41;1400;;;;;;42.90;30.80;24.16;26.25;0.00;100.00;57.00;80.00;23.58;-1000.00;-104.009;-30.871;32;2049.03;72.95;4
+M;0001;033;01;86;8.61;0.00;6.46;0.00;-1.38;0.00;26.80;28.70;24.30;21.20;-9999.00;73.29;1399;;;;;;42.90;30.80;24.16;26.25;0.00;100.00;57.00;80.00;23.62;-1000.00;-104.009;-17.864;32;2049.18;72.95;4
+M;0001;034;01;87;7.50;0.00;5.63;0.00;-1.57;0.00;26.90;28.80;24.40;21.20;-9999.00;73.20;1399;;;;;;42.90;30.80;24.19;26.25;0.00;100.00;54.00;80.00;23.66;-1000.00;-91.019;-17.864;32;2049.24;72.93;4
+M;0001;035;01;89;8.19;0.00;6.14;0.00;-1.70;0.00;27.10;28.90;24.40;21.20;-9999.00;73.13;1399;;;;;;43.10;30.80;24.19;26.25;0.00;100.00;51.00;80.00;23.70;-1000.00;-78.021;-17.864;32;2049.25;72.96;4
+M;0001;036;01;90;8.25;0.00;6.19;0.00;-1.68;0.00;27.10;28.90;24.40;21.19;-9999.00;72.92;1399;;;;;;43.10;30.90;24.25;26.25;0.00;100.00;51.00;80.00;23.80;-1000.00;-65.031;-17.864;32;2048.76;72.98;4
+M;0001;037;01;91;8.23;0.00;6.18;0.00;-1.31;0.00;27.20;29.00;24.40;21.19;-9999.00;72.80;1399;;;;;;43.10;30.90;24.19;26.25;0.00;100.00;49.00;80.00;23.83;-1000.00;-52.032;-17.864;32;2048.92;72.95;4
+M;0001;038;01;92;7.59;0.00;5.70;0.00;-1.70;0.00;27.20;29.00;24.40;21.18;-9999.00;72.70;1400;;;;;;43.10;30.90;24.19;26.25;0.00;100.00;49.00;80.00;23.87;-1000.00;-39.026;-17.864;32;2048.73;72.96;4
+M;0001;039;01;94;7.95;0.00;5.97;0.00;-1.65;0.00;27.40;29.00;24.40;21.18;-9999.00;72.59;1400;;;;;;43.30;30.90;24.12;26.25;0.00;95.50;47.00;80.00;23.92;-1000.00;-26.028;-17.864;32;2048.48;72.97;4
+M;0001;040;01;95;7.21;0.00;5.41;0.00;-1.64;0.00;27.50;29.10;24.50;21.18;-9999.00;72.50;1399;;;;;;43.20;30.90;24.12;26.25;0.00;91.00;45.50;80.00;23.97;-1000.00;-13.030;-17.864;32;2048.40;72.99;4
+M;0001;041;01;96;7.30;0.00;5.48;0.00;-1.47;0.00;27.50;29.10;24.50;21.18;-9999.00;72.59;1400;;;;;;43.20;31.00;24.22;26.25;0.00;91.00;45.50;80.00;24.01;-1000.00;-13.030;-4.888;32;2048.62;72.95;4
+M;0001;042;01;97;7.82;0.00;5.87;0.00;-1.82;0.00;27.70;29.10;24.50;21.17;-9999.00;72.37;1400;;;;;;43.30;31.00;24.22;26.25;0.00;87.50;44.00;80.00;24.09;-1000.00;-26.004;-4.888;32;2048.28;72.96;4
+M;0001;043;01;98;7.87;0.00;5.91;0.00;-1.51;0.00;27.70;29.10;24.50;21.17;-9999.00;72.25;1400;;;;;;43.30;31.00;24.22;26.25;0.00;87.50;44.00;80.00;24.13;-1000.00;-39.002;-4.888;32;2048.32;72.98;4
+M;0001;044;01;100;8.33;0.00;6.25;0.00;-1.84;0.00;27.80;29.20;24.50;21.17;-9999.00;72.14;1400;;;;;;43.30;31.10;24.25;26.25;0.00;83.00;43.50;80.00;24.17;-1000.00;-52.000;-4.888;32;2048.69;72.96;4
+M;0001;045;01;101;8.62;0.00;6.47;0.00;-1.83;0.00;27.90;29.20;24.50;21.17;-9999.00;72.04;1400;;;;;;43.40;31.10;24.25;26.25;0.00;79.50;42.50;80.00;24.22;-1000.00;-65.007;-4.888;32;2048.27;72.98;4
+M;0001;046;01;102;9.05;0.00;6.79;0.00;-1.83;0.00;27.90;29.20;24.50;21.16;-9999.00;71.88;1401;;;;;;43.40;31.10;24.25;26.25;0.00;79.50;42.50;80.00;24.26;-1000.00;-77.997;-4.888;32;2047.90;72.98;4
+M;0001;047;01;103;8.03;0.00;6.03;0.00;-1.40;0.00;28.10;29.20;24.60;21.16;-9999.00;71.66;1401;;;;;;43.50;31.10;24.19;26.25;0.00;76.00;42.00;80.00;24.35;-1000.00;-90.987;-4.888;32;2047.80;72.97;4
+M;0001;048;01;105;9.44;0.00;7.08;0.00;-1.75;0.00;28.10;29.20;24.60;21.15;-9999.00;71.52;1401;;;;;;43.50;31.10;24.19;26.25;0.00;76.00;42.00;80.00;24.39;-1000.00;-104.001;-4.888;32;2048.31;72.98;4
+P;0001;;;105;;;;;;;28.10;29.20;24.60;21.15;-9999.00;71.52;1401;;;;;;43.50;31.10;24.19;26.25;0.00;76.00;42.00;80.00;24.39;-1000.00;-104.001;-4.888;32;;;;1.930;0.814;0.804;0.821;0.808
+P;0001;;;107;;;;;;;28.30;29.20;24.60;21.15;-9999.00;71.31;1399;;;;;;43.90;31.10;24.19;26.25;0.00;68.50;41.50;80.00;24.48;-1000.00;-104.009;-4.888;2;;;;1.929;0.813;0.803;0.819;0.807
+M;0001;001;02;129;98.48;0.00;0.00;0.00;27.76;6.53;29.50;29.40;24.80;21.10;-9999.00;68.91;1398;;;;;;44.70;31.60;24.22;26.25;0.00;31.50;39.50;80.00;25.37;-1000.00;-101.531;-72.333;23;2339.64;73.33;3
+M;0001;002;02;130;102.29;0.00;0.00;0.00;27.16;6.56;29.50;29.40;24.80;21.09;-9999.00;68.83;1398;;;;;;44.70;31.60;24.25;26.25;0.00;31.50;39.50;80.00;25.40;-1000.00;-88.525;-72.333;23;2339.07;73.34;3
+M;0001;003;02;131;100.15;0.00;0.00;0.00;27.01;6.56;29.60;29.40;24.90;21.09;-9999.00;68.69;1399;;;;;;44.80;31.60;24.19;26.25;0.00;29.00;39.50;80.00;25.48;-1000.00;-75.519;-72.333;23;2339.04;73.34;3
+M;0001;004;02;132;95.36;0.00;0.00;0.00;27.41;6.54;29.70;29.40;24.90;21.09;-9999.00;68.60;1398;;;;;;44.70;31.60;24.19;26.25;0.00;26.00;39.50;80.00;25.53;-1000.00;-62.529;-72.333;23;2339.65;73.34;3
+M;0001;005;02;134;84.94;0.00;0.00;0.00;27.94;6.52;29.70;29.40;24.90;21.09;-9999.00;68.50;1398;;;;;;44.70;31.60;24.22;26.25;0.00;26.00;39.50;80.00;25.57;-1000.00;-49.530;-72.333;23;2339.09;73.34;3
+M;0001;006;02;135;99.73;0.00;0.00;0.00;26.70;6.58;29.70;29.40;24.90;21.08;-9999.00;68.43;1399;;;;;;44.90;31.60;24.28;26.25;0.00;23.50;40.00;80.00;25.61;-1000.00;-36.532;-72.333;23;2339.13;73.35;3
+M;0001;007;02;136;94.79;0.00;0.00;0.00;27.20;6.55;29.80;29.30;24.90;21.08;-9999.00;68.33;1399;;;;;;44.90;31.70;24.28;26.25;0.00;21.00;41.00;80.00;25.65;-1000.00;-23.518;-72.333;23;2338.95;73.37;3
+M;0001;008;02;137;100.96;0.00;0.00;0.00;26.38;6.60;29.80;29.30;24.90;21.07;-9999.00;68.21;1399;;;;;;44.90;31.70;24.19;26.25;0.00;21.00;41.00;80.00;25.70;-1000.00;-10.536;-72.333;23;2339.43;73.35;3
+M;0001;009;02;139;93.71;0.00;0.00;0.00;27.23;6.55;29.90;29.30;24.90;21.07;-9999.00;68.14;1398;;;;;;45.20;31.70;24.19;26.25;0.00;19.50;43.00;80.00;25.73;-1000.00;-10.536;-59.365;23;2338.85;73.34;3
+M;0001;010;02;140;108.49;0.00;0.00;0.00;26.99;6.56;29.90;29.30;24.90;21.07;-9999.00;68.07;1398;;;;;;45.20;31.80;24.28;26.25;0.00;19.50;43.00;80.00;25.77;-1000.00;-23.494;-59.365;23;2338.35;73.36;3
+M;0001;011;02;141;88.69;0.00;0.00;0.00;27.50;6.54;29.90;29.30;24.90;21.07;-9999.00;68.01;1400;;;;;;45.30;31.80;24.25;26.25;0.00;17.00;43.50;80.00;25.81;-1000.00;-36.508;-59.365;23;2338.45;73.36;3
+M;0001;012;02;142;90.60;0.00;0.00;0.00;27.15;6.56;29.90;29.30;25.00;21.06;-9999.00;67.94;1401;;;;;;45.30;31.80;24.25;26.25;0.00;15.50;44.00;80.00;25.84;-1000.00;-49.506;-59.365;23;2338.20;73.36;3
+M;0001;013;02;143;91.15;0.00;0.00;0.00;27.88;6.52;29.90;29.30;25.00;21.06;-9999.00;67.89;1401;;;;;;45.30;31.80;24.22;26.25;0.00;15.50;44.00;80.00;25.88;-1000.00;-62.497;-59.365;23;2338.06;73.36;3
+M;0001;014;02;145;95.17;0.00;0.00;0.00;27.29;6.55;30.00;29.30;25.00;21.06;-9999.00;67.86;1400;;;;;;45.30;31.80;24.22;26.25;0.00;14.00;43.50;80.00;25.95;-1000.00;-75.495;-59.365;23;2337.84;73.36;3
+M;0001;015;02;146;47.52;0.00;0.00;0.00;29.23;6.45;30.00;29.30;25.00;21.06;-9999.00;67.84;1400;;;;;;45.30;31.80;24.25;26.25;0.00;14.00;43.50;80.00;25.98;-1000.00;-88.501;-59.365;23;2337.74;73.38;3
+M;0001;016;02;147;114.06;0.00;0.00;0.00;26.32;6.60;30.00;29.30;25.00;21.05;-9999.00;67.82;1400;;;;;;45.50;31.80;24.19;26.25;0.00;12.50;43.00;80.00;26.01;-1000.00;-101.507;-59.365;23;2337.66;73.38;3
+M;0001;017;02;148;110.78;0.00;0.00;0.00;27.87;6.52;30.10;29.40;25.00;21.05;-9999.00;67.79;1400;;;;;;45.50;31.80;24.19;26.25;0.00;11.50;43.50;80.00;26.04;-1000.00;-101.507;-46.350;23;2337.13;73.38;3
+M;0001;018;02;150;89.49;0.00;0.00;0.00;26.99;6.56;30.10;29.40;25.00;21.05;-9999.00;67.74;1400;;;;;;45.50;31.80;24.22;26.25;0.00;11.50;43.50;80.00;26.07;-1000.00;-88.525;-46.350;23;2337.48;73.37;3
+M;0001;019;02;151;92.40;0.00;0.00;0.00;27.28;6.55;30.10;29.40;25.00;21.04;-9999.00;67.71;1398;;;;;;45.50;31.90;24.25;26.25;0.00;10.00;43.50;80.00;26.13;-1000.00;-75.519;-46.350;23;2337.14;73.38;3
+M;0001;020;02;152;89.66;0.00;0.00;0.00;27.41;6.54;30.10;29.40;25.00;21.04;-9999.00;67.73;1396;;;;;;45.50;31.90;24.25;26.25;0.00;10.00;43.50;80.00;26.15;-1000.00;-62.529;-46.350;23;2337.65;73.37;3
+M;0001;021;02;153;80.26;0.00;0.00;0.00;27.61;6.53;30.10;29.40;25.10;21.04;-9999.00;67.73;1396;;;;;;45.70;31.90;24.16;26.25;0.00;9.00;43.00;80.00;26.18;-1000.00;-49.530;-46.350;23;2337.27;73.39;3
+M;0001;022;02;155;88.08;0.00;0.00;0.00;27.77;6.52;30.10;29.40;25.10;21.04;-9999.00;67.72;1397;;;;;;45.70;32.00;24.16;26.25;0.00;8.50;43.00;80.00;26.21;-1000.00;-36.532;-46.350;23;2337.18;73.37;3
+M;0001;023;02;156;92.55;0.00;0.00;0.00;27.29;6.55;30.10;29.40;25.10;21.04;-9999.00;67.72;1397;;;;;;45.80;32.00;24.22;26.25;0.00;8.00;43.00;80.00;26.24;-1000.00;-23.518;-46.350;23;2337.46;73.38;3
+M;0001;024;02;157;94.87;0.00;0.00;0.00;27.51;6.54;30.10;29.40;25.10;21.04;-9999.00;67.75;1398;;;;;;45.80;32.00;24.19;26.25;0.00;8.00;43.00;80.00;26.27;-1000.00;-10.536;-46.350;23;2337.12;73.39;3
+M;0001;025;02;158;97.32;0.00;0.00;0.00;27.77;6.52;30.10;29.40;25.10;21.04;-9999.00;67.74;1400;;;;;;46.00;32.00;24.19;26.25;0.00;7.50;43.50;80.00;26.29;-1000.00;-10.536;-33.367;23;2336.51;73.38;3
+M;0001;026;02;159;97.81;0.00;0.00;0.00;27.62;6.53;30.10;29.40;25.10;21.04;-9999.00;67.77;1400;;;;;;46.00;32.00;24.25;26.25;0.00;7.50;43.50;80.00;26.32;-1000.00;-23.494;-33.367;23;2336.39;73.37;3
+M;0001;027;02;161;88.55;0.00;0.00;0.00;27.74;6.53;30.10;29.40;25.10;21.04;-9999.00;67.76;1401;;;;;;45.90;32.00;24.25;26.25;0.00;7.00;43.00;80.00;26.34;-1000.00;-36.508;-33.367;23;2336.94;73.39;3
+M;0001;028;02;162;91.90;0.00;0.00;0.00;27.58;6.53;30.10;29.40;25.10;21.03;-9999.00;67.64;1401;;;;;;45.90;32.00;24.28;26.25;0.00;7.00;43.00;80.00;26.36;-1000.00;-49.506;-33.367;23;2337.16;73.37;3
+M;0001;029;02;163;94.28;0.00;0.00;0.00;27.64;6.53;30.10;29.50;25.10;21.03;-9999.00;67.65;1402;;;;;;46.20;32.10;24.19;26.25;0.00;7.00;42.00;80.00;26.37;-1000.00;-62.497;-33.367;23;2336.62;73.39;3
+M;0001;030;02;164;91.57;0.00;0.00;0.00;27.67;6.53;30.10;29.50;25.10;21.04;-9999.00;67.72;1403;;;;;;46.30;32.10;24.19;26.25;0.00;6.50;40.50;80.00;26.41;-1000.00;-75.495;-33.367;23;2336.56;73.39;3
+M;0001;031;02;165;95.67;0.00;0.00;0.00;28.13;6.51;30.10;29.50;25.10;21.04;-9999.00;67.77;1403;;;;;;46.30;32.10;24.22;26.25;0.00;6.50;40.50;80.00;26.43;-1000.00;-88.501;-33.367;23;2336.84;73.39;3
+M;0001;032;02;167;102.25;0.00;0.00;0.00;27.34;6.55;30.10;29.50;25.20;21.04;-9999.00;67.83;1400;;;;;;46.40;32.10;24.22;26.25;0.00;6.50;40.50;80.00;26.45;-1000.00;-101.499;-33.367;23;2336.55;73.40;3
+M;0001;033;02;168;105.79;0.00;0.00;0.00;27.97;6.51;30.10;29.50;25.20;21.03;-9999.00;67.88;1400;;;;;;46.50;32.10;24.22;26.25;0.00;7.00;40.00;80.00;26.46;-1000.00;-101.507;-20.360;23;2337.03;73.39;3
+M;0001;034;02;169;93.16;0.00;0.00;0.00;28.24;6.50;30.10;29.50;25.20;21.03;-9999.00;67.92;1400;;;;;;46.50;32.10;24.16;26.25;0.00;7.00;40.00;80.00;26.47;-1000.00;-88.525;-20.360;23;2336.64;73.39;3
+M;0001;035;02;170;98.87;0.00;0.00;0.00;27.68;6.53;30.10;29.60;25.20;21.03;-9999.00;68.02;1401;;;;;;46.50;32.10;24.16;26.25;0.00;7.50;39.00;80.00;26.50;-1000.00;-75.519;-20.360;23;2336.21;73.40;3
+M;0001;036;02;172;92.27;0.00;0.00;0.00;28.15;6.51;30.10;29.60;25.20;21.03;-9999.00;68.08;1401;;;;;;46.40;32.20;24.19;26.25;0.00;7.50;38.00;80.00;26.52;-1000.00;-62.529;-20.360;23;2336.13;73.40;3
+M;0001;037;02;173;87.42;0.00;0.00;0.00;28.21;6.50;30.10;29.60;25.20;21.03;-9999.00;68.15;1398;;;;;;46.40;32.20;24.19;26.25;0.00;7.50;38.00;80.00;26.54;-1000.00;-49.530;-20.360;23;2336.03;73.40;3
+M;0001;038;02;174;91.09;0.00;0.00;0.00;28.04;6.51;30.10;29.60;25.20;21.03;-9999.00;68.23;1399;;;;;;46.50;32.20;24.19;26.25;0.00;7.50;38.00;80.00;26.56;-1000.00;-36.532;-20.360;23;2336.32;73.39;3
+M;0001;039;02;175;90.63;0.00;0.00;0.00;27.73;6.53;30.10;29.60;25.20;21.03;-9999.00;68.39;1399;;;;;;46.50;32.20;24.16;26.25;0.00;7.50;38.00;80.00;26.58;-1000.00;-23.518;-20.360;23;2335.54;73.39;3
+M;0001;040;02;177;87.52;0.00;0.00;0.00;28.08;6.51;30.10;29.60;25.20;21.03;-9999.00;68.46;1399;;;;;;46.70;32.20;24.16;26.25;0.00;8.00;38.00;80.00;26.60;-1000.00;-10.536;-20.360;23;2335.72;73.40;3
+M;0001;041;02;178;92.48;0.00;0.00;0.00;27.56;6.54;30.00;29.60;25.20;21.03;-9999.00;68.49;1399;;;;;;46.90;32.30;24.25;26.25;0.00;9.00;38.00;80.00;26.61;-1000.00;-10.536;-7.384;23;2335.98;73.40;3
+M;0001;042;02;179;97.88;0.00;0.00;0.00;28.01;6.51;30.00;29.60;25.20;21.03;-9999.00;68.59;1399;;;;;;46.90;32.30;24.19;26.25;0.00;9.00;38.00;80.00;26.62;-1000.00;-23.494;-7.384;23;2336.05;73.40;3
+M;0001;043;02;180;97.77;0.00;0.00;0.00;27.25;6.55;30.00;29.60;25.30;21.03;-9999.00;68.67;1398;;;;;;47.00;32.20;24.19;26.25;0.00;10.00;38.00;80.00;26.62;-1000.00;-36.508;-7.384;23;2336.06;73.39;3
+M;0001;044;02;182;87.99;0.00;0.00;0.00;28.37;6.50;30.00;29.60;25.30;21.03;-9999.00;68.78;1398;;;;;;47.00;32.20;24.19;26.25;0.00;10.00;38.00;80.00;26.63;-1000.00;-49.506;-7.384;23;2336.25;73.41;3
+M;0001;045;02;183;93.25;0.00;0.00;0.00;27.66;6.53;30.00;29.60;25.30;21.03;-9999.00;68.91;1400;;;;;;46.90;32.30;24.19;26.25;0.00;11.00;38.00;80.00;26.66;-1000.00;-62.497;-7.384;23;2335.73;73.40;3
+M;0001;046;02;184;104.22;0.00;0.00;0.00;27.63;6.53;30.00;29.60;25.30;21.02;-9999.00;68.99;1400;;;;;;46.90;32.30;24.22;26.25;0.00;11.50;38.00;80.00;26.66;-1000.00;-75.495;-7.384;23;2335.12;73.42;3
+M;0001;047;02;185;98.46;0.00;0.00;0.00;27.70;6.53;30.00;29.60;25.30;21.02;-9999.00;69.12;1400;;;;;;46.90;32.30;24.12;26.25;0.00;11.50;38.00;80.00;26.66;-1000.00;-88.501;-7.384;23;2335.52;73.42;3
+M;0001;048;02;186;107.22;0.00;0.00;0.00;27.92;6.52;29.90;29.60;25.30;21.02;-9999.00;69.20;1400;;;;;;47.00;32.30;24.12;26.25;0.00;12.00;38.00;80.00;26.66;-1000.00;-101.499;-7.384;23;2335.79;73.41;3
+P;0001;;;186;;;;;;;29.90;29.60;25.30;21.02;-9999.00;69.20;1400;;;;;;47.00;32.30;24.12;26.25;0.00;12.00;38.00;80.00;26.66;-1000.00;-101.499;-7.384;23;;;;1.930;0.813;0.803;0.820;0.807
+P;0001;;;188;;;;;;;29.90;29.60;25.30;21.02;-9999.00;69.26;1400;;;;;;47.00;32.30;24.12;26.25;0.00;12.00;38.00;80.00;26.68;-1000.00;-101.499;-7.384;2;;;;1.931;0.814;0.804;0.820;0.808
+M;0001;001;03;210;23.55;0.00;0.00;0.00;42.68;94.73;29.60;29.80;25.40;21.00;-9999.00;71.44;1399;;;;;;47.80;32.60;24.25;26.25;0.00;23.50;34.00;80.00;26.71;-1000.00;-101.531;-67.364;23;2901.61;5.85;3
+M;0001;002;03;211;24.16;0.00;0.00;0.00;42.82;94.05;29.60;29.80;25.40;21.00;-9999.00;71.57;1399;;;;;;47.80;32.60;24.22;26.25;0.00;23.50;34.00;80.00;26.72;-1000.00;-88.525;-67.364;23;2900.09;5.88;3
+M;0001;003;03;212;24.07;0.00;0.00;0.00;42.85;93.94;29.60;29.80;25.40;21.00;-9999.00;71.66;1400;;;;;;48.10;32.60;24.22;26.25;0.00;24.50;33.50;80.00;26.72;-1000.00;-75.519;-67.364;23;2899.04;5.85;3
+M;0001;004;03;213;23.02;0.00;0.00;0.00;42.91;93.65;29.60;29.80;25.50;21.00;-9999.00;71.77;1400;;;;;;48.30;32.60;24.19;26.25;0.00;25.50;33.50;80.00;26.72;-1000.00;-62.529;-67.364;23;2897.02;5.90;3
+M;0001;005;03;215;23.46;0.00;0.00;0.00;42.77;94.32;29.60;29.80;25.50;21.00;-9999.00;71.87;1400;;;;;;48.30;32.60;24.19;26.25;0.00;25.50;33.50;80.00;26.72;-1000.00;-49.530;-67.364;23;2896.28;5.87;3
+M;0001;006;03;216;22.72;0.00;0.00;0.00;42.54;95.42;29.60;29.70;25.50;21.00;-9999.00;72.04;1400;;;;;;48.50;32.70;24.28;26.25;0.00;25.50;34.50;80.00;26.72;-1000.00;-36.532;-67.364;23;2895.13;5.89;3
+M;0001;007;03;217;23.89;0.00;0.00;0.00;42.80;94.15;29.60;29.70;25.50;20.99;-9999.00;72.11;1399;;;;;;48.50;32.70;24.19;26.25;0.00;25.50;34.50;80.00;26.72;-1000.00;-23.518;-67.364;23;2894.09;5.89;3
+M;0001;008;03;218;24.21;0.00;0.00;0.00;42.76;94.37;29.60;29.70;25.50;20.99;-9999.00;72.23;1400;;;;;;48.40;32.70;24.19;26.25;0.00;26.50;36.00;80.00;26.72;-1000.00;-10.536;-67.364;23;2893.36;5.82;3
+M;0001;009;03;220;23.28;0.00;0.00;0.00;42.78;94.26;29.60;29.70;25.50;20.99;-9999.00;72.31;1400;;;;;;48.20;32.70;24.19;26.25;0.00;27.00;36.50;80.00;26.72;-1000.00;-10.536;-54.357;23;2892.74;5.85;3
+M;0001;010;03;221;22.82;0.00;0.00;0.00;42.81;94.14;29.60;29.70;25.50;20.99;-9999.00;72.43;1400;;;;;;48.20;32.70;24.19;26.25;0.00;27.00;36.50;80.00;26.72;-1000.00;-23.494;-54.357;23;2891.35;5.87;3
+M;0001;011;03;222;25.10;0.00;0.00;0.00;42.81;94.10;29.60;29.70;25.50;20.99;-9999.00;72.56;1400;;;;;;48.30;32.80;24.12;26.25;0.00;27.50;36.50;80.00;26.72;-1000.00;-36.508;-54.357;23;2890.52;5.87;3
+M;0001;012;03;223;22.33;0.00;0.00;0.00;42.79;94.21;29.60;29.70;25.50;20.99;-9999.00;72.67;1400;;;;;;48.30;32.80;24.19;26.25;0.00;27.50;36.50;80.00;26.72;-1000.00;-49.506;-54.349;23;2889.59;5.88;3
+M;0001;013;03;224;24.24;0.00;0.00;0.00;42.67;94.78;29.60;29.70;25.50;20.99;-9999.00;72.75;1401;;;;;;48.50;32.70;24.19;26.25;0.00;28.00;37.00;80.00;26.72;-1000.00;-62.497;-54.349;23;2889.13;5.85;3
+M;0001;014;03;226;22.79;0.00;0.00;0.00;42.67;94.79;29.60;29.70;25.50;20.99;-9999.00;72.84;1401;;;;;;48.50;32.80;24.22;26.25;0.00;28.50;37.00;80.00;26.72;-1000.00;-75.495;-54.349;23;2888.08;5.84;3
+M;0001;015;03;227;23.24;0.00;0.00;0.00;42.72;94.53;29.60;29.70;25.50;20.99;-9999.00;72.94;1399;;;;;;48.50;32.80;24.16;26.25;0.00;28.50;37.00;80.00;26.72;-1000.00;-88.501;-54.349;23;2887.26;5.91;3
+M;0001;016;03;228;22.85;0.00;0.00;0.00;42.67;94.79;29.60;29.70;25.50;20.99;-9999.00;73.15;1398;;;;;;48.70;32.80;24.16;26.25;0.00;28.50;37.50;80.00;26.72;-1000.00;-101.507;-54.349;23;2886.66;5.87;3
+M;0001;017;03;229;22.71;0.00;0.00;0.00;42.55;95.38;29.60;29.70;25.60;20.99;-9999.00;73.32;1398;;;;;;48.90;32.80;24.25;26.25;0.00;29.00;37.00;80.00;26.72;-1000.00;-101.507;-41.366;23;2886.07;5.87;3
+M;0001;018;03;231;21.62;0.00;0.00;0.00;42.65;94.90;29.60;29.70;25.60;20.98;-9999.00;73.40;1400;;;;;;48.90;32.80;24.25;26.25;0.00;29.00;37.00;80.00;26.72;-1000.00;-88.525;-41.366;23;2885.24;5.87;3
+M;0001;019;03;232;21.87;0.00;0.00;0.00;42.75;94.41;29.60;29.80;25.60;20.98;-9999.00;73.45;1400;;;;;;48.80;32.80;24.09;26.25;0.00;29.00;37.00;80.00;26.72;-1000.00;-75.519;-41.366;23;2884.61;5.89;3
+M;0001;020;03;233;21.04;0.00;0.00;0.00;42.66;94.85;29.60;29.80;25.60;20.98;-9999.00;73.54;1399;;;;;;48.80;32.80;24.19;26.25;0.00;29.00;37.00;80.00;26.72;-1000.00;-62.529;-41.366;23;2884.04;5.85;3
+M;0001;021;03;234;22.54;0.00;0.00;0.00;42.61;95.10;29.60;29.80;25.60;20.98;-9999.00;73.61;1399;;;;;;48.90;32.80;24.19;26.25;0.00;29.00;36.00;80.00;26.72;-1000.00;-49.530;-41.366;23;2883.57;5.87;3
+M;0001;022;03;235;20.60;0.00;0.00;0.00;42.58;95.24;29.60;29.80;25.60;20.98;-9999.00;73.75;1399;;;;;;48.80;32.80;24.16;26.25;0.00;29.00;36.00;80.00;26.72;-1000.00;-36.540;-41.366;23;2883.31;5.82;3
+M;0001;023;03;237;20.68;0.00;0.00;0.00;42.56;95.34;29.60;29.80;25.60;20.97;-9999.00;73.83;1400;;;;;;48.80;32.90;24.16;26.25;0.00;29.00;36.00;80.00;26.72;-1000.00;-23.518;-41.366;23;2882.15;5.89;3
+M;0001;024;03;238;24.05;0.00;0.00;0.00;42.66;94.82;29.60;29.80;25.60;20.97;-9999.00;73.88;1400;;;;;;49.00;32.90;24.16;26.25;0.00;29.50;35.50;80.00;26.72;-1000.00;-10.536;-41.366;23;2881.64;5.85;3
+M;0001;025;03;239;22.52;0.00;0.00;0.00;42.72;94.55;29.60;29.80;25.60;20.97;-9999.00;73.98;1399;;;;;;49.10;32.90;24.16;26.25;0.00;29.50;35.00;80.00;26.73;-1000.00;-10.536;-28.359;23;2881.38;5.87;3
+M;0001;026;03;240;23.49;0.00;0.00;0.00;42.74;94.46;29.60;29.80;25.60;20.97;-9999.00;74.10;1400;;;;;;49.10;33.00;24.16;26.25;0.00;29.50;35.00;80.00;26.73;-1000.00;-23.494;-28.359;23;2880.45;5.87;3
+M;0001;027;03;242;21.42;0.00;0.00;0.00;42.59;95.17;29.60;29.80;25.60;20.97;-9999.00;74.14;1400;;;;;;49.30;33.00;24.16;26.25;0.00;29.00;35.00;80.00;26.72;-1000.00;-36.508;-28.359;23;2879.65;5.88;3
+M;0001;028;03;243;21.29;0.00;0.00;0.00;42.52;95.51;29.60;29.80;25.60;20.97;-9999.00;74.20;1401;;;;;;49.30;33.00;24.22;26.25;0.00;29.00;35.00;80.00;26.72;-1000.00;-49.506;-28.359;23;2879.07;5.85;3
+M;0001;029;03;244;22.95;0.00;0.00;0.00;42.59;95.19;29.60;29.80;25.60;20.97;-9999.00;74.21;1398;;;;;;49.40;33.00;24.22;26.25;0.00;29.00;34.50;80.00;26.73;-1000.00;-62.497;-28.359;23;2878.88;5.88;3
+M;0001;030;03;245;22.44;0.00;0.00;0.00;42.52;95.49;29.60;29.90;25.60;20.97;-9999.00;74.25;1398;;;;;;49.50;33.00;24.16;26.25;0.00;28.50;33.50;80.00;26.73;-1000.00;-75.495;-28.359;23;2878.16;5.86;3
+M;0001;031;03;247;23.66;0.00;0.00;0.00;42.61;95.09;29.60;29.90;25.60;20.97;-9999.00;74.31;1398;;;;;;49.50;33.00;24.16;26.25;0.00;28.50;33.50;80.00;26.73;-1000.00;-88.501;-28.359;23;2878.04;5.83;3
+M;0001;032;03;248;23.31;0.00;0.00;0.00;42.55;95.34;29.60;29.90;25.70;20.96;-9999.00;74.35;1398;;;;;;49.40;33.00;24.22;26.25;0.00;28.00;32.50;80.00;26.73;-1000.00;-101.507;-28.359;23;2877.11;5.90;3
+M;0001;033;03;249;25.69;0.00;0.00;0.00;42.56;95.29;29.70;29.90;25.70;20.96;-9999.00;74.41;1399;;;;;;49.40;33.00;24.16;26.25;0.00;28.00;32.00;80.00;26.73;-1000.00;-101.507;-15.367;23;2876.50;5.85;3
+M;0001;034;03;250;20.48;0.00;0.00;0.00;42.39;96.11;29.70;29.90;25.70;20.97;-9999.00;74.46;1399;;;;;;49.40;33.00;24.16;26.25;0.00;28.00;32.00;80.00;26.73;-1000.00;-88.525;-15.367;23;2876.87;5.81;3
+M;0001;035;03;252;20.57;0.00;0.00;0.00;42.59;95.10;29.70;29.90;25.70;20.96;-9999.00;74.52;1399;;;;;;49.50;33.00;24.16;26.25;0.00;27.50;31.50;80.00;26.73;-1000.00;-75.519;-15.367;23;2876.03;5.85;3
+M;0001;036;03;253;22.27;0.00;0.00;0.00;42.62;94.96;29.70;29.90;25.70;20.96;-9999.00;74.56;1400;;;;;;49.50;33.10;24.16;26.25;0.00;27.50;31.50;80.00;26.73;-1000.00;-62.529;-15.367;23;2876.07;5.89;3
+M;0001;037;03;254;21.33;0.00;0.00;0.00;42.54;95.39;29.70;29.90;25.70;20.96;-9999.00;74.60;1400;;;;;;49.70;33.10;24.16;26.25;0.00;27.00;31.50;80.00;26.74;-1000.00;-49.530;-15.367;23;2875.30;5.85;3
+M;0001;038;03;255;21.27;0.00;0.00;0.00;42.54;95.38;29.70;29.90;25.70;20.96;-9999.00;74.60;1400;;;;;;49.60;33.10;24.19;26.25;0.00;27.50;31.50;80.00;26.75;-1000.00;-36.540;-15.367;23;2874.72;5.86;3
+M;0001;039;03;256;22.20;0.00;0.00;0.00;42.61;95.02;29.70;29.90;25.70;20.96;-9999.00;74.62;1400;;;;;;49.60;33.10;24.19;26.25;0.00;27.50;31.50;80.00;26.75;-1000.00;-23.518;-15.367;23;2874.72;5.86;3
+M;0001;040;03;258;22.55;0.00;0.00;0.00;42.41;96.01;29.70;29.90;25.70;20.95;-9999.00;74.68;1400;;;;;;49.70;33.10;24.19;26.25;0.00;26.50;31.00;80.00;26.76;-1000.00;-10.536;-15.367;23;2874.05;5.84;3
+M;0001;041;03;259;18.83;0.00;0.00;0.00;42.38;96.13;29.70;29.90;25.70;20.95;-9999.00;74.71;1401;;;;;;49.70;33.10;24.16;26.25;0.00;26.50;31.00;80.00;26.76;-1000.00;-10.536;-2.376;23;2873.23;5.88;3
+M;0001;042;03;260;20.54;0.00;0.00;0.00;42.30;96.50;29.70;29.90;25.70;20.95;-9999.00;74.73;1400;;;;;;49.90;33.10;24.16;26.25;0.00;27.00;31.50;80.00;26.76;-1000.00;-23.494;-2.376;23;2873.26;5.84;3
+M;0001;043;03;261;20.30;0.00;0.00;0.00;42.48;95.66;29.70;29.90;25.80;20.95;-9999.00;74.78;1400;;;;;;50.00;33.10;24.19;26.25;0.00;25.50;31.00;80.00;26.77;-1000.00;-36.508;-2.376;23;2872.46;5.88;3
+M;0001;044;03;263;21.05;0.00;0.00;0.00;42.26;96.67;29.80;29.90;25.80;20.95;-9999.00;74.79;1400;;;;;;50.00;33.10;24.19;26.25;0.00;25.00;31.50;80.00;26.78;-1000.00;-49.506;-2.376;23;2871.64;5.87;3
+M;0001;045;03;264;21.27;0.00;0.00;0.00;42.38;96.11;29.80;29.90;25.80;20.95;-9999.00;74.83;1401;;;;;;50.00;33.10;24.16;26.25;0.00;25.00;31.50;80.00;26.79;-1000.00;-62.497;-2.376;23;2871.62;5.87;3
+M;0001;046;03;265;21.76;0.00;0.00;0.00;42.46;95.72;29.80;29.90;25.80;20.95;-9999.00;74.83;1401;;;;;;50.10;33.10;24.19;26.25;0.00;25.00;31.50;80.00;26.79;-1000.00;-75.495;-2.376;23;2871.75;5.87;3
+M;0001;047;03;266;21.82;0.00;0.00;0.00;42.35;96.25;29.80;29.90;25.80;20.95;-9999.00;74.81;1401;;;;;;50.10;33.20;24.19;26.25;0.00;25.00;31.50;80.00;26.80;-1000.00;-88.501;-2.376;23;2871.19;5.84;3
+M;0001;048;03;268;23.96;0.00;0.00;0.00;42.24;96.78;29.80;29.90;25.80;20.95;-9999.00;74.81;1401;;;;;;50.30;33.20;24.22;26.25;0.00;24.50;31.50;80.00;26.80;-1000.00;-101.507;-2.376;23;2871.25;5.83;3
+P;0001;;;268;;;;;;;29.80;29.90;25.80;20.95;-9999.00;74.81;1401;;;;;;50.30;33.20;24.22;26.25;0.00;24.50;31.50;80.00;26.80;-1000.00;-101.507;-2.376;23;;;;1.930;0.813;0.804;0.820;0.807
+P;0001;;;304;;;;;;;30.10;30.10;26.10;20.94;-9999.00;75.27;1402;;;;;;51.60;33.50;24.22;26.25;0.00;14.50;24.00;80.00;27.04;-1000.00;-125.993;-69.326;23;;;;1.930;0.814;0.804;0.821;0.807
+P;0001;;;334;;;;;;;30.10;30.00;26.20;20.93;-9999.00;75.84;1400;;;;;;53.20;33.60;24.22;26.25;0.00;12.00;26.50;80.00;27.15;-1000.00;-125.993;-69.326;23;;;;1.930;0.814;0.804;0.820;0.806
+P;0001;;;364;;;;;;;30.00;30.00;26.40;20.91;-9999.00;76.84;1400;;;;;;54.30;33.80;24.22;26.25;0.00;13.00;25.00;80.00;27.22;-1000.00;-125.993;-69.326;23;;;;1.930;0.814;0.804;0.820;0.806
+P;0001;;;394;;;;;;;30.00;30.10;26.70;20.91;-9999.00;77.92;1400;;;;;;55.40;34.00;24.22;26.25;0.00;13.00;22.50;80.00;27.24;-1000.00;-125.993;-69.326;23;;;;1.931;0.815;0.804;0.820;0.806
+P;0001;;;424;;;;;;;30.00;30.10;26.90;20.89;-9999.00;78.77;1399;;;;;;56.70;34.30;24.22;26.25;0.00;12.00;22.50;80.00;27.29;-1000.00;-125.993;-69.326;23;;;;1.929;0.814;0.804;0.821;0.808
+P;0001;;;454;;;;;;;30.10;30.00;27.10;20.88;-9999.00;79.50;1399;;;;;;58.10;34.30;24.22;26.25;0.00;10.00;21.50;80.00;27.34;-1000.00;-125.993;-69.326;23;;;;1.930;0.813;0.803;0.820;0.807
+P;0001;;;484;;;;;;;30.10;30.00;27.30;20.88;-9999.00;80.21;1399;;;;;;59.20;34.50;24.22;26.25;0.00;9.00;21.50;80.00;27.36;-1000.00;-125.993;-69.334;23;;;;1.929;0.814;0.804;0.821;0.807
+P;0001;;;514;;;;;;;30.10;30.10;27.60;20.86;-9999.00;80.99;1398;;;;;;60.40;34.60;24.22;26.25;0.00;8.00;20.50;80.00;27.40;-1000.00;-125.993;-69.334;23;;;;1.931;0.814;0.804;0.821;0.806
+P;0001;;;544;;;;;;;30.10;30.00;27.90;20.86;-9999.00;81.66;1399;;;;;;61.60;34.80;24.22;26.25;0.00;8.00;20.00;80.00;27.41;-1000.00;-125.993;-69.334;23;;;;1.930;0.813;0.803;0.819;0.806
+P;0001;;;574;;;;;;;30.00;30.10;28.20;20.85;-9999.00;82.40;1400;;;;;;62.40;34.80;24.22;26.25;0.00;7.50;19.50;80.00;27.44;-1000.00;-125.993;-69.334;23;;;;1.929;0.814;0.803;0.820;0.806
+P;0001;;;604;;;;;;;30.10;30.00;28.50;20.84;-9999.00;83.11;1399;;;;;;63.40;34.90;24.22;26.25;0.00;6.50;18.00;80.00;27.45;-1000.00;-125.993;-69.334;23;;;;1.929;0.813;0.803;0.819;0.807
+P;0002;;;614;;;;;;;30.10;30.00;28.60;20.84;-9999.00;83.35;1400;;;;;;63.60;34.90;24.22;26.25;0.00;6.00;18.00;80.00;27.46;-1000.00;-125.993;-69.334;23;;;;1.930;0.813;0.803;0.819;0.806
+P;0002;;;617;;;;;;;30.00;30.00;28.60;20.83;-9999.00;83.35;1399;;;;;;63.60;35.00;24.22;26.25;0.00;6.00;18.50;80.00;27.46;-1000.00;-125.993;-69.334;3;;;;1.930;0.814;0.804;0.820;0.806
+R;0002;;01;645;241.60;0.00;;;;;30.00;30.00;28.90;20.83;-9999.00;84.00;1400;2055.78;;;;;64.30;34.90;24.16;26.25;0.00;6.00;18.50;80.00;27.48;-1000.00;-125.993;-69.334;30;2055.78;72.92;4
+M;0002;001;01;646;9.02;0.00;6.76;0.00;-1.25;0.00;30.00;30.00;28.90;20.83;-9999.00;84.04;1399;;;;;;64.50;35.00;24.12;26.25;0.00;6.00;18.50;80.00;27.48;-1000.00;-104.033;-69.837;32;2059.07;72.92;4
+M;0002;002;01;648;8.58;0.00;6.43;0.00;-1.41;0.00;30.00;30.00;29.00;20.83;-9999.00;84.07;1399;;;;;;64.30;35.00;24.09;26.25;0.00;6.00;18.00;80.00;27.48;-1000.00;-91.019;-69.837;32;2059.41;72.93;4
+M;0002;003;01;649;8.40;0.00;6.29;0.00;-1.73;0.00;30.10;30.00;29.00;20.83;-9999.00;84.09;1401;;;;;;64.60;35.00;24.19;26.25;0.00;6.00;18.00;80.00;27.48;-1000.00;-78.021;-69.837;32;2059.36;72.91;4
+M;0002;004;01;650;8.64;0.00;6.48;0.00;-1.21;0.00;30.10;30.00;29.00;20.83;-9999.00;84.16;1400;;;;;;64.60;35.00;24.19;26.25;0.00;6.00;18.00;80.00;27.48;-1000.00;-65.031;-69.837;32;2058.85;72.94;4
+M;0002;005;01;651;8.43;0.00;6.32;0.00;-1.36;0.00;30.00;30.00;29.00;20.83;-9999.00;84.16;1400;;;;;;64.80;35.00;24.09;26.25;0.00;5.00;18.50;80.00;27.48;-1000.00;-52.024;-69.837;32;2058.75;72.91;4
+M;0002;006;01;652;9.22;0.00;6.91;0.00;-1.64;0.00;30.00;30.00;29.00;20.83;-9999.00;84.21;1399;;;;;;64.80;35.00;24.09;26.25;0.00;5.00;18.50;80.00;27.49;-1000.00;-39.026;-69.837;32;2058.64;72.91;4
+M;0002;007;01;654;7.61;0.00;5.71;0.00;-1.73;0.00;30.00;30.00;29.00;20.83;-9999.00;84.25;1399;;;;;;64.80;35.00;24.16;26.25;0.00;5.50;18.50;80.00;27.48;-1000.00;-26.028;-69.837;32;2058.40;72.93;4
+M;0002;008;01;655;7.78;0.00;5.83;0.00;-1.63;0.00;30.00;30.00;29.00;20.82;-9999.00;84.26;1399;;;;;;64.70;35.00;24.12;26.25;0.00;5.50;19.00;80.00;27.49;-1000.00;-13.030;-69.837;32;2058.37;72.92;4
+M;0002;009;01;656;8.11;0.00;6.08;0.00;-1.59;0.00;30.00;30.00;29.00;20.82;-9999.00;84.29;1399;;;;;;64.70;35.00;24.12;26.25;0.00;5.50;19.00;80.00;27.48;-1000.00;-13.030;-56.853;32;2058.63;72.89;4
+M;0002;010;01;657;8.09;0.00;6.07;0.00;-1.60;0.00;30.00;30.00;29.10;20.82;-9999.00;84.28;1399;;;;;;64.80;35.00;24.16;26.25;0.00;5.50;19.50;80.00;27.48;-1000.00;-26.004;-56.853;32;2057.64;72.94;4
+M;0002;011;01;659;8.54;0.00;6.41;0.00;-1.67;0.00;30.00;30.00;29.10;20.82;-9999.00;84.28;1400;;;;;;64.80;35.00;24.09;26.25;0.00;5.50;19.50;80.00;27.48;-1000.00;-39.002;-56.853;32;2057.25;72.92;4
+M;0002;012;01;660;8.20;0.00;6.15;0.00;-1.46;0.00;30.00;30.00;29.10;20.82;-9999.00;84.28;1400;;;;;;64.90;35.00;24.09;26.25;0.00;5.50;19.50;80.00;27.48;-1000.00;-52.000;-56.853;32;2057.49;72.91;4
+M;0002;013;01;661;9.97;0.00;7.48;0.00;-1.50;0.00;30.00;30.00;29.10;20.82;-9999.00;84.31;1400;;;;;;64.90;35.00;24.12;26.25;0.00;5.50;19.50;80.00;27.49;-1000.00;-65.007;-56.853;32;2057.18;72.91;4
+M;0002;014;01;662;8.97;0.00;6.73;0.00;-1.26;0.00;30.00;30.00;29.10;20.82;-9999.00;84.39;1400;;;;;;64.90;35.00;24.12;26.25;0.00;5.50;19.50;80.00;27.49;-1000.00;-77.997;-56.853;32;2057.03;72.91;4
+M;0002;015;01;664;9.38;0.00;7.03;0.00;-1.39;0.00;30.00;30.00;29.10;20.82;-9999.00;84.39;1400;;;;;;64.90;35.00;24.12;26.25;0.00;5.50;20.00;80.00;27.48;-1000.00;-90.995;-56.853;32;2056.73;72.95;4
+M;0002;016;01;665;9.21;0.00;6.90;0.00;-1.65;0.00;30.00;30.00;29.10;20.82;-9999.00;84.46;1399;;;;;;64.90;35.00;24.16;26.25;0.00;5.50;20.00;80.00;27.48;-1000.00;-104.009;-56.853;32;2056.79;72.92;4
+M;0002;017;01;666;9.17;0.00;6.87;0.00;-1.63;0.00;30.00;29.90;29.20;20.82;-9999.00;84.50;1399;;;;;;65.10;35.00;24.16;26.25;0.00;5.50;20.00;80.00;27.49;-1000.00;-104.009;-43.854;32;2056.29;72.94;4
+M;0002;018;01;667;8.27;0.00;6.20;0.00;-1.94;0.00;30.00;30.00;29.20;20.82;-9999.00;84.53;1399;;;;;;65.20;35.00;24.12;26.25;0.00;5.50;20.50;80.00;27.49;-1000.00;-91.019;-43.854;32;2056.65;72.92;4
+M;0002;019;01;669;8.47;0.00;6.35;0.00;-1.53;0.00;30.00;30.00;29.20;20.82;-9999.00;84.52;1400;;;;;;65.10;35.00;24.12;26.25;0.00;5.50;20.50;80.00;27.48;-1000.00;-78.021;-43.854;32;2056.05;72.94;4
+M;0002;020;01;670;9.04;0.00;6.77;0.00;-1.59;0.00;30.00;30.00;29.20;20.82;-9999.00;84.55;1400;;;;;;65.10;35.00;24.16;26.25;0.00;5.50;20.50;80.00;27.48;-1000.00;-65.031;-43.854;32;2056.36;72.91;4
+M;0002;021;01;671;7.78;0.00;5.84;0.00;-1.17;0.00;30.00;30.00;29.20;20.82;-9999.00;84.58;1401;;;;;;65.20;35.00;24.09;26.25;0.00;5.00;19.50;80.00;27.49;-1000.00;-52.032;-43.854;32;2055.26;72.97;4
+M;0002;022;01;672;7.96;0.00;5.97;0.00;-1.99;0.00;30.00;30.00;29.20;20.82;-9999.00;84.62;1401;;;;;;65.20;35.00;24.09;26.25;0.00;5.00;19.50;80.00;27.48;-1000.00;-39.026;-43.854;32;2055.50;72.94;4
+M;0002;023;01;674;8.15;0.00;6.11;0.00;-1.80;0.00;30.10;30.00;29.30;20.81;-9999.00;84.65;1401;;;;;;65.40;35.00;24.16;26.25;0.00;5.00;19.50;80.00;27.49;-1000.00;-26.028;-43.854;32;2055.34;72.95;4
+M;0002;024;01;675;7.47;0.00;5.60;0.00;-1.44;0.00;30.10;30.00;29.30;20.81;-9999.00;84.65;1399;;;;;;65.30;35.00;24.12;26.25;0.00;4.50;20.00;80.00;27.49;-1000.00;-13.030;-43.854;32;2055.41;72.94;4
+M;0002;025;01;676;8.16;0.00;6.12;0.00;-1.84;0.00;30.10;30.00;29.30;20.81;-9999.00;84.70;1399;;;;;;65.30;35.00;24.12;26.25;0.00;4.50;20.00;80.00;27.49;-1000.00;-13.030;-30.871;32;2055.08;72.92;4
+M;0002;026;01;677;8.06;0.00;6.04;0.00;-1.71;0.00;30.00;30.00;29.30;20.81;-9999.00;84.79;1399;;;;;;65.20;35.00;24.19;26.25;0.00;5.00;19.50;80.00;27.49;-1000.00;-26.004;-30.871;32;2054.77;72.96;4
+M;0002;027;01;678;7.71;0.00;5.78;0.00;-1.43;0.00;30.00;30.00;29.30;20.81;-9999.00;84.78;1399;;;;;;65.20;35.00;24.19;26.25;0.00;5.00;19.50;80.00;27.50;-1000.00;-39.002;-30.871;32;2054.35;72.97;4
+M;0002;028;01;680;8.19;0.00;6.14;0.00;-1.12;0.00;30.10;30.00;29.30;20.81;-9999.00;84.77;1399;;;;;;65.30;35.00;24.19;26.25;0.00;5.00;20.00;80.00;27.50;-1000.00;-52.000;-30.871;32;2054.34;72.99;4
+M;0002;029;01;681;8.00;0.00;6.00;0.00;-1.52;0.00;30.00;30.00;29.30;20.81;-9999.00;84.83;1399;;;;;;65.40;35.00;24.09;26.25;0.00;4.50;19.50;80.00;27.50;-1000.00;-65.007;-30.871;32;2053.96;72.99;4
+M;0002;030;01;682;8.90;0.00;6.67;0.00;-1.73;0.00;30.00;30.00;29.30;20.81;-9999.00;84.84;1398;;;;;;65.40;35.00;24.09;26.25;0.00;4.50;19.50;80.00;27.50;-1000.00;-77.997;-30.871;32;2054.23;72.94;4
+M;0002;031;01;683;8.40;0.00;6.30;0.00;-1.81;0.00;30.00;30.00;29.30;20.81;-9999.00;84.90;1398;;;;;;65.30;35.00;24.12;26.25;0.00;5.00;19.00;80.00;27.50;-1000.00;-90.995;-30.871;32;2053.96;72.98;4
+M;0002;032;01;685;8.47;0.00;6.35;0.00;-1.72;0.00;30.00;30.00;29.40;20.80;-9999.00;84.89;1399;;;;;;65.30;35.00;24.12;26.25;0.00;5.00;19.00;80.00;27.49;-1000.00;-104.001;-30.871;32;2053.68;72.95;4
+M;0002;033;01;686;8.66;0.00;6.49;0.00;-1.17;0.00;30.00;30.00;29.40;20.80;-9999.00;84.91;1399;;;;;;65.30;35.00;24.12;26.25;0.00;5.00;19.00;80.00;27.50;-1000.00;-104.009;-17.864;32;2053.69;72.94;4
+M;0002;034;01;687;8.22;0.00;6.16;0.00;-1.44;0.00;30.00;30.00;29.40;20.80;-9999.00;84.93;1400;;;;;;65.50;35.00;24.16;26.25;0.00;5.00;18.50;80.00;27.50;-1000.00;-91.019;-17.864;32;2053.52;72.98;4
+M;0002;035;01;688;8.19;0.00;6.14;0.00;-1.45;0.00;30.00;30.00;29.40;20.80;-9999.00;84.95;1399;;;;;;65.50;35.00;24.16;26.25;0.00;5.00;18.50;80.00;27.50;-1000.00;-78.021;-17.864;32;2052.88;72.98;4
+M;0002;036;01;690;8.34;0.00;6.25;0.00;-1.67;0.00;30.00;30.00;29.40;20.80;-9999.00;85.01;1399;;;;;;65.60;35.10;24.16;26.25;0.00;5.00;18.50;80.00;27.50;-1000.00;-65.031;-17.864;32;2053.20;72.96;4
+M;0002;037;01;691;7.92;0.00;5.94;0.00;-1.50;0.00;30.00;30.00;29.40;20.80;-9999.00;85.04;1400;;;;;;65.70;35.10;24.12;26.25;0.00;4.50;18.50;80.00;27.50;-1000.00;-52.024;-17.864;32;2053.00;72.99;4
+M;0002;038;01;692;8.19;0.00;6.14;0.00;-1.40;0.00;30.00;30.00;29.40;20.80;-9999.00;85.11;1400;;;;;;65.70;35.00;24.12;26.25;0.00;4.50;18.50;80.00;27.50;-1000.00;-39.026;-17.864;32;2053.06;72.94;4
+M;0002;039;01;693;8.05;0.00;6.03;0.00;-1.68;0.00;30.00;30.00;29.50;20.80;-9999.00;85.14;1400;;;;;;65.80;35.00;24.09;26.25;0.00;5.50;18.50;80.00;27.50;-1000.00;-26.028;-17.864;32;2052.67;72.98;4
+M;0002;040;01;694;7.80;0.00;5.84;0.00;-1.52;0.00;30.00;30.00;29.50;20.80;-9999.00;85.17;1400;;;;;;65.80;35.00;24.09;26.25;0.00;5.50;18.50;80.00;27.50;-1000.00;-13.030;-17.864;32;2052.92;72.95;4
+M;0002;041;01;696;7.90;0.00;5.92;0.00;-1.48;0.00;30.00;30.00;29.50;20.80;-9999.00;85.19;1400;;;;;;65.90;35.10;24.03;26.25;0.00;5.00;18.00;80.00;27.50;-1000.00;-13.030;-4.880;32;2052.50;72.97;4
+M;0002;042;01;697;8.06;0.00;6.04;0.00;-1.50;0.00;30.00;30.00;29.50;20.79;-9999.00;85.21;1400;;;;;;66.10;35.10;24.16;26.25;0.00;5.00;18.00;80.00;27.50;-1000.00;-26.004;-4.880;32;2051.96;72.98;4
+M;0002;043;01;698;8.26;0.00;6.19;0.00;-1.64;0.00;30.00;30.00;29.50;20.79;-9999.00;85.25;1400;;;;;;66.10;35.00;24.16;26.25;0.00;5.00;18.00;80.00;27.50;-1000.00;-39.002;-4.880;32;2052.34;72.95;4
+M;0002;044;01;699;8.35;0.00;6.26;0.00;-1.61;0.00;30.00;30.00;29.50;20.79;-9999.00;85.27;1400;;;;;;66.00;35.00;24.12;26.25;0.00;5.00;18.00;80.00;27.50;-1000.00;-52.000;-4.880;32;2052.19;72.96;4
+M;0002;045;01;701;8.33;0.00;6.24;0.00;-1.45;0.00;30.00;30.00;29.60;20.80;-9999.00;85.30;1399;;;;;;65.90;35.00;24.12;26.25;0.00;5.00;18.00;80.00;27.50;-1000.00;-65.007;-4.880;32;2051.97;72.99;4
+M;0002;046;01;702;8.61;0.00;6.45;0.00;-1.67;0.00;30.00;30.00;29.60;20.79;-9999.00;85.34;1399;;;;;;65.90;35.00;24.22;26.25;0.00;5.00;18.00;80.00;27.50;-1000.00;-77.997;-4.880;32;2051.87;72.94;4
+M;0002;047;01;703;7.78;0.00;5.83;0.00;-1.39;0.00;30.00;30.00;29.60;20.79;-9999.00;85.45;1400;;;;;;66.00;35.00;24.12;26.25;0.00;4.50;18.00;80.00;27.50;-1000.00;-90.995;-4.880;32;2051.82;72.95;4
+M;0002;048;01;704;7.73;0.00;5.79;0.00;-1.70;0.00;30.00;30.00;29.60;20.79;-9999.00;85.43;1400;;;;;;66.30;35.10;24.12;26.25;0.00;5.50;18.00;80.00;27.49;-1000.00;-104.001;-4.880;32;2051.13;73.01;4
+P;0002;;;704;;;;;;;30.00;30.00;29.60;20.79;-9999.00;85.43;1400;;;;;;66.30;35.10;24.12;26.25;0.00;5.50;18.00;80.00;27.49;-1000.00;-104.001;-4.880;32;;;;1.930;0.814;0.804;0.820;0.806
+P;0002;;;706;;;;;;;30.00;30.00;29.60;20.79;-9999.00;85.48;1399;;;;;;66.30;35.00;24.12;26.25;0.00;5.00;18.00;80.00;27.49;-1000.00;-104.001;-4.880;2;;;;1.931;0.814;0.804;0.820;0.806
+M;0002;001;02;727;94.60;0.00;0.00;0.00;28.92;6.47;30.00;30.00;29.10;20.78;-9999.00;84.90;1401;;;;;;59.80;35.10;24.09;26.25;0.00;5.50;16.50;0.00;27.51;-1000.00;-101.531;-72.333;23;2339.18;73.34;3
+M;0002;002;02;729;98.09;0.00;0.00;0.00;28.23;6.50;30.00;30.00;29.10;20.78;-9999.00;84.87;1400;;;;;;59.30;35.00;24.09;26.25;0.00;5.50;17.00;80.00;27.51;-1000.00;-88.525;-72.333;23;2339.07;73.34;3
+M;0002;003;02;730;96.14;0.00;0.00;0.00;28.00;6.51;30.00;30.00;29.10;20.78;-9999.00;84.88;1400;;;;;;59.30;35.10;24.09;26.25;0.00;5.50;17.00;80.00;27.51;-1000.00;-75.519;-72.333;23;2339.41;73.34;3
+M;0002;004;02;731;91.33;0.00;0.00;0.00;28.52;6.49;30.00;30.00;29.20;20.78;-9999.00;84.91;1400;;;;;;61.20;35.10;24.12;26.25;0.00;5.50;17.00;80.00;27.51;-1000.00;-62.529;-72.333;23;2338.85;73.35;3
+M;0002;005;02;732;81.34;0.00;0.00;0.00;29.09;6.46;30.00;30.00;29.30;20.77;-9999.00;84.94;1400;;;;;;63.80;35.10;24.12;26.25;0.00;5.50;17.00;80.00;27.52;-1000.00;-49.530;-72.333;23;2338.78;73.36;3
+M;0002;006;02;734;95.54;0.00;0.00;0.00;27.77;6.52;30.00;30.00;29.30;20.77;-9999.00;84.96;1400;;;;;;63.80;35.10;24.16;26.25;0.00;5.50;17.00;80.00;27.52;-1000.00;-36.532;-72.333;23;2338.46;73.36;3
+M;0002;007;02;735;90.64;0.00;0.00;0.00;28.21;6.50;30.00;30.00;29.30;20.77;-9999.00;85.06;1399;;;;;;65.20;35.10;24.22;26.25;0.00;5.50;17.50;80.00;27.51;-1000.00;-23.518;-72.333;23;2338.57;73.36;3
+M;0002;008;02;736;96.20;0.00;0.00;0.00;27.50;6.54;30.00;30.00;29.30;20.77;-9999.00;85.12;1399;;;;;;65.20;35.10;24.22;26.25;0.00;5.50;17.50;80.00;27.52;-1000.00;-10.536;-72.333;23;2338.15;73.37;3
+M;0002;009;02;737;89.72;0.00;0.00;0.00;28.42;6.49;30.00;30.00;29.40;20.77;-9999.00;85.15;1399;;;;;;66.10;35.10;24.16;26.25;0.00;5.00;18.00;80.00;27.51;-1000.00;-10.536;-59.365;23;2338.06;73.37;3
+M;0002;010;02;739;103.80;0.00;0.00;0.00;28.10;6.51;30.00;30.00;29.50;20.77;-9999.00;85.17;1400;;;;;;66.20;35.10;24.16;26.25;0.00;5.00;18.00;80.00;27.51;-1000.00;-23.494;-59.357;23;2337.51;73.38;3
+M;0002;011;02;740;84.91;0.00;0.00;0.00;28.64;6.48;30.00;30.00;29.50;20.77;-9999.00;85.19;1399;;;;;;66.20;35.10;24.16;26.25;0.00;4.50;18.50;80.00;27.52;-1000.00;-36.508;-59.357;23;2337.35;73.38;3
+M;0002;012;02;741;86.52;0.00;0.00;0.00;28.34;6.50;30.00;30.00;29.50;20.78;-9999.00;85.24;1399;;;;;;66.20;35.10;24.09;26.25;0.00;4.50;18.50;80.00;27.51;-1000.00;-49.506;-59.357;23;2337.30;73.38;3
+M;0002;013;02;742;87.31;0.00;0.00;0.00;29.10;6.46;30.00;29.90;29.60;20.77;-9999.00;85.34;1399;;;;;;66.30;35.10;24.09;26.25;0.00;4.50;19.00;80.00;27.51;-1000.00;-62.505;-59.357;23;2337.23;73.39;3
+M;0002;014;02;744;91.46;0.00;0.00;0.00;28.44;6.49;30.00;29.90;29.60;20.77;-9999.00;85.38;1399;;;;;;66.30;35.10;24.16;26.25;0.00;4.50;19.00;80.00;27.51;-1000.00;-75.495;-59.357;23;2337.18;73.39;3
+M;0002;015;02;745;44.96;0.00;0.00;0.00;30.89;6.38;30.00;30.00;29.60;20.77;-9999.00;85.41;1399;;;;;;66.30;35.10;24.12;26.25;0.00;5.00;20.00;80.00;27.52;-1000.00;-88.501;-59.357;23;2337.01;73.38;3
+M;0002;016;02;746;109.53;0.00;0.00;0.00;27.42;6.54;30.00;29.90;29.70;20.77;-9999.00;85.46;1399;;;;;;66.40;35.10;24.12;26.25;0.00;4.50;19.50;80.00;27.52;-1000.00;-101.507;-59.357;23;2336.78;73.40;3
+M;0002;017;02;747;106.37;0.00;0.00;0.00;29.02;6.46;30.00;29.90;29.70;20.77;-9999.00;85.52;1399;;;;;;66.40;35.10;24.16;26.25;0.00;4.50;19.50;80.00;27.52;-1000.00;-101.507;-46.350;23;2337.24;73.39;3
+M;0002;018;02;748;85.58;0.00;0.00;0.00;28.23;6.50;30.00;29.90;29.70;20.77;-9999.00;85.58;1400;;;;;;66.90;35.10;24.16;26.25;0.00;4.50;20.00;0.00;27.51;-1000.00;-88.525;-46.350;23;2337.14;73.38;3
+M;0002;019;02;750;88.34;0.00;0.00;0.00;28.47;6.49;30.00;29.90;29.70;20.77;-9999.00;85.67;1400;;;;;;66.90;35.10;24.12;26.25;0.00;4.50;20.00;0.00;27.52;-1000.00;-75.519;-46.350;23;2336.54;73.39;3
+M;0002;020;02;751;85.85;0.00;0.00;0.00;28.64;6.48;30.00;30.00;29.70;20.77;-9999.00;85.66;1400;;;;;;65.10;35.10;24.12;26.25;0.00;5.00;19.50;0.00;27.52;-1000.00;-62.521;-46.350;23;2336.91;73.40;3
+M;0002;021;02;752;76.41;0.00;0.00;0.00;28.93;6.47;30.00;29.90;29.60;20.77;-9999.00;85.61;1397;;;;;;63.40;35.10;24.12;26.25;0.00;5.00;19.50;0.00;27.52;-1000.00;-49.530;-46.350;23;2336.08;73.40;3
+M;0002;022;02;753;83.94;0.00;0.00;0.00;29.01;6.46;30.00;29.90;29.60;20.77;-9999.00;85.58;1397;;;;;;63.40;35.10;24.19;26.25;0.00;5.00;19.50;0.00;27.52;-1000.00;-36.532;-46.350;23;2336.35;73.39;3
+M;0002;023;02;755;88.30;0.00;0.00;0.00;28.54;6.49;30.00;29.90;29.60;20.77;-9999.00;85.51;1399;;;;;;62.30;35.10;24.19;26.25;0.00;5.00;19.50;0.00;27.51;-1000.00;-23.518;-46.350;23;2336.41;73.39;3
+M;0002;024;02;756;90.28;0.00;0.00;0.00;28.73;6.48;30.00;30.00;29.50;20.77;-9999.00;85.44;1399;;;;;;61.70;35.10;24.12;26.25;0.00;5.00;20.00;0.00;27.52;-1000.00;-10.536;-46.350;23;2336.05;73.39;3
+M;0002;025;02;757;92.76;0.00;0.00;0.00;28.98;6.47;30.00;30.00;29.50;20.77;-9999.00;85.39;1399;;;;;;61.70;35.10;24.12;26.25;0.00;5.00;20.00;0.00;27.52;-1000.00;-10.536;-33.367;23;2336.07;73.39;3
+M;0002;026;02;758;93.38;0.00;0.00;0.00;28.93;6.47;30.00;30.00;29.40;20.77;-9999.00;85.35;1399;;;;;;61.30;35.10;24.12;26.25;0.00;5.50;19.50;0.00;27.53;-1000.00;-23.494;-33.367;23;2336.08;73.40;3
+M;0002;027;02;760;84.19;0.00;0.00;0.00;29.08;6.46;30.00;30.00;29.40;20.77;-9999.00;85.30;1399;;;;;;61.30;35.10;24.16;26.25;0.00;5.50;19.50;0.00;27.53;-1000.00;-36.508;-33.367;23;2336.28;73.40;3
+M;0002;028;02;761;87.54;0.00;0.00;0.00;28.92;6.47;30.00;30.00;29.30;20.77;-9999.00;85.25;1401;;;;;;61.00;35.10;24.16;26.25;0.00;5.00;18.50;0.00;27.53;-1000.00;-49.506;-33.367;23;2336.33;73.40;3
+M;0002;029;02;762;90.10;0.00;0.00;0.00;28.93;6.47;30.00;30.00;29.30;20.77;-9999.00;85.19;1400;;;;;;60.70;35.10;24.16;26.25;0.00;5.00;18.00;0.00;27.53;-1000.00;-62.497;-33.367;23;2335.84;73.41;3
+M;0002;030;02;763;87.29;0.00;0.00;0.00;29.02;6.46;30.00;30.00;29.30;20.77;-9999.00;85.14;1400;;;;;;60.70;35.10;24.16;26.25;0.00;5.00;18.00;0.00;27.53;-1000.00;-75.495;-33.367;23;2335.76;73.41;3
+M;0002;031;02;764;91.46;0.00;0.00;0.00;29.47;6.44;30.00;30.00;29.20;20.77;-9999.00;85.11;1401;;;;;;60.40;35.10;24.16;26.25;0.00;5.00;18.00;0.00;27.53;-1000.00;-88.501;-33.367;23;2336.01;73.41;3
+M;0002;032;02;766;97.83;0.00;0.00;0.00;28.55;6.49;30.00;30.00;29.20;20.77;-9999.00;85.11;1401;;;;;;60.40;35.10;24.12;26.25;0.00;5.00;18.00;0.00;27.52;-1000.00;-101.507;-33.367;23;2335.78;73.41;3
+M;0002;033;02;767;101.25;0.00;0.00;0.00;29.24;6.45;30.00;30.00;29.20;20.77;-9999.00;85.06;1402;;;;;;60.20;35.20;24.12;26.25;0.00;5.00;17.50;0.00;27.53;-1000.00;-101.507;-20.360;23;2335.84;73.41;3
+M;0002;034;02;768;88.90;0.00;0.00;0.00;29.60;6.44;30.00;30.00;29.10;20.77;-9999.00;84.98;1402;;;;;;59.90;35.10;24.12;26.25;0.00;5.00;17.50;0.00;27.53;-1000.00;-88.525;-20.360;23;2335.93;73.41;3
+M;0002;035;02;769;94.42;0.00;0.00;0.00;28.97;6.47;30.00;30.00;29.10;20.77;-9999.00;84.95;1402;;;;;;59.90;35.10;24.09;26.25;0.00;5.00;17.50;0.00;27.52;-1000.00;-75.519;-20.360;23;2336.06;73.41;3
+M;0002;036;02;771;88.08;0.00;0.00;0.00;29.44;6.44;30.00;30.00;29.10;20.77;-9999.00;84.91;1399;;;;;;59.70;35.10;24.09;26.25;0.00;5.00;17.50;0.00;27.52;-1000.00;-62.529;-20.360;23;2335.91;73.41;3
+M;0002;037;02;772;83.43;0.00;0.00;0.00;29.53;6.44;30.00;30.00;29.10;20.77;-9999.00;84.88;1399;;;;;;59.30;35.20;24.12;26.25;0.00;5.00;17.50;80.00;27.53;-1000.00;-49.530;-20.360;23;2335.66;73.43;3
+M;0002;038;02;773;86.78;0.00;0.00;0.00;29.42;6.45;30.00;30.00;29.10;20.77;-9999.00;84.85;1399;;;;;;59.30;35.20;24.22;26.25;0.00;5.00;17.50;80.00;27.53;-1000.00;-36.532;-20.360;23;2335.39;73.41;3
+M;0002;039;02;774;86.00;0.00;0.00;0.00;28.99;6.47;30.00;30.00;29.20;20.77;-9999.00;84.85;1398;;;;;;61.50;35.10;24.22;26.25;0.00;5.00;17.00;80.00;27.52;-1000.00;-23.518;-20.360;23;2335.39;73.41;3
+M;0002;040;02;775;83.32;0.00;0.00;0.00;29.37;6.45;30.00;30.00;29.20;20.77;-9999.00;84.92;1398;;;;;;61.50;35.10;24.09;26.25;0.00;5.00;17.00;80.00;27.52;-1000.00;-10.536;-20.360;23;2335.86;73.41;3
+M;0002;041;02;777;88.17;0.00;0.00;0.00;28.80;6.47;30.00;30.00;29.20;20.77;-9999.00;84.94;1399;;;;;;64.20;35.20;24.09;26.25;0.00;5.00;17.50;80.00;27.53;-1000.00;-10.536;-7.376;23;2335.25;73.42;3
+M;0002;042;02;778;93.41;0.00;0.00;0.00;29.23;6.45;30.00;30.00;29.30;20.77;-9999.00;84.99;1398;;;;;;65.40;35.20;24.09;26.25;0.00;4.50;17.00;80.00;27.53;-1000.00;-23.494;-7.376;23;2335.12;73.41;3
+M;0002;043;02;779;93.35;0.00;0.00;0.00;28.50;6.49;30.00;30.00;29.30;20.77;-9999.00;85.02;1398;;;;;;65.40;35.20;24.00;26.25;0.00;4.50;17.00;80.00;27.52;-1000.00;-36.508;-7.376;23;2335.14;73.42;3
+M;0002;044;02;780;84.03;0.00;0.00;0.00;29.63;6.44;30.00;30.00;29.40;20.77;-9999.00;85.08;1398;;;;;;66.20;35.20;24.00;26.25;0.00;4.00;17.00;80.00;27.53;-1000.00;-49.498;-7.376;23;2335.73;73.42;3
+M;0002;045;02;782;89.56;0.00;0.00;0.00;28.78;6.48;30.00;30.00;29.40;20.77;-9999.00;85.18;1398;;;;;;66.20;35.20;24.22;26.25;0.00;4.00;17.00;80.00;27.53;-1000.00;-62.497;-7.376;23;2334.78;73.42;3
+M;0002;046;02;783;100.02;0.00;0.00;0.00;28.71;6.48;30.00;30.00;29.50;20.77;-9999.00;85.22;1399;;;;;;66.40;35.20;24.12;26.25;0.00;4.00;17.00;80.00;27.53;-1000.00;-75.495;-7.376;23;2335.04;73.42;3
+M;0002;047;02;784;94.18;0.00;0.00;0.00;28.86;6.47;30.00;30.00;29.50;20.77;-9999.00;85.26;1401;;;;;;66.60;35.20;24.12;26.25;0.00;4.00;17.00;80.00;27.53;-1000.00;-88.501;-7.376;23;2335.44;73.42;3
+M;0002;048;02;785;102.71;0.00;0.00;0.00;29.09;6.46;30.00;30.00;29.60;20.77;-9999.00;85.31;1401;;;;;;66.70;35.20;24.19;26.25;0.00;4.00;17.00;80.00;27.53;-1000.00;-101.499;-7.376;23;2334.87;73.43;3
+P;0002;;;785;;;;;;;30.00;30.00;29.60;20.77;-9999.00;85.31;1401;;;;;;66.70;35.20;24.19;26.25;0.00;4.00;17.00;80.00;27.53;-1000.00;-101.499;-7.376;23;;;;1.931;0.814;0.803;0.820;0.806
+P;0002;;;786;;;;;;;30.00;30.00;29.60;20.77;-9999.00;85.33;1401;;;;;;66.70;35.20;24.19;26.25;0.00;4.00;17.00;80.00;27.53;-1000.00;-101.507;-7.376;1;;;;1.931;0.814;0.803;0.821;0.806
+M;0002;001;03;808;23.12;0.00;0.00;0.00;42.13;97.23;30.00;30.00;29.30;20.76;-9999.00;85.19;1399;;;;;;60.40;35.30;24.12;26.25;0.00;4.50;16.50;0.00;27.54;-1000.00;-101.531;-67.364;23;2901.52;5.87;3
+M;0002;002;03;810;23.84;0.00;0.00;0.00;42.14;97.17;30.00;30.00;29.20;20.76;-9999.00;85.15;1399;;;;;;60.20;35.30;24.16;26.25;0.00;4.50;16.50;0.00;27.54;-1000.00;-88.525;-67.364;23;2899.73;5.88;3
+M;0002;003;03;811;23.74;0.00;0.00;0.00;42.09;97.42;30.00;30.00;29.20;20.76;-9999.00;85.11;1400;;;;;;60.20;35.30;24.16;26.25;0.00;4.50;16.50;0.00;27.54;-1000.00;-75.527;-67.364;23;2897.29;5.86;3
+M;0002;004;03;812;22.68;0.00;0.00;0.00;42.21;96.80;30.00;30.00;29.10;20.75;-9999.00;85.09;1400;;;;;;60.00;35.30;24.16;26.25;0.00;4.50;16.50;0.00;27.54;-1000.00;-62.521;-67.364;23;2896.34;5.86;3
+M;0002;005;03;813;23.08;0.00;0.00;0.00;42.15;97.10;30.00;30.00;29.10;20.75;-9999.00;85.07;1400;;;;;;59.80;35.30;24.09;26.25;0.00;5.00;16.50;0.00;27.54;-1000.00;-49.530;-67.364;23;2895.85;5.86;3
+M;0002;006;03;815;22.38;0.00;0.00;0.00;42.18;96.95;30.00;30.00;29.10;20.75;-9999.00;85.05;1400;;;;;;59.80;35.30;24.09;26.25;0.00;5.00;16.50;0.00;27.55;-1000.00;-36.532;-67.364;23;2894.10;5.91;3
+M;0002;007;03;816;23.39;0.00;0.00;0.00;42.11;97.30;30.00;30.00;29.00;20.75;-9999.00;85.04;1400;;;;;;59.70;35.20;24.06;26.25;0.00;4.50;16.50;0.00;27.55;-1000.00;-23.518;-67.364;23;2893.82;5.86;3
+M;0002;008;03;817;23.72;0.00;0.00;0.00;42.15;97.10;30.00;30.00;29.00;20.75;-9999.00;85.00;1401;;;;;;59.70;35.20;24.09;26.25;0.00;4.50;16.50;0.00;27.55;-1000.00;-10.536;-67.364;23;2892.14;5.90;3
+M;0002;009;03;818;22.91;0.00;0.00;0.00;42.01;97.81;30.00;30.00;29.00;20.75;-9999.00;84.98;1399;;;;;;59.50;35.30;24.09;26.25;0.00;5.00;17.50;0.00;27.55;-1000.00;-10.536;-54.357;23;2891.44;5.81;3
+M;0002;010;03;820;22.44;0.00;0.00;0.00;42.11;97.32;30.00;30.00;29.00;20.75;-9999.00;84.90;1399;;;;;;59.40;35.30;24.12;26.25;0.00;4.50;17.50;0.00;27.55;-1000.00;-23.494;-54.357;23;2890.73;5.83;3
+M;0002;011;03;821;24.67;0.00;0.00;0.00;42.13;97.20;30.00;30.00;29.00;20.75;-9999.00;84.85;1398;;;;;;59.40;35.30;24.16;26.25;0.00;4.50;17.50;0.00;27.55;-1000.00;-36.508;-54.357;23;2889.62;5.84;3
+M;0002;012;03;822;22.00;0.00;0.00;0.00;41.97;98.01;30.00;30.00;29.10;20.75;-9999.00;84.82;1401;;;;;;59.00;35.30;24.16;26.25;0.00;4.50;17.00;80.00;27.55;-1000.00;-49.498;-54.357;23;2888.57;5.85;3
+M;0002;013;03;823;23.87;0.00;0.00;0.00;42.26;96.57;30.00;30.00;29.20;20.75;-9999.00;84.86;1401;;;;;;61.60;35.30;24.16;26.25;0.00;4.50;17.50;80.00;27.55;-1000.00;-62.497;-54.357;23;2887.87;5.85;3
+M;0002;014;03;824;22.50;0.00;0.00;0.00;42.03;97.70;30.00;30.00;29.20;20.75;-9999.00;84.92;1399;;;;;;61.60;35.30;24.16;26.25;0.00;4.50;17.50;80.00;27.55;-1000.00;-75.495;-54.357;23;2887.36;5.84;3
+M;0002;015;03;826;22.95;0.00;0.00;0.00;42.09;97.39;30.00;30.00;29.20;20.75;-9999.00;84.99;1399;;;;;;64.60;35.30;24.19;26.25;0.00;4.50;18.00;80.00;27.55;-1000.00;-88.501;-54.357;23;2886.82;5.83;3
+M;0002;016;03;827;22.58;0.00;0.00;0.00;41.92;98.21;30.00;30.00;29.20;20.75;-9999.00;85.09;1400;;;;;;64.60;35.30;24.12;26.25;0.00;4.50;18.00;80.00;27.56;-1000.00;-101.499;-54.357;23;2885.64;5.87;3
+M;0002;017;03;828;22.37;0.00;0.00;0.00;42.04;97.62;30.00;30.00;29.30;20.75;-9999.00;85.12;1399;;;;;;65.90;35.30;24.12;26.25;0.00;4.50;18.50;80.00;27.55;-1000.00;-101.507;-41.358;23;2885.14;5.86;3
+M;0002;018;03;829;21.36;0.00;0.00;0.00;41.92;98.23;30.00;29.90;29.40;20.75;-9999.00;85.20;1399;;;;;;66.60;35.30;24.25;26.25;0.00;4.50;18.50;80.00;27.56;-1000.00;-88.525;-41.358;23;2883.92;5.85;3
+M;0002;019;03;831;21.56;0.00;0.00;0.00;42.16;97.07;30.00;29.90;29.40;20.75;-9999.00;85.21;1399;;;;;;66.60;35.30;24.25;26.25;0.00;4.50;18.50;80.00;27.55;-1000.00;-75.519;-41.358;23;2883.53;5.87;3
+M;0002;020;03;832;20.81;0.00;0.00;0.00;42.02;97.74;30.00;30.00;29.50;20.75;-9999.00;85.27;1400;;;;;;66.90;35.30;24.09;26.25;0.00;4.00;18.50;80.00;27.55;-1000.00;-62.529;-41.358;23;2882.69;5.86;3
+M;0002;021;03;833;22.15;0.00;0.00;0.00;42.12;97.27;30.00;30.00;29.50;20.75;-9999.00;85.37;1400;;;;;;66.90;35.30;24.25;26.25;0.00;4.00;18.50;80.00;27.55;-1000.00;-49.530;-41.358;23;2882.31;5.87;3
+M;0002;022;03;834;20.22;0.00;0.00;0.00;41.89;98.38;30.00;30.00;29.50;20.75;-9999.00;85.41;1401;;;;;;67.00;35.30;24.25;26.25;0.00;4.00;18.00;80.00;27.55;-1000.00;-36.540;-41.358;23;2881.93;5.83;3
+M;0002;023;03;836;20.33;0.00;0.00;0.00;42.20;96.88;30.00;30.00;29.60;20.75;-9999.00;85.42;1401;;;;;;67.10;35.30;24.09;26.25;0.00;4.00;18.50;80.00;27.55;-1000.00;-23.526;-41.358;23;2880.56;5.89;3
+M;0002;024;03;837;23.63;0.00;0.00;0.00;42.14;97.14;30.00;30.00;29.60;20.75;-9999.00;85.49;1399;;;;;;67.10;35.30;24.12;26.25;0.00;4.00;18.50;80.00;27.55;-1000.00;-10.536;-41.358;23;2880.46;5.89;3
+M;0002;025;03;838;22.15;0.00;0.00;0.00;42.09;97.40;30.00;30.00;29.60;20.75;-9999.00;85.54;1399;;;;;;67.10;35.30;24.12;26.25;0.00;4.00;18.50;80.00;27.55;-1000.00;-10.536;-28.359;23;2879.68;5.87;3
+M;0002;026;03;839;23.23;0.00;0.00;0.00;42.02;97.76;30.00;30.00;29.60;20.75;-9999.00;85.60;1399;;;;;;67.80;35.30;24.16;26.25;0.00;4.00;18.50;0.00;27.55;-1000.00;-23.494;-28.359;23;2879.23;5.87;3
+M;0002;027;03;841;21.19;0.00;0.00;0.00;41.82;98.71;30.00;30.00;29.60;20.76;-9999.00;85.63;1400;;;;;;67.80;35.30;24.16;26.25;0.00;4.00;18.50;0.00;27.55;-1000.00;-36.508;-28.359;23;2878.80;5.84;3
+M;0002;028;03;842;21.02;0.00;0.00;0.00;42.01;97.81;30.00;30.00;29.60;20.76;-9999.00;85.64;1400;;;;;;65.70;35.30;24.12;26.25;0.00;4.00;18.00;0.00;27.55;-1000.00;-49.506;-28.359;23;2877.78;5.86;3
+M;0002;029;03;843;22.85;0.00;0.00;0.00;42.15;97.11;30.00;30.00;29.60;20.76;-9999.00;85.65;1399;;;;;;65.70;35.30;24.12;26.25;0.00;4.00;18.00;0.00;27.56;-1000.00;-62.497;-28.359;23;2877.12;5.86;3
+M;0002;030;03;844;22.19;0.00;0.00;0.00;42.01;97.78;30.00;30.00;29.60;20.76;-9999.00;85.63;1399;;;;;;63.80;35.30;24.12;26.25;0.00;4.00;18.00;0.00;27.55;-1000.00;-75.495;-28.359;23;2876.70;5.87;3
+M;0002;031;03;845;23.24;0.00;0.00;0.00;41.98;97.91;30.00;30.00;29.50;20.76;-9999.00;85.57;1399;;;;;;62.70;35.30;24.00;26.25;0.00;4.00;17.00;0.00;27.56;-1000.00;-88.501;-28.359;23;2875.81;5.88;3
+M;0002;032;03;847;22.98;0.00;0.00;0.00;41.91;98.27;30.00;30.00;29.40;20.76;-9999.00;85.54;1400;;;;;;62.00;35.30;24.12;26.25;0.00;4.00;17.00;0.00;27.55;-1000.00;-101.499;-28.359;23;2875.33;5.86;3
+M;0002;033;03;848;25.39;0.00;0.00;0.00;41.96;98.03;30.00;30.00;29.40;20.76;-9999.00;85.52;1399;;;;;;62.00;35.30;24.12;26.25;0.00;4.00;17.00;0.00;27.55;-1000.00;-101.499;-15.367;23;2875.11;5.87;3
+M;0002;034;03;849;20.23;0.00;0.00;0.00;41.78;98.90;30.00;30.00;29.40;20.76;-9999.00;85.50;1399;;;;;;61.50;35.30;24.16;26.25;0.00;4.00;17.00;0.00;27.55;-1000.00;-88.525;-15.367;23;2874.99;5.89;3
+M;0002;035;03;850;20.29;0.00;0.00;0.00;41.92;98.26;30.00;30.00;29.40;20.76;-9999.00;85.43;1399;;;;;;61.50;35.30;24.16;26.25;0.00;4.00;17.00;0.00;27.55;-1000.00;-75.519;-15.367;23;2874.67;5.85;3
+M;0002;036;03;852;21.95;0.00;0.00;0.00;41.99;97.90;30.00;30.00;29.30;20.76;-9999.00;85.38;1399;;;;;;61.20;35.30;24.12;26.25;0.00;4.00;16.50;0.00;27.55;-1000.00;-62.529;-15.367;23;2873.76;5.86;3
+M;0002;037;03;853;21.03;0.00;0.00;0.00;41.84;98.64;30.00;30.00;29.20;20.76;-9999.00;85.34;1399;;;;;;60.90;35.30;24.22;26.25;0.00;4.00;16.50;0.00;27.56;-1000.00;-49.530;-15.367;23;2873.80;5.85;3
+M;0002;038;03;854;20.96;0.00;0.00;0.00;41.91;98.27;30.00;30.00;29.20;20.76;-9999.00;85.31;1399;;;;;;60.90;35.30;24.22;26.25;0.00;4.00;16.50;0.00;27.55;-1000.00;-36.532;-15.367;23;2872.86;5.89;3
+M;0002;039;03;856;21.84;0.00;0.00;0.00;41.96;98.02;30.00;30.00;29.20;20.76;-9999.00;85.29;1399;;;;;;60.60;35.30;24.09;26.25;0.00;4.00;16.50;0.00;27.55;-1000.00;-23.518;-15.367;23;2872.89;5.86;3
+M;0002;040;03;857;22.19;0.00;0.00;0.00;41.96;98.02;30.00;30.00;29.20;20.76;-9999.00;85.26;1400;;;;;;60.60;35.30;24.12;26.25;0.00;4.00;16.50;0.00;27.55;-1000.00;-10.536;-15.367;23;2872.48;5.87;3
+M;0002;041;03;858;18.51;0.00;0.00;0.00;41.81;98.79;30.00;30.00;29.10;20.76;-9999.00;85.19;1401;;;;;;60.30;35.30;24.12;26.25;0.00;4.00;16.00;0.00;27.56;-1000.00;-10.536;-2.376;23;2871.93;5.87;3
+M;0002;042;03;859;20.16;0.00;0.00;0.00;41.90;98.31;30.00;30.00;29.10;20.76;-9999.00;85.17;1401;;;;;;60.10;35.30;24.19;26.25;0.00;4.00;16.50;0.00;27.55;-1000.00;-23.494;-2.376;23;2871.57;5.88;3
+M;0002;043;03;860;20.00;0.00;0.00;0.00;41.94;98.14;30.00;30.00;29.10;20.76;-9999.00;85.12;1400;;;;;;60.10;35.30;24.19;26.25;0.00;4.00;16.50;0.00;27.55;-1000.00;-36.508;-2.376;23;2871.10;5.87;3
+M;0002;044;03;862;20.76;0.00;0.00;0.00;41.78;98.95;30.00;30.00;29.00;20.76;-9999.00;85.08;1400;;;;;;59.90;35.30;24.06;26.25;0.00;4.00;16.50;0.00;27.55;-1000.00;-49.506;-2.376;23;2870.98;5.84;3
+M;0002;045;03;863;20.97;0.00;0.00;0.00;41.72;99.23;30.00;30.00;29.00;20.76;-9999.00;85.08;1399;;;;;;59.90;35.30;24.16;26.25;0.00;4.00;16.50;0.00;27.56;-1000.00;-62.505;-2.376;23;2870.41;5.86;3
+M;0002;046;03;864;21.49;0.00;0.00;0.00;41.97;97.97;30.00;30.00;29.00;20.76;-9999.00;85.00;1399;;;;;;59.80;35.30;24.16;26.25;0.00;4.00;16.50;0.00;27.55;-1000.00;-75.495;-2.376;23;2869.89;5.86;3
+M;0002;047;03;865;21.57;0.00;0.00;0.00;42.09;97.38;30.00;30.00;28.90;20.76;-9999.00;84.96;1399;;;;;;59.70;35.30;24.06;26.25;0.00;4.00;16.50;0.00;27.55;-1000.00;-88.501;-2.376;23;2869.40;5.88;3
+M;0002;048;03;866;23.65;0.00;0.00;0.00;41.86;98.54;30.00;30.00;28.90;20.76;-9999.00;84.94;1398;;;;;;59.50;35.30;24.06;26.25;0.00;4.00;16.00;0.00;27.56;-1000.00;-101.507;-2.376;23;2869.14;5.91;3
+P;0002;;;866;;;;;;;30.00;30.00;28.90;20.76;-9999.00;84.94;1398;;;;;;59.50;35.30;24.06;26.25;0.00;4.00;16.00;0.00;27.56;-1000.00;-101.507;-2.376;23;;;;1.931;0.814;0.804;0.820;0.807
+P;0002;;;902;;;;;;;30.00;30.00;29.20;20.77;-9999.00;85.38;1399;;;;;;60.80;35.40;24.06;26.25;0.00;4.00;15.50;0.00;27.56;-1000.00;-125.993;-69.326;23;;;;1.930;0.814;0.804;0.820;0.807
+P;0002;;;932;;;;;;;30.00;30.00;29.20;20.77;-9999.00;85.31;1400;;;;;;67.20;35.50;24.06;26.25;0.00;3.50;15.50;80.00;27.57;-1000.00;-125.993;-69.326;23;;;;1.930;0.813;0.803;0.820;0.807
+P;0002;;;962;;;;;;;30.00;30.00;28.90;20.76;-9999.00;85.05;1400;;;;;;60.40;35.50;24.06;26.25;0.00;3.50;15.00;0.00;27.57;-1000.00;-125.993;-69.334;23;;;;1.931;0.814;0.804;0.820;0.807
+P;0002;;;992;;;;;;;30.00;30.00;29.30;20.77;-9999.00;85.60;1399;;;;;;64.30;35.50;24.06;26.25;0.00;3.00;14.50;0.00;27.59;-1000.00;-125.993;-69.334;23;;;;1.930;0.814;0.804;0.820;0.805
+P;0002;;;1022;;;;;;;30.00;30.00;28.60;20.78;-9999.00;84.92;1399;;;;;;59.50;35.50;24.06;26.25;0.00;4.00;14.50;0.00;27.58;-1000.00;-125.993;-69.334;23;;;;1.931;0.814;0.803;0.820;0.806
+P;0002;;;1052;;;;;;;30.00;30.00;28.90;20.77;-9999.00;85.44;1400;;;;;;61.90;35.60;24.06;26.25;0.00;3.00;14.00;0.00;27.60;-1000.00;-125.993;-69.334;23;;;;1.930;0.814;0.803;0.820;0.807
+P;0002;;;1082;;;;;;;30.00;30.00;28.90;20.75;-9999.00;85.28;1400;;;;;;67.70;35.60;24.06;26.25;0.00;2.50;13.50;80.00;27.60;-1000.00;-125.993;-69.334;23;;;;1.931;0.815;0.804;0.821;0.808
+P;0002;;;1112;;;;;;;30.00;30.00;28.60;20.74;-9999.00;85.18;1399;;;;;;60.20;35.60;24.06;26.25;0.00;3.50;13.50;0.00;27.61;-1000.00;-125.993;-69.334;23;;;;1.930;0.813;0.803;0.820;0.806
+P;0002;;;1142;;;;;;;30.00;30.00;29.00;20.75;-9999.00;85.61;1399;;;;;;68.30;35.60;24.06;26.25;0.00;3.00;13.50;0.00;27.61;-1000.00;-125.993;-69.334;23;;;;1.930;0.814;0.803;0.820;0.807
+P;0002;;;1172;;;;;;;30.00;30.00;28.50;20.75;-9999.00;85.06;1399;;;;;;60.20;35.60;24.06;26.25;0.00;3.00;13.50;0.00;27.63;-1000.00;-125.993;-69.334;23;;;;1.930;0.813;0.804;0.821;0.807
+P;0002;;;1202;;;;;;;30.00;30.00;28.80;20.74;-9999.00;85.62;1400;;;;;;63.70;35.70;24.06;26.25;0.00;2.50;13.50;0.00;27.63;-1000.00;-125.993;-69.334;23;;;;1.931;0.815;0.803;0.821;0.807
+P;0003;;;1214;;;;;;;30.00;30.00;28.60;20.74;-9999.00;85.32;1400;;;;;;61.10;35.70;24.06;26.25;0.00;2.50;13.00;0.00;27.64;-1000.00;-125.993;-69.334;23;;;;1.930;0.813;0.804;0.821;0.806
+P;0003;;;1216;;;;;;;30.00;30.00;28.50;20.74;-9999.00;85.18;1400;;;;;;60.90;35.70;24.06;26.25;0.00;3.00;13.00;0.00;27.64;-1000.00;-125.993;-69.334;2;;;;1.930;0.814;0.804;0.820;0.806
+R;0003;;01;1245;241.68;0.00;;;;;30.00;30.00;28.90;20.76;-9999.00;85.64;1399;2056.47;;;;;68.70;35.60;24.12;26.25;0.00;2.50;13.00;0.00;27.64;-1000.00;-125.993;-69.334;30;2056.47;72.94;4
+M;0003;001;01;1246;8.86;0.00;6.64;0.00;-1.38;0.00;30.00;30.00;28.90;20.77;-9999.00;85.63;1399;;;;;;66.30;35.60;24.12;26.25;0.00;2.50;13.00;0.00;27.64;-1000.00;-104.033;-69.829;32;2059.73;72.93;4
+M;0003;002;01;1248;7.71;0.00;5.78;0.00;-1.93;0.00;30.00;30.00;28.90;20.77;-9999.00;85.60;1399;;;;;;64.90;35.60;24.19;26.25;0.00;2.50;13.50;0.00;27.64;-1000.00;-91.019;-69.829;32;2060.24;72.90;4
+M;0003;003;01;1249;8.35;0.00;6.26;0.00;-1.52;0.00;30.00;30.00;28.90;20.77;-9999.00;85.54;1400;;;;;;64.90;35.60;24.16;26.25;0.00;2.50;13.50;0.00;27.64;-1000.00;-78.021;-69.829;32;2060.28;72.88;4
+M;0003;004;01;1250;8.42;0.00;6.31;0.00;-1.79;0.00;30.00;30.00;28.80;20.77;-9999.00;85.50;1400;;;;;;63.80;35.60;24.16;26.25;0.00;2.50;13.00;0.00;27.64;-1000.00;-65.031;-69.829;32;2059.69;72.93;4
+M;0003;005;01;1251;8.75;0.00;6.56;0.00;-1.58;0.00;30.00;30.00;28.80;20.77;-9999.00;85.47;1400;;;;;;63.00;35.60;24.16;26.25;0.00;2.50;14.00;0.00;27.64;-1000.00;-52.024;-69.829;32;2059.32;72.91;4
+M;0003;006;01;1253;8.58;0.00;6.43;0.00;-1.49;0.00;30.00;29.90;28.70;20.77;-9999.00;85.45;1399;;;;;;62.40;35.60;24.16;26.25;0.00;2.50;13.50;0.00;27.64;-1000.00;-39.026;-69.829;32;2059.38;72.90;4
+M;0003;007;01;1254;8.03;0.00;6.02;0.00;-1.50;0.00;30.00;29.90;28.70;20.77;-9999.00;85.41;1400;;;;;;62.40;35.60;24.19;26.25;0.00;2.50;13.50;0.00;27.64;-1000.00;-26.028;-69.829;32;2059.01;72.90;4
+M;0003;008;01;1255;7.56;0.00;5.66;0.00;-1.35;0.00;30.00;29.90;28.70;20.77;-9999.00;85.37;1400;;;;;;62.00;35.60;24.16;26.25;0.00;2.50;15.00;0.00;27.64;-1000.00;-13.030;-69.829;32;2058.85;72.93;4
+M;0003;009;01;1256;7.90;0.00;5.92;0.00;-1.91;0.00;30.00;29.90;28.70;20.77;-9999.00;85.30;1400;;;;;;62.00;35.60;24.16;26.25;0.00;2.50;15.00;0.00;27.64;-1000.00;-13.030;-56.853;32;2058.45;72.94;4
+M;0003;010;01;1258;8.48;0.00;6.35;0.00;-1.46;0.00;30.00;29.90;28.60;20.77;-9999.00;85.29;1400;;;;;;61.60;35.60;24.16;26.25;0.00;2.50;15.00;0.00;27.64;-1000.00;-26.004;-56.853;32;2058.04;72.94;4
+M;0003;011;01;1259;7.68;0.00;5.75;0.00;-1.90;0.00;30.00;29.90;28.60;20.76;-9999.00;85.28;1400;;;;;;61.40;35.60;24.09;26.25;0.00;3.00;15.00;0.00;27.64;-1000.00;-39.002;-56.853;32;2058.16;72.92;4
+M;0003;012;01;1260;8.68;0.00;6.50;0.00;-1.69;0.00;30.00;29.90;28.60;20.76;-9999.00;85.27;1400;;;;;;61.40;35.60;24.09;26.25;0.00;3.00;15.00;0.00;27.64;-1000.00;-52.000;-56.853;32;2058.01;72.92;4
+M;0003;013;01;1261;9.15;0.00;6.86;0.00;-1.45;0.00;30.00;29.90;28.60;20.76;-9999.00;85.25;1400;;;;;;61.20;35.60;24.19;26.25;0.00;3.00;15.50;0.00;27.64;-1000.00;-65.007;-56.853;32;2057.59;72.94;4
+M;0003;014;01;1263;10.02;0.00;7.51;0.00;-1.57;0.00;30.00;29.90;28.60;20.76;-9999.00;85.23;1400;;;;;;61.20;35.60;24.19;26.25;0.00;3.00;15.50;0.00;27.64;-1000.00;-77.997;-56.853;32;2057.39;72.92;4
+M;0003;015;01;1264;8.28;0.00;6.21;0.00;-1.51;0.00;30.00;29.90;28.50;20.76;-9999.00;85.21;1399;;;;;;61.00;35.60;24.25;26.25;0.00;3.00;15.50;0.00;27.64;-1000.00;-90.995;-56.853;32;2057.41;72.93;4
+M;0003;016;01;1265;9.17;0.00;6.88;0.00;-1.11;0.00;30.00;29.90;28.50;20.75;-9999.00;85.22;1399;;;;;;60.80;35.60;24.25;26.25;0.00;2.50;15.50;0.00;27.64;-1000.00;-104.009;-56.853;32;2057.11;72.93;4
+M;0003;017;01;1266;9.04;0.00;6.78;0.00;-1.58;0.00;30.00;29.90;28.50;20.75;-9999.00;85.23;1398;;;;;;60.80;35.60;24.25;26.25;0.00;2.50;15.50;0.00;27.64;-1000.00;-104.009;-43.854;32;2056.97;72.94;4
+M;0003;018;01;1268;8.78;0.00;6.58;0.00;-1.51;0.00;30.00;29.90;28.50;20.75;-9999.00;85.23;1398;;;;;;60.70;35.60;24.28;26.25;0.00;2.50;15.50;0.00;27.64;-1000.00;-91.019;-43.854;32;2056.64;72.93;4
+M;0003;019;01;1269;9.37;0.00;7.02;0.00;-1.72;0.00;30.00;29.90;28.50;20.76;-9999.00;85.17;1400;;;;;;60.50;35.60;24.19;26.25;0.00;3.00;15.50;0.00;27.64;-1000.00;-78.021;-43.854;32;2056.75;72.92;4
+M;0003;020;01;1270;8.06;0.00;6.04;0.00;-1.57;0.00;30.00;29.90;28.50;20.75;-9999.00;85.11;1398;;;;;;60.50;35.60;24.19;26.25;0.00;3.00;15.50;0.00;27.64;-1000.00;-65.031;-43.854;32;2056.38;72.94;4
+M;0003;021;01;1271;8.45;0.00;6.33;0.00;-1.25;0.00;30.00;29.90;28.40;20.76;-9999.00;85.08;1398;;;;;;60.40;35.60;24.25;26.25;0.00;3.00;15.00;0.00;27.64;-1000.00;-52.024;-43.854;32;2055.82;72.97;4
+M;0003;022;01;1272;7.81;0.00;5.85;0.00;-1.53;0.00;29.90;29.90;28.40;20.76;-9999.00;85.07;1399;;;;;;60.30;35.60;24.25;26.25;0.00;3.00;15.00;0.00;27.64;-1000.00;-39.026;-43.854;32;2055.83;72.96;4
+M;0003;023;01;1274;7.80;0.00;5.84;0.00;-1.55;0.00;29.90;29.90;28.40;20.76;-9999.00;85.03;1399;;;;;;60.30;35.60;24.22;26.25;0.00;3.00;15.00;0.00;27.64;-1000.00;-26.028;-43.854;32;2055.67;72.94;4
+M;0003;024;01;1275;8.30;0.00;6.22;0.00;-1.50;0.00;29.90;29.90;28.40;20.76;-9999.00;85.03;1401;;;;;;60.10;35.60;24.16;26.25;0.00;3.00;15.00;0.00;27.64;-1000.00;-13.030;-43.854;32;2055.54;72.94;4
+M;0003;025;01;1276;8.20;0.00;6.14;0.00;-1.54;0.00;29.90;29.90;28.40;20.76;-9999.00;85.00;1401;;;;;;60.10;35.60;24.16;26.25;0.00;3.00;15.00;0.00;27.64;-1000.00;-13.030;-30.871;32;2055.45;72.95;4
+M;0003;026;01;1277;8.00;0.00;5.99;0.00;-1.48;0.00;29.90;29.90;28.40;20.76;-9999.00;84.98;1401;;;;;;60.00;35.60;24.19;26.25;0.00;3.00;15.00;0.00;27.64;-1000.00;-26.004;-30.871;32;2055.68;72.90;4
+M;0003;027;01;1279;8.80;0.00;6.60;0.00;-1.52;0.00;29.90;29.90;28.40;20.76;-9999.00;84.94;1399;;;;;;59.90;35.60;24.19;26.25;0.00;3.00;14.50;0.00;27.64;-1000.00;-39.002;-30.871;32;2054.80;72.94;4
+M;0003;028;01;1280;8.26;0.00;6.19;0.00;-1.61;0.00;29.90;29.90;28.40;20.75;-9999.00;84.95;1399;;;;;;59.90;35.60;24.19;26.25;0.00;3.00;14.50;0.00;27.64;-1000.00;-52.000;-30.871;32;2054.74;72.96;4
+M;0003;029;01;1281;8.18;0.00;6.13;0.00;-1.58;0.00;29.90;30.00;28.40;20.75;-9999.00;84.94;1399;;;;;;59.70;35.60;24.19;26.25;0.00;3.50;15.00;80.00;27.64;-1000.00;-65.007;-30.871;32;2054.78;72.94;4
+M;0003;030;01;1282;8.78;0.00;6.58;0.00;-1.31;0.00;29.90;30.00;28.40;20.75;-9999.00;85.02;1399;;;;;;59.70;35.60;24.19;26.25;0.00;3.50;15.00;80.00;27.64;-1000.00;-77.997;-30.871;32;2054.40;72.96;4
+M;0003;031;01;1284;8.55;0.00;6.41;0.00;-1.46;0.00;30.00;30.00;28.50;20.75;-9999.00;85.05;1399;;;;;;62.90;35.60;24.16;26.25;0.00;3.00;13.50;80.00;27.64;-1000.00;-90.995;-30.871;32;2054.38;72.95;4
+M;0003;032;01;1285;9.12;0.00;6.84;0.00;-1.51;0.00;30.00;30.00;28.50;20.75;-9999.00;85.06;1400;;;;;;66.00;35.60;24.19;26.25;0.00;2.50;13.50;80.00;27.64;-1000.00;-104.009;-30.871;32;2054.54;72.94;4
+M;0003;033;01;1286;9.94;0.00;7.45;0.00;-1.41;0.00;30.00;30.00;28.50;20.75;-9999.00;85.11;1399;;;;;;66.00;35.70;24.19;26.25;0.00;2.50;13.50;80.00;27.64;-1000.00;-104.009;-17.864;32;2054.48;72.95;4
+M;0003;034;01;1287;8.24;0.00;6.18;0.00;-1.68;0.00;30.00;30.00;28.60;20.75;-9999.00;85.12;1399;;;;;;67.30;35.70;24.16;26.25;0.00;2.50;13.00;80.00;27.64;-1000.00;-91.019;-17.864;32;2054.39;72.97;4
+M;0003;035;01;1289;8.19;0.00;6.14;0.00;-1.61;0.00;30.00;30.00;28.60;20.75;-9999.00;85.28;1399;;;;;;67.30;35.60;24.16;26.25;0.00;2.50;13.00;80.00;27.64;-1000.00;-78.021;-17.864;32;2053.65;73.00;4
+M;0003;036;01;1290;7.87;0.00;5.90;0.00;-1.60;0.00;30.00;30.00;28.70;20.75;-9999.00;85.33;1399;;;;;;67.80;35.60;24.16;26.25;0.00;2.50;13.00;80.00;27.64;-1000.00;-65.031;-17.864;32;2053.62;72.95;4
+M;0003;037;01;1291;8.97;0.00;6.72;0.00;-1.70;0.00;30.00;30.00;28.70;20.75;-9999.00;85.37;1398;;;;;;67.90;35.60;24.16;26.25;0.00;2.50;12.50;80.00;27.64;-1000.00;-52.024;-17.864;32;2053.08;72.97;4
+M;0003;038;01;1292;7.71;0.00;5.78;0.00;-1.23;0.00;30.00;30.00;28.70;20.75;-9999.00;85.37;1400;;;;;;67.90;35.60;24.16;26.25;0.00;2.50;12.50;80.00;27.64;-1000.00;-39.026;-17.864;32;2053.45;72.99;4
+M;0003;039;01;1293;8.09;0.00;6.06;0.00;-1.78;0.00;30.00;30.00;28.80;20.75;-9999.00;85.43;1400;;;;;;68.10;35.60;24.22;26.25;0.00;2.50;12.50;80.00;27.64;-1000.00;-26.028;-17.864;32;2053.24;72.94;4
+M;0003;040;01;1295;7.23;0.00;5.42;0.00;-1.39;0.00;30.00;30.00;28.80;20.75;-9999.00;85.51;1398;;;;;;67.70;35.60;24.22;26.25;0.00;2.00;12.50;80.00;27.64;-1000.00;-13.030;-17.864;32;2052.66;73.00;4
+M;0003;041;01;1296;7.11;0.00;5.33;0.00;-1.61;0.00;30.00;30.00;28.80;20.75;-9999.00;85.56;1401;;;;;;67.70;35.60;24.22;26.25;0.00;2.00;12.50;0.00;27.64;-1000.00;-13.030;-4.888;32;2053.09;72.97;4
+M;0003;042;01;1297;7.03;0.00;5.27;0.00;-1.45;0.00;30.00;30.00;28.90;20.74;-9999.00;85.60;1401;;;;;;68.70;35.60;24.19;26.25;0.00;2.00;12.50;0.00;27.64;-1000.00;-26.004;-4.888;32;2053.09;72.95;4
+M;0003;043;01;1298;7.86;0.00;5.89;0.00;-1.16;0.00;30.00;30.00;28.90;20.75;-9999.00;85.63;1401;;;;;;68.70;35.60;24.19;26.25;0.00;2.00;12.50;0.00;27.64;-1000.00;-39.002;-4.888;32;2052.54;72.98;4
+M;0003;044;01;1300;9.05;0.00;6.78;0.00;-1.30;0.00;30.00;30.00;28.80;20.75;-9999.00;85.65;1401;;;;;;66.30;35.60;24.25;26.25;0.00;2.50;12.50;0.00;27.64;-1000.00;-52.000;-4.888;32;2052.73;72.96;4
+M;0003;045;01;1301;8.61;0.00;6.45;0.00;-1.57;0.00;30.00;30.00;28.80;20.75;-9999.00;85.70;1401;;;;;;64.80;35.60;24.22;26.25;0.00;2.50;12.50;0.00;27.64;-1000.00;-65.007;-4.888;32;2052.90;72.97;4
+M;0003;046;01;1302;8.52;0.00;6.39;0.00;-1.51;0.00;30.00;30.00;28.80;20.75;-9999.00;85.62;1400;;;;;;64.80;35.60;24.22;26.25;0.00;2.50;12.50;0.00;27.64;-1000.00;-77.997;-4.888;32;2052.57;72.98;4
+M;0003;047;01;1303;7.75;0.00;5.81;0.00;-1.03;0.00;30.00;30.00;28.80;20.75;-9999.00;85.58;1400;;;;;;63.90;35.60;24.12;26.25;0.00;3.00;12.50;0.00;27.64;-1000.00;-90.995;-4.888;32;2052.30;72.97;4
+M;0003;048;01;1304;9.40;0.00;7.05;0.00;-2.02;0.00;30.00;30.00;28.80;20.75;-9999.00;85.55;1399;;;;;;63.90;35.60;24.12;26.25;0.00;3.00;12.50;0.00;27.64;-1000.00;-104.009;-4.888;32;2052.30;72.98;4
+P;0003;;;1304;;;;;;;30.00;30.00;28.80;20.75;-9999.00;85.55;1399;;;;;;63.90;35.60;24.12;26.25;0.00;3.00;12.50;0.00;27.64;-1000.00;-104.009;-4.888;32;;;;1.930;0.814;0.804;0.820;0.807
+P;0003;;;1306;;;;;;;30.00;30.00;28.70;20.76;-9999.00;85.51;1398;;;;;;62.60;35.60;24.12;26.25;0.00;3.00;12.50;0.00;27.64;-1000.00;-104.009;-4.888;2;;;;1.930;0.814;0.804;0.820;0.806
+M;0003;001;02;1327;92.72;0.00;0.00;0.00;29.63;6.44;30.00;30.00;28.40;20.75;-9999.00;85.02;1400;;;;;;60.30;35.60;24.22;26.25;0.00;2.50;11.50;0.00;27.66;-1000.00;-101.531;-72.333;23;2338.95;73.35;3
+M;0003;002;02;1329;95.93;0.00;0.00;0.00;28.97;6.47;29.90;30.00;28.40;20.75;-9999.00;85.01;1399;;;;;;60.20;35.60;24.16;26.25;0.00;3.00;12.00;0.00;27.65;-1000.00;-88.525;-72.333;23;2339.27;73.35;3
+M;0003;003;02;1330;93.93;0.00;0.00;0.00;28.72;6.48;29.90;30.00;28.40;20.75;-9999.00;84.99;1400;;;;;;60.20;35.60;24.16;26.25;0.00;3.00;12.00;0.00;27.65;-1000.00;-75.519;-72.333;23;2339.19;73.34;3
+M;0003;004;02;1331;89.18;0.00;0.00;0.00;29.28;6.45;30.00;30.00;28.30;20.75;-9999.00;84.99;1400;;;;;;60.10;35.60;24.22;26.25;0.00;3.00;12.00;0.00;27.66;-1000.00;-62.529;-72.333;23;2338.66;73.36;3
+M;0003;005;02;1332;79.39;0.00;0.00;0.00;29.83;6.43;30.00;30.00;28.30;20.75;-9999.00;85.00;1400;;;;;;59.90;35.60;24.22;26.25;0.00;3.00;12.50;0.00;27.65;-1000.00;-49.530;-72.333;23;2338.38;73.37;3
+M;0003;006;02;1334;93.19;0.00;0.00;0.00;28.52;6.49;30.00;30.00;28.30;20.75;-9999.00;84.97;1400;;;;;;59.90;35.60;24.22;26.25;0.00;3.00;12.50;0.00;27.65;-1000.00;-36.532;-72.333;23;2338.27;73.36;3
+M;0003;007;02;1335;88.56;0.00;0.00;0.00;29.02;6.46;30.00;29.90;28.40;20.75;-9999.00;84.96;1401;;;;;;59.70;35.60;24.19;26.25;0.00;2.50;13.00;80.00;27.66;-1000.00;-23.518;-72.333;23;2338.08;73.36;3
+M;0003;008;02;1336;93.68;0.00;0.00;0.00;28.24;6.50;30.00;29.90;28.50;20.75;-9999.00;84.94;1399;;;;;;63.00;35.60;24.19;26.25;0.00;2.50;14.00;80.00;27.65;-1000.00;-10.536;-72.333;23;2337.87;73.37;3
+M;0003;009;02;1337;87.34;0.00;0.00;0.00;29.18;6.46;30.00;29.90;28.50;20.75;-9999.00;85.02;1399;;;;;;63.00;35.60;24.16;26.25;0.00;2.50;14.00;80.00;27.66;-1000.00;-10.536;-59.365;23;2338.11;73.36;3
+M;0003;010;02;1339;101.17;0.00;0.00;0.00;28.77;6.48;30.00;29.90;28.50;20.75;-9999.00;85.05;1399;;;;;;65.70;35.60;24.16;26.25;0.00;2.50;14.50;80.00;27.66;-1000.00;-23.494;-59.357;23;2337.77;73.36;3
+M;0003;011;02;1340;83.01;0.00;0.00;0.00;29.41;6.45;30.00;29.90;28.50;20.75;-9999.00;85.10;1399;;;;;;65.70;35.60;24.16;26.25;0.00;2.50;14.50;80.00;27.66;-1000.00;-36.508;-59.357;23;2337.93;73.37;3
+M;0003;012;02;1341;84.80;0.00;0.00;0.00;29.00;6.47;30.00;29.90;28.60;20.75;-9999.00;85.22;1400;;;;;;66.80;35.60;24.16;26.25;0.00;2.00;15.00;80.00;27.67;-1000.00;-49.506;-59.357;23;2337.72;73.38;3
+M;0003;013;02;1342;85.38;0.00;0.00;0.00;29.85;6.43;30.00;29.90;28.70;20.75;-9999.00;85.31;1400;;;;;;67.30;35.60;24.16;26.25;0.00;2.00;15.00;80.00;27.66;-1000.00;-62.505;-59.357;23;2337.55;73.38;3
+M;0003;014;02;1344;89.28;0.00;0.00;0.00;29.24;6.45;30.00;29.90;28.70;20.75;-9999.00;85.36;1400;;;;;;67.30;35.60;24.22;26.25;0.00;2.00;15.00;80.00;27.66;-1000.00;-75.495;-59.357;23;2337.33;73.38;3
+M;0003;015;02;1345;43.99;0.00;0.00;0.00;31.85;6.34;30.00;29.90;28.70;20.75;-9999.00;85.36;1399;;;;;;67.70;35.60;24.16;26.25;0.00;2.00;15.00;80.00;27.67;-1000.00;-88.501;-59.357;23;2337.55;73.39;3
+M;0003;016;02;1346;107.16;0.00;0.00;0.00;28.12;6.51;30.00;29.90;28.80;20.74;-9999.00;85.39;1400;;;;;;67.90;35.60;24.16;26.25;0.00;2.00;15.50;80.00;27.67;-1000.00;-101.507;-59.357;23;2337.10;73.38;3
+M;0003;017;02;1347;104.29;0.00;0.00;0.00;29.80;6.43;30.00;29.90;28.80;20.75;-9999.00;85.49;1400;;;;;;67.90;35.60;24.19;26.25;0.00;2.00;15.50;80.00;27.67;-1000.00;-101.507;-46.350;23;2337.20;73.39;3
+M;0003;018;02;1349;83.70;0.00;0.00;0.00;29.08;6.46;30.00;29.90;28.80;20.75;-9999.00;85.52;1400;;;;;;68.00;35.60;24.19;26.25;0.00;2.00;15.50;80.00;27.67;-1000.00;-88.525;-46.350;23;2337.01;73.39;3
+M;0003;019;02;1350;86.21;0.00;0.00;0.00;29.30;6.45;30.00;29.90;28.80;20.74;-9999.00;85.54;1398;;;;;;68.00;35.60;24.19;26.25;0.00;2.00;15.50;0.00;27.66;-1000.00;-75.519;-46.350;23;2336.44;73.39;3
+M;0003;020;02;1351;83.67;0.00;0.00;0.00;29.43;6.44;30.00;29.90;28.80;20.74;-9999.00;85.56;1398;;;;;;69.10;35.60;24.19;26.25;0.00;2.00;15.50;0.00;27.67;-1000.00;-62.529;-46.350;23;2336.44;73.38;3
+M;0003;021;02;1352;74.55;0.00;0.00;0.00;29.76;6.43;30.00;29.90;28.90;20.74;-9999.00;85.58;1398;;;;;;66.50;35.60;24.19;26.25;0.00;2.00;15.50;0.00;27.67;-1000.00;-49.530;-46.350;23;2336.42;73.40;3
+M;0003;022;02;1353;81.80;0.00;0.00;0.00;29.95;6.42;30.00;29.90;28.90;20.74;-9999.00;85.64;1398;;;;;;66.50;35.60;24.16;26.25;0.00;2.00;15.50;0.00;27.66;-1000.00;-36.532;-46.350;23;2336.66;73.39;3
+M;0003;023;02;1355;86.20;0.00;0.00;0.00;29.28;6.45;30.00;29.90;28.80;20.74;-9999.00;85.63;1399;;;;;;65.00;35.60;24.19;26.25;0.00;2.00;15.50;0.00;27.67;-1000.00;-23.518;-46.350;23;2336.71;73.39;3
+M;0003;024;02;1356;88.45;0.00;0.00;0.00;29.45;6.44;30.00;29.90;28.80;20.74;-9999.00;85.57;1400;;;;;;65.00;35.60;24.19;26.25;0.00;2.00;15.50;0.00;27.67;-1000.00;-10.536;-46.350;23;2336.76;73.38;3
+M;0003;025;02;1357;90.72;0.00;0.00;0.00;29.83;6.43;30.00;29.90;28.80;20.74;-9999.00;85.54;1400;;;;;;64.10;35.60;24.19;26.25;0.00;2.00;15.50;0.00;27.67;-1000.00;-10.536;-33.367;23;2336.25;73.40;3
+M;0003;026;02;1358;90.95;0.00;0.00;0.00;29.80;6.43;30.00;29.90;28.70;20.74;-9999.00;85.50;1400;;;;;;63.30;35.60;24.19;26.25;0.00;2.50;15.50;0.00;27.67;-1000.00;-23.494;-33.367;23;2336.03;73.40;3
+M;0003;027;02;1360;82.02;0.00;0.00;0.00;29.94;6.42;30.00;29.90;28.70;20.74;-9999.00;85.49;1400;;;;;;62.80;35.60;24.19;26.25;0.00;2.50;15.50;0.00;27.67;-1000.00;-36.508;-33.367;23;2335.71;73.41;3
+M;0003;028;02;1361;85.37;0.00;0.00;0.00;29.78;6.43;30.00;29.90;28.70;20.74;-9999.00;85.47;1400;;;;;;62.80;35.60;24.22;26.25;0.00;2.50;15.50;0.00;27.67;-1000.00;-49.506;-33.367;23;2336.15;73.40;3
+M;0003;029;02;1362;87.84;0.00;0.00;0.00;29.68;6.43;30.00;29.90;28.60;20.74;-9999.00;85.44;1402;;;;;;62.40;35.60;24.22;26.25;0.00;2.50;15.50;0.00;27.67;-1000.00;-62.497;-33.367;23;2335.90;73.41;3
+M;0003;030;02;1363;85.14;0.00;0.00;0.00;29.79;6.43;30.00;29.90;28.60;20.74;-9999.00;85.46;1402;;;;;;62.40;35.60;24.22;26.25;0.00;2.50;15.50;0.00;27.67;-1000.00;-75.495;-33.367;23;2336.34;73.40;3
+M;0003;031;02;1365;89.10;0.00;0.00;0.00;30.30;6.40;30.00;29.90;28.60;20.74;-9999.00;85.38;1400;;;;;;62.10;35.60;24.22;26.25;0.00;2.50;15.00;0.00;27.67;-1000.00;-88.501;-33.367;23;2336.08;73.41;3
+M;0003;032;02;1366;95.55;0.00;0.00;0.00;29.36;6.45;29.90;29.90;28.60;20.74;-9999.00;85.31;1399;;;;;;61.70;35.60;24.16;26.25;0.00;2.50;15.00;0.00;27.67;-1000.00;-101.507;-33.367;23;2335.72;73.40;3
+M;0003;033;02;1367;98.95;0.00;0.00;0.00;30.08;6.42;29.90;29.90;28.60;20.74;-9999.00;85.29;1399;;;;;;61.70;35.60;24.19;26.25;0.00;2.50;15.00;0.00;27.67;-1000.00;-101.507;-20.360;23;2335.94;73.41;3
+M;0003;034;02;1368;86.64;0.00;0.00;0.00;30.46;6.40;30.00;29.90;28.50;20.74;-9999.00;85.28;1399;;;;;;61.50;35.60;24.19;26.25;0.00;3.00;14.50;0.00;27.67;-1000.00;-88.525;-20.360;23;2335.82;73.40;3
+M;0003;035;02;1370;92.11;0.00;0.00;0.00;29.78;6.43;30.00;29.90;28.50;20.74;-9999.00;85.25;1399;;;;;;61.50;35.60;24.19;26.25;0.00;3.00;14.50;0.00;27.67;-1000.00;-75.519;-20.360;23;2335.39;73.41;3
+M;0003;036;02;1371;85.78;0.00;0.00;0.00;30.22;6.41;29.90;30.00;28.50;20.74;-9999.00;85.22;1399;;;;;;61.20;35.60;24.19;26.25;0.00;2.50;14.00;0.00;27.67;-1000.00;-62.529;-20.360;23;2335.69;73.41;3
+M;0003;037;02;1372;81.42;0.00;0.00;0.00;30.35;6.40;30.00;30.00;28.50;20.74;-9999.00;85.21;1399;;;;;;61.00;35.60;24.19;26.25;0.00;3.00;13.50;0.00;27.66;-1000.00;-49.530;-20.360;23;2335.43;73.41;3
+M;0003;038;02;1373;84.67;0.00;0.00;0.00;30.25;6.41;30.00;30.00;28.50;20.74;-9999.00;85.22;1399;;;;;;61.00;35.60;24.22;26.25;0.00;3.00;13.50;0.00;27.67;-1000.00;-36.532;-20.360;23;2335.37;73.42;3
+M;0003;039;02;1374;83.93;0.00;0.00;0.00;29.94;6.42;29.90;30.00;28.40;20.73;-9999.00;85.17;1399;;;;;;60.80;35.60;24.22;26.25;0.00;2.50;13.00;0.00;27.67;-1000.00;-23.518;-20.360;23;2335.28;73.42;3
+M;0003;040;02;1376;81.18;0.00;0.00;0.00;30.18;6.41;30.00;30.00;28.40;20.73;-9999.00;85.10;1399;;;;;;60.70;35.60;24.16;26.25;0.00;3.00;13.00;0.00;27.67;-1000.00;-10.536;-20.360;23;2335.32;73.42;3
+M;0003;041;02;1377;85.89;0.00;0.00;0.00;29.54;6.44;30.00;30.00;28.40;20.73;-9999.00;85.05;1401;;;;;;60.70;35.60;24.16;26.25;0.00;3.00;13.00;0.00;27.67;-1000.00;-10.536;-7.376;23;2335.01;73.41;3
+M;0003;042;02;1378;91.15;0.00;0.00;0.00;30.02;6.42;30.00;30.00;28.40;20.74;-9999.00;85.02;1400;;;;;;60.50;35.60;24.16;26.25;0.00;2.50;12.50;0.00;27.67;-1000.00;-23.494;-7.376;23;2334.52;73.43;3
+M;0003;043;02;1379;91.01;0.00;0.00;0.00;29.22;6.45;30.00;30.00;28.40;20.73;-9999.00;84.99;1400;;;;;;60.50;35.60;24.22;26.25;0.00;2.50;12.50;0.00;27.67;-1000.00;-36.508;-7.376;23;2334.63;73.41;3
+M;0003;044;02;1381;81.89;0.00;0.00;0.00;30.46;6.40;29.90;30.00;28.40;20.73;-9999.00;84.99;1401;;;;;;60.30;35.60;24.22;26.25;0.00;2.50;12.50;0.00;27.67;-1000.00;-49.506;-7.376;23;2334.60;73.43;3
+M;0003;045;02;1382;87.32;0.00;0.00;0.00;29.57;6.44;29.90;30.00;28.40;20.73;-9999.00;84.95;1400;;;;;;60.10;35.60;24.22;26.25;0.00;3.00;12.50;0.00;27.67;-1000.00;-62.497;-7.376;23;2334.98;73.43;3
+M;0003;046;02;1383;97.62;0.00;0.00;0.00;29.47;6.44;29.90;30.00;28.40;20.73;-9999.00;84.96;1400;;;;;;60.10;35.60;24.22;26.25;0.00;3.00;12.50;0.00;27.67;-1000.00;-75.495;-7.376;23;2334.69;73.42;3
+M;0003;047;02;1384;92.03;0.00;0.00;0.00;29.63;6.44;30.00;30.00;28.40;20.73;-9999.00;84.95;1401;;;;;;59.80;35.60;24.22;26.25;0.00;3.00;13.00;80.00;27.67;-1000.00;-88.501;-7.376;23;2334.79;73.43;3
+M;0003;048;02;1385;100.50;0.00;0.00;0.00;29.83;6.43;30.00;30.00;28.50;20.73;-9999.00;85.06;1401;;;;;;63.00;35.60;24.19;26.25;0.00;2.50;13.00;80.00;27.67;-1000.00;-101.499;-7.376;23;2334.95;73.43;3
+P;0003;;;1385;;;;;;;30.00;30.00;28.50;20.73;-9999.00;85.06;1401;;;;;;63.00;35.60;24.19;26.25;0.00;2.50;13.00;80.00;27.67;-1000.00;-101.499;-7.376;23;;;;1.930;0.814;0.803;0.821;0.806
+P;0003;;;1387;;;;;;;30.00;30.00;28.50;20.73;-9999.00;85.10;1401;;;;;;63.00;35.60;24.19;26.25;0.00;2.50;13.00;80.00;27.67;-1000.00;-101.499;-7.376;2;;;;1.930;0.813;0.803;0.820;0.806
+M;0003;001;03;1408;23.25;0.00;0.00;0.00;41.93;98.18;30.00;30.00;28.70;20.73;-9999.00;85.48;1400;;;;;;63.70;35.70;24.22;26.25;0.00;3.00;12.00;0.00;27.68;-1000.00;-101.531;-67.364;22;2900.63;5.82;3
+M;0003;002;03;1409;23.83;0.00;0.00;0.00;41.81;98.84;29.90;30.00;28.70;20.73;-9999.00;85.48;1400;;;;;;63.00;35.70;24.19;26.25;0.00;2.50;12.00;0.00;27.68;-1000.00;-88.525;-67.364;22;2898.94;5.80;3
+M;0003;003;03;1411;23.72;0.00;0.00;0.00;41.73;99.20;29.90;30.00;28.70;20.73;-9999.00;85.48;1399;;;;;;63.00;35.60;24.16;26.25;0.00;2.50;12.00;0.00;27.68;-1000.00;-75.519;-67.364;22;2897.51;5.83;3
+M;0003;004;03;1412;22.59;0.00;0.00;0.00;41.77;99.00;30.00;30.00;28.70;20.73;-9999.00;85.45;1401;;;;;;62.60;35.60;24.16;26.25;0.00;3.00;12.50;0.00;27.68;-1000.00;-62.529;-67.364;22;2896.14;5.83;3
+M;0003;005;03;1413;23.04;0.00;0.00;0.00;41.75;99.13;29.90;30.00;28.60;20.73;-9999.00;85.34;1401;;;;;;62.20;35.60;24.22;26.25;0.00;2.50;13.00;0.00;27.68;-1000.00;-49.530;-67.364;22;2894.81;5.82;3
+M;0003;006;03;1414;22.22;0.00;0.00;0.00;41.66;99.56;29.90;30.00;28.60;20.73;-9999.00;85.29;1400;;;;;;62.20;35.70;24.22;26.25;0.00;2.50;13.00;0.00;27.68;-1000.00;-36.532;-67.364;22;2893.55;5.84;3
+M;0003;007;03;1416;23.42;0.00;0.00;0.00;41.83;98.72;29.90;29.90;28.60;20.73;-9999.00;85.31;1400;;;;;;61.90;35.70;24.19;26.25;0.00;3.00;13.50;0.00;27.68;-1000.00;-23.518;-67.364;22;2892.68;5.87;3
+M;0003;008;03;1417;23.58;0.00;0.00;0.00;41.76;99.08;29.90;29.90;28.60;20.74;-9999.00;85.24;1400;;;;;;61.90;35.70;24.19;26.25;0.00;3.00;13.50;0.00;27.69;-1000.00;-10.536;-67.364;22;2891.49;5.87;3
+M;0003;009;03;1418;22.77;0.00;0.00;0.00;41.77;99.04;29.90;29.90;28.50;20.74;-9999.00;85.21;1399;;;;;;61.60;35.60;24.19;26.25;0.00;3.00;14.00;0.00;27.68;-1000.00;-10.536;-54.357;22;2890.76;5.83;3
+M;0003;010;03;1419;22.33;0.00;0.00;0.00;41.70;99.36;29.90;29.90;28.50;20.74;-9999.00;85.19;1399;;;;;;61.30;35.60;24.22;26.25;0.00;3.00;15.00;0.00;27.68;-1000.00;-23.494;-54.357;22;2889.25;5.86;3
+M;0003;011;03;1421;24.56;0.00;0.00;0.00;41.87;98.55;29.90;29.90;28.50;20.74;-9999.00;85.19;1399;;;;;;61.30;35.60;24.12;26.25;0.00;3.00;15.00;0.00;27.68;-1000.00;-36.508;-54.357;22;2888.70;5.86;3
+M;0003;012;03;1422;21.95;0.00;0.00;0.00;41.89;98.38;30.00;29.90;28.50;20.74;-9999.00;85.14;1399;;;;;;61.10;35.60;24.12;26.25;0.00;2.50;15.00;0.00;27.69;-1000.00;-49.506;-54.349;22;2887.75;5.88;3
+M;0003;013;03;1423;23.78;0.00;0.00;0.00;41.86;98.52;30.00;29.90;28.50;20.74;-9999.00;85.11;1400;;;;;;61.10;35.60;24.19;26.25;0.00;2.50;15.00;0.00;27.68;-1000.00;-62.497;-54.349;22;2887.51;5.83;3
+M;0003;014;03;1424;22.42;0.00;0.00;0.00;41.66;99.51;30.00;29.90;28.50;20.73;-9999.00;85.14;1399;;;;;;60.90;35.60;24.19;26.25;0.00;2.00;15.00;0.00;27.68;-1000.00;-75.495;-54.349;22;2886.20;5.85;3
+M;0003;015;03;1426;22.92;0.00;0.00;0.00;41.86;98.55;30.00;29.90;28.40;20.73;-9999.00;85.11;1399;;;;;;60.70;35.60;24.12;26.25;0.00;2.00;15.00;0.00;27.68;-1000.00;-88.501;-54.349;22;2885.38;5.87;3
+M;0003;016;03;1427;22.53;0.00;0.00;0.00;41.72;99.24;30.00;29.90;28.40;20.73;-9999.00;85.06;1397;;;;;;60.60;35.70;24.22;26.25;0.00;2.50;15.00;0.00;27.68;-1000.00;-101.507;-54.349;22;2884.59;5.82;3
+M;0003;017;03;1428;22.29;0.00;0.00;0.00;41.70;99.33;30.00;29.90;28.40;20.73;-9999.00;85.04;1399;;;;;;60.60;35.70;24.22;26.25;0.00;2.50;15.00;0.00;27.68;-1000.00;-101.507;-41.358;22;2883.99;5.82;3
+M;0003;018;03;1429;21.33;0.00;0.00;0.00;41.64;99.62;30.00;29.90;28.40;20.73;-9999.00;85.00;1399;;;;;;60.40;35.70;24.22;26.25;0.00;2.50;15.00;0.00;27.69;-1000.00;-88.525;-41.358;22;2882.90;5.85;3
+M;0003;019;03;1431;21.46;0.00;0.00;0.00;41.90;98.32;30.00;29.90;28.40;20.73;-9999.00;84.97;1400;;;;;;60.40;35.70;24.22;26.25;0.00;2.50;15.00;0.00;27.69;-1000.00;-75.519;-41.358;22;2882.70;5.88;3
+M;0003;020;03;1432;20.69;0.00;0.00;0.00;41.68;99.43;30.00;29.90;28.40;20.73;-9999.00;84.95;1400;;;;;;60.20;35.70;24.25;26.25;0.00;2.00;15.00;0.00;27.68;-1000.00;-62.529;-41.358;22;2882.45;5.82;3
+M;0003;021;03;1433;22.12;0.00;0.00;0.00;41.76;99.03;30.00;29.90;28.40;20.73;-9999.00;84.96;1400;;;;;;59.90;35.70;24.09;26.25;0.00;2.00;15.00;80.00;27.69;-1000.00;-49.530;-41.358;22;2881.26;5.86;3
+M;0003;022;03;1434;20.14;0.00;0.00;0.00;41.88;98.42;30.00;29.90;28.40;20.73;-9999.00;85.02;1401;;;;;;59.90;35.60;24.09;26.25;0.00;2.00;15.00;80.00;27.68;-1000.00;-36.540;-41.358;22;2880.98;5.83;3
+M;0003;023;03;1435;20.23;0.00;0.00;0.00;41.64;99.64;30.00;29.90;28.50;20.73;-9999.00;85.07;1401;;;;;;63.10;35.60;24.22;26.25;0.00;2.00;15.00;80.00;27.68;-1000.00;-23.526;-41.358;22;2880.49;5.85;3
+M;0003;024;03;1437;23.45;0.00;0.00;0.00;41.70;99.31;30.00;29.90;28.50;20.73;-9999.00;85.08;1398;;;;;;63.10;35.60;24.19;26.25;0.00;2.00;15.00;80.00;27.68;-1000.00;-10.536;-41.358;22;2879.61;5.86;3
+M;0003;025;03;1438;21.96;0.00;0.00;0.00;41.68;99.41;30.00;29.90;28.60;20.73;-9999.00;85.09;1399;;;;;;65.50;35.70;24.19;26.25;0.00;2.00;15.00;80.00;27.69;-1000.00;-10.536;-28.359;22;2879.12;5.86;3
+M;0003;026;03;1439;23.00;0.00;0.00;0.00;41.92;98.22;30.00;29.90;28.60;20.73;-9999.00;85.18;1399;;;;;;66.50;35.70;24.16;26.25;0.00;2.00;15.00;80.00;27.68;-1000.00;-23.494;-28.359;22;2878.59;5.81;3
+M;0003;027;03;1441;20.99;0.00;0.00;0.00;41.75;99.10;30.00;29.90;28.60;20.73;-9999.00;85.25;1399;;;;;;66.50;35.70;24.16;26.25;0.00;2.00;15.00;80.00;27.69;-1000.00;-36.508;-28.359;22;2877.32;5.83;3
+M;0003;028;03;1442;20.90;0.00;0.00;0.00;41.86;98.54;30.00;29.90;28.70;20.73;-9999.00;85.27;1400;;;;;;67.10;35.60;24.22;26.25;0.00;2.00;15.00;80.00;27.69;-1000.00;-49.506;-28.359;22;2876.70;5.91;3
+M;0003;029;03;1443;22.58;0.00;0.00;0.00;41.82;98.71;30.00;29.90;28.70;20.73;-9999.00;85.29;1400;;;;;;67.10;35.60;24.12;26.25;0.00;2.00;15.00;80.00;27.68;-1000.00;-62.497;-28.359;22;2877.31;5.83;3
+M;0003;030;03;1444;22.14;0.00;0.00;0.00;41.58;99.90;30.00;29.90;28.80;20.73;-9999.00;85.35;1399;;;;;;67.30;35.60;24.12;26.25;0.00;2.00;15.00;80.00;27.68;-1000.00;-75.495;-28.359;22;2876.83;5.79;3
+M;0003;031;03;1445;23.22;0.00;0.00;0.00;41.77;98.96;30.00;29.90;28.80;20.73;-9999.00;85.41;1399;;;;;;67.50;35.60;24.22;26.25;0.00;2.00;14.50;80.00;27.68;-1000.00;-88.501;-28.359;22;2875.25;5.89;3
+M;0003;032;03;1447;22.89;0.00;0.00;0.00;41.58;99.91;30.00;29.90;28.90;20.73;-9999.00;85.45;1400;;;;;;67.50;35.60;24.19;26.25;0.00;2.00;14.00;80.00;27.68;-1000.00;-101.507;-28.359;22;2875.04;5.88;3
+M;0003;033;03;1448;25.27;0.00;0.00;0.00;41.76;99.02;30.00;29.90;28.90;20.73;-9999.00;85.49;1399;;;;;;67.50;35.70;24.19;26.25;0.00;2.00;14.00;80.00;27.69;-1000.00;-101.507;-15.367;22;2874.91;5.84;3
+M;0003;034;03;1449;20.22;0.00;0.00;0.00;41.56;100.02;30.00;29.90;28.90;20.73;-9999.00;85.52;1399;;;;;;67.60;35.70;24.25;26.25;0.00;2.00;14.00;80.00;27.68;-1000.00;-88.525;-15.367;22;2874.30;5.86;3
+M;0003;035;03;1450;20.26;0.00;0.00;0.00;41.70;99.31;30.00;29.90;28.90;20.73;-9999.00;85.57;1400;;;;;;67.60;35.60;24.25;26.25;0.00;2.00;14.00;0.00;27.69;-1000.00;-75.527;-15.367;22;2874.01;5.83;3
+M;0003;036;03;1452;21.93;0.00;0.00;0.00;41.69;99.35;30.00;30.00;28.90;20.73;-9999.00;85.63;1400;;;;;;67.60;35.60;24.19;26.25;0.00;2.00;14.00;0.00;27.68;-1000.00;-62.529;-15.367;22;2873.49;5.85;3
+M;0003;037;03;1453;20.93;0.00;0.00;0.00;41.64;99.60;30.00;30.00;28.90;20.72;-9999.00;85.62;1399;;;;;;65.80;35.70;24.12;26.25;0.00;2.00;13.00;0.00;27.68;-1000.00;-49.530;-15.367;22;2873.07;5.84;3
+M;0003;038;03;1454;20.84;0.00;0.00;0.00;41.51;100.25;30.00;30.00;28.90;20.72;-9999.00;85.61;1398;;;;;;65.80;35.70;24.12;26.25;0.00;2.00;13.00;0.00;27.69;-1000.00;-36.532;-15.367;22;2872.92;5.82;3
+M;0003;039;03;1455;21.71;0.00;0.00;0.00;41.67;99.47;30.00;30.00;28.90;20.72;-9999.00;85.61;1398;;;;;;64.70;35.70;24.28;26.25;0.00;2.00;13.00;0.00;27.68;-1000.00;-23.518;-15.367;22;2872.24;5.87;3
+M;0003;040;03;1457;22.11;0.00;0.00;0.00;41.79;98.87;30.00;30.00;28.90;20.72;-9999.00;85.61;1399;;;;;;64.70;35.70;24.31;26.25;0.00;2.00;13.00;0.00;27.69;-1000.00;-10.536;-15.367;22;2871.42;5.85;3
+M;0003;041;03;1458;18.44;0.00;0.00;0.00;41.58;99.93;30.00;30.00;28.80;20.72;-9999.00;85.58;1400;;;;;;64.00;35.70;24.31;26.25;0.00;2.00;13.00;0.00;27.69;-1000.00;-10.536;-2.376;22;2871.82;5.85;3
+M;0003;042;03;1459;20.07;0.00;0.00;0.00;41.55;100.05;30.00;30.00;28.80;20.72;-9999.00;85.53;1400;;;;;;63.40;35.70;24.22;26.25;0.00;2.50;12.50;0.00;27.70;-1000.00;-23.494;-2.376;22;2870.59;5.85;3
+M;0003;043;03;1460;19.94;0.00;0.00;0.00;41.41;100.76;30.00;30.00;28.80;20.72;-9999.00;85.48;1400;;;;;;63.40;35.70;24.22;26.25;0.00;2.50;12.50;0.00;27.69;-1000.00;-36.508;-2.376;22;2871.08;5.83;3
+M;0003;044;03;1462;20.64;0.00;0.00;0.00;41.68;99.41;30.00;30.00;28.70;20.72;-9999.00;85.48;1400;;;;;;62.90;35.70;24.22;26.25;0.00;2.00;12.50;0.00;27.69;-1000.00;-49.506;-2.376;22;2869.64;5.90;3
+M;0003;045;03;1463;20.93;0.00;0.00;0.00;41.72;99.20;30.00;30.00;28.70;20.72;-9999.00;85.43;1400;;;;;;62.50;35.60;24.16;26.25;0.00;2.00;13.50;0.00;27.70;-1000.00;-62.505;-2.376;22;2869.66;5.88;3
+M;0003;046;03;1464;21.51;0.00;0.00;0.00;41.81;98.79;30.00;30.00;28.70;20.72;-9999.00;85.41;1399;;;;;;62.50;35.60;24.16;26.25;0.00;2.00;13.50;0.00;27.69;-1000.00;-75.495;-2.376;22;2868.76;5.85;3
+M;0003;047;03;1465;21.53;0.00;0.00;0.00;41.66;99.49;30.00;30.00;28.70;20.72;-9999.00;85.40;1399;;;;;;62.30;35.60;24.19;26.25;0.00;2.00;13.00;0.00;27.70;-1000.00;-88.501;-2.376;22;2868.66;5.87;3
+M;0003;048;03;1467;23.66;0.00;0.00;0.00;41.92;98.24;30.00;30.00;28.70;20.73;-9999.00;85.44;1399;;;;;;62.30;35.60;24.19;26.25;0.00;2.00;13.00;0.00;27.70;-1000.00;-101.507;-2.376;22;2868.09;5.89;3
+P;0003;;;1467;;;;;;;30.00;30.00;28.70;20.73;-9999.00;85.44;1399;;;;;;62.30;35.60;24.19;26.25;0.00;2.00;13.00;0.00;27.70;-1000.00;-101.507;-2.376;22;;;;1.930;0.815;0.804;0.820;0.806
+P;0003;;;1503;;;;;;;30.00;30.00;28.90;20.73;-9999.00;85.55;1398;;;;;;68.00;35.70;24.19;26.25;0.00;1.50;12.50;0.00;27.69;-1000.00;-125.993;-69.334;22;;;;1.931;0.814;0.804;0.821;0.806
+P;0003;;;1533;;;;;;;29.90;30.00;28.40;20.72;-9999.00;85.13;1400;;;;;;60.50;35.80;24.19;26.25;0.00;2.00;12.50;0.00;27.71;-1000.00;-125.993;-69.334;22;;;;1.931;0.814;0.804;0.821;0.806
+P;0003;;;1563;;;;;;;30.00;30.00;28.90;20.72;-9999.00;85.59;1401;;;;;;65.00;35.80;24.19;26.25;0.00;1.50;12.00;0.00;27.71;-1000.00;-126.001;-69.334;22;;;;1.930;0.814;0.803;0.820;0.806
+P;0003;;;1593;;;;;;;30.00;30.00;28.40;20.71;-9999.00;85.04;1399;;;;;;60.40;35.80;24.19;26.25;0.00;2.50;11.50;0.00;27.71;-1000.00;-126.001;-69.334;22;;;;1.930;0.814;0.804;0.820;0.807
+P;0003;;;1623;;;;;;;30.00;30.00;28.80;20.74;-9999.00;85.64;1401;;;;;;64.60;35.80;24.19;26.25;0.00;1.50;11.50;0.00;27.71;-1000.00;-126.001;-69.334;22;;;;1.930;0.814;0.804;0.820;0.806
+P;0003;;;1653;;;;;;;30.00;30.00;28.40;20.74;-9999.00;85.09;1400;;;;;;60.30;35.80;24.19;26.25;0.00;2.00;11.50;0.00;27.72;-1000.00;-126.001;-69.334;22;;;;1.931;0.814;0.804;0.821;0.805
+P;0003;;;1683;;;;;;;30.00;30.00;28.70;20.73;-9999.00;85.57;1400;;;;;;64.10;35.90;24.19;26.25;0.00;2.00;11.50;0.00;27.72;-1000.00;-126.001;-69.334;22;;;;1.931;0.814;0.804;0.820;0.806
+P;0003;;;1713;;;;;;;30.00;30.00;28.30;20.72;-9999.00;85.02;1400;;;;;;60.20;35.90;24.19;26.25;0.00;2.00;10.50;0.00;27.73;-1000.00;-126.001;-69.334;22;;;;1.930;0.814;0.803;0.820;0.807
+P;0003;;;1743;;;;;;;30.00;30.00;28.70;20.74;-9999.00;85.56;1401;;;;;;64.00;36.00;24.19;26.25;0.00;1.00;11.00;0.00;27.73;-1000.00;-126.001;-69.334;22;;;;1.931;0.814;0.803;0.821;0.806
+P;0003;;;1773;;;;;;;30.00;30.00;28.30;20.73;-9999.00;85.09;1400;;;;;;60.20;35.90;24.19;26.25;0.00;2.00;11.00;0.00;27.74;-1000.00;-126.001;-69.334;22;;;;1.931;0.813;0.803;0.820;0.807
+P;0003;;;1803;;;;;;;29.90;30.00;28.60;20.73;-9999.00;85.57;1400;;;;;;64.10;36.00;24.19;26.25;0.00;2.00;11.00;0.00;27.73;-1000.00;-126.001;-69.334;22;;;;1.930;0.814;0.803;0.820;0.806
+P;0004;;;1814;;;;;;;29.90;30.00;28.40;20.74;-9999.00;85.28;1399;;;;;;61.90;36.00;24.19;26.25;0.00;2.00;11.00;0.00;27.74;-1000.00;-126.001;-69.334;22;;;;1.931;0.814;0.804;0.820;0.806
+P;0004;;;1817;;;;;;;29.90;30.00;28.40;20.74;-9999.00;85.26;1400;;;;;;61.70;36.00;24.19;26.25;0.00;2.00;11.00;0.00;27.74;-1000.00;-126.001;-69.334;3;;;;1.929;0.813;0.804;0.820;0.806
+R;0004;;01;1845;241.26;0.00;;;;;30.00;30.00;28.40;20.75;-9999.00;85.14;1398;2052.64;;;;;65.70;35.90;24.34;26.25;0.00;1.50;11.00;80.00;27.74;-1000.00;-126.001;-69.334;30;2052.64;72.93;4
+M;0004;001;01;1846;9.34;0.00;7.01;0.00;-1.47;0.00;30.00;29.90;28.50;20.75;-9999.00;85.21;1400;;;;;;67.10;35.90;24.34;26.25;0.00;1.50;11.00;80.00;27.74;-1000.00;-104.033;-69.837;32;2056.51;72.87;4
+M;0004;002;01;1847;8.65;0.00;6.49;0.00;-1.08;0.00;30.00;30.00;28.60;20.75;-9999.00;85.26;1400;;;;;;67.70;35.90;24.34;26.25;0.00;1.50;11.50;80.00;27.74;-1000.00;-91.019;-69.837;32;2056.25;72.88;4
+M;0004;003;01;1849;8.79;0.00;6.60;0.00;-1.46;0.00;30.00;30.00;28.60;20.75;-9999.00;85.30;1400;;;;;;67.70;35.90;24.34;26.25;0.00;1.50;11.50;80.00;27.74;-1000.00;-78.021;-69.837;32;2055.78;72.91;4
+M;0004;004;01;1850;8.05;0.00;6.04;0.00;-1.48;0.00;30.00;29.90;28.60;20.75;-9999.00;85.38;1399;;;;;;67.70;35.90;24.34;26.25;0.00;1.50;11.00;80.00;27.74;-1000.00;-65.031;-69.837;32;2056.23;72.90;4
+M;0004;005;01;1851;8.10;0.00;6.08;0.00;-1.73;0.00;30.00;29.90;28.60;20.75;-9999.00;85.45;1399;;;;;;67.80;35.90;24.34;26.25;0.00;1.50;12.00;80.00;27.74;-1000.00;-52.024;-69.837;32;2055.71;72.91;4
+M;0004;006;01;1852;8.35;0.00;6.27;0.00;-1.71;0.00;30.00;29.90;28.60;20.75;-9999.00;85.47;1400;;;;;;67.80;35.90;24.34;26.25;0.00;1.50;12.00;80.00;27.74;-1000.00;-39.026;-69.837;32;2055.79;72.89;4
+M;0004;007;01;1854;7.78;0.00;5.84;0.00;-1.29;0.00;30.00;29.90;28.70;20.75;-9999.00;85.51;1400;;;;;;68.00;35.90;24.31;26.25;0.00;1.00;12.50;80.00;27.74;-1000.00;-26.028;-69.837;32;2055.04;72.93;4
+M;0004;008;01;1855;7.47;0.00;5.61;0.00;-1.58;0.00;30.00;29.90;28.70;20.75;-9999.00;85.57;1400;;;;;;68.00;35.90;24.31;26.25;0.00;1.50;12.50;0.00;27.74;-1000.00;-13.030;-69.837;32;2055.29;72.92;4
+M;0004;009;01;1856;8.29;0.00;6.22;0.00;-1.58;0.00;30.00;29.90;28.70;20.75;-9999.00;85.64;1399;;;;;;68.00;35.90;24.31;26.25;0.00;1.50;12.50;0.00;27.74;-1000.00;-13.030;-56.853;32;2055.13;72.88;4
+M;0004;010;01;1857;8.17;0.00;6.13;0.00;-1.64;0.00;29.90;29.90;28.70;20.75;-9999.00;85.67;1399;;;;;;67.50;35.90;24.28;26.25;0.00;1.50;12.50;0.00;27.74;-1000.00;-26.004;-56.853;32;2054.56;72.90;4
+M;0004;011;01;1859;8.16;0.00;6.13;0.00;-1.62;0.00;29.90;29.90;28.70;20.75;-9999.00;85.69;1400;;;;;;67.50;35.90;24.19;26.25;0.00;1.50;12.50;0.00;27.74;-1000.00;-39.002;-56.853;32;2054.19;72.95;4
+M;0004;012;01;1860;8.46;0.00;6.35;0.00;-1.49;0.00;30.00;29.90;28.70;20.75;-9999.00;85.68;1401;;;;;;65.90;35.90;24.19;26.25;0.00;2.00;13.00;0.00;27.74;-1000.00;-52.000;-56.853;32;2054.06;72.92;4
+M;0004;013;01;1861;9.73;0.00;7.30;0.00;-1.65;0.00;30.00;29.90;28.70;20.75;-9999.00;85.67;1401;;;;;;65.10;35.90;24.28;26.25;0.00;1.50;13.00;0.00;27.74;-1000.00;-65.007;-56.853;32;2054.26;72.90;4
+M;0004;014;01;1862;8.69;0.00;6.52;0.00;-1.95;0.00;30.00;29.90;28.70;20.75;-9999.00;85.61;1399;;;;;;65.10;35.90;24.28;26.25;0.00;1.50;13.00;0.00;27.74;-1000.00;-77.997;-56.853;32;2054.54;72.88;4
+M;0004;015;01;1864;7.76;0.00;5.83;0.00;-1.40;0.00;30.00;29.90;28.70;20.75;-9999.00;85.58;1399;;;;;;64.50;35.90;24.28;26.25;0.00;1.50;13.00;0.00;27.74;-1000.00;-90.995;-56.853;32;2053.46;72.95;4
+M;0004;016;01;1865;9.64;0.00;7.23;0.00;-1.53;0.00;30.00;29.90;28.60;20.74;-9999.00;85.55;1399;;;;;;63.90;35.90;24.25;26.25;0.00;1.50;13.00;0.00;27.74;-1000.00;-104.009;-56.853;32;2053.66;72.92;4
+M;0004;017;01;1866;9.78;0.00;7.34;0.00;-1.77;0.00;30.00;29.90;28.60;20.74;-9999.00;85.51;1398;;;;;;63.90;35.90;24.25;26.25;0.00;1.50;13.00;0.00;27.74;-1000.00;-104.009;-43.854;32;2053.33;72.97;4
+M;0004;018;01;1867;8.37;0.00;6.28;0.00;-1.33;0.00;30.00;29.90;28.60;20.74;-9999.00;85.45;1398;;;;;;63.40;35.90;24.25;26.25;0.00;1.50;13.00;0.00;27.74;-1000.00;-91.019;-43.854;32;2052.90;72.93;4
+M;0004;019;01;1869;8.20;0.00;6.15;0.00;-1.43;0.00;30.00;29.90;28.60;20.74;-9999.00;85.45;1398;;;;;;63.40;35.90;24.25;26.25;0.00;1.50;13.00;0.00;27.74;-1000.00;-78.021;-43.854;32;2053.11;72.91;4
+M;0004;020;01;1870;8.71;0.00;6.54;0.00;-1.70;0.00;30.00;29.90;28.50;20.74;-9999.00;85.44;1400;;;;;;63.00;35.90;24.28;26.25;0.00;1.50;13.00;0.00;27.74;-1000.00;-65.031;-43.854;32;2052.94;72.92;4
+M;0004;021;01;1871;9.02;0.00;6.77;0.00;-1.39;0.00;30.00;29.90;28.50;20.74;-9999.00;85.43;1400;;;;;;62.70;35.90;24.19;26.25;0.00;1.50;12.50;0.00;27.74;-1000.00;-52.024;-43.854;32;2052.59;72.93;4
+M;0004;022;01;1872;7.93;0.00;5.96;0.00;-1.74;0.00;30.00;29.90;28.50;20.74;-9999.00;85.43;1399;;;;;;62.70;35.90;24.19;26.25;0.00;1.50;12.50;0.00;27.74;-1000.00;-39.026;-43.854;32;2051.72;72.95;4
+M;0004;023;01;1873;7.71;0.00;5.79;0.00;-1.12;0.00;29.90;29.90;28.50;20.73;-9999.00;85.39;1399;;;;;;62.30;35.90;24.25;26.25;0.00;1.50;12.50;0.00;27.74;-1000.00;-26.028;-43.854;32;2051.65;72.96;4
+M;0004;024;01;1875;7.34;0.00;5.51;0.00;-1.95;0.00;30.00;29.90;28.40;20.73;-9999.00;85.33;1401;;;;;;62.10;35.80;24.31;26.25;0.00;1.50;12.00;0.00;27.74;-1000.00;-13.030;-43.854;32;2052.19;72.94;4
+M;0004;025;01;1876;7.64;0.00;5.74;0.00;-1.65;0.00;30.00;29.90;28.40;20.73;-9999.00;85.32;1401;;;;;;62.10;35.90;24.31;26.25;0.00;1.50;12.00;0.00;27.74;-1000.00;-13.030;-30.871;32;2051.70;72.94;4
+M;0004;026;01;1877;8.11;0.00;6.09;0.00;-1.51;0.00;29.90;30.00;28.40;20.73;-9999.00;85.31;1401;;;;;;61.80;35.90;24.28;26.25;0.00;1.50;12.50;0.00;27.74;-1000.00;-26.004;-30.871;32;2051.39;72.93;4
+M;0004;027;01;1878;7.50;0.00;5.63;0.00;-1.52;0.00;29.90;30.00;28.40;20.73;-9999.00;85.30;1399;;;;;;61.80;35.90;24.28;26.25;0.00;1.50;12.50;0.00;27.74;-1000.00;-39.002;-30.871;32;2051.44;72.92;4
+M;0004;028;01;1880;7.67;0.00;5.76;0.00;-1.56;0.00;29.90;29.90;28.40;20.73;-9999.00;85.28;1399;;;;;;61.60;35.90;24.34;26.25;0.00;2.00;11.50;0.00;27.74;-1000.00;-52.000;-30.871;32;2051.22;72.95;4
+M;0004;029;01;1881;8.42;0.00;6.32;0.00;-1.51;0.00;30.00;30.00;28.40;20.72;-9999.00;85.28;1399;;;;;;61.40;35.90;24.28;26.25;0.00;2.00;11.50;0.00;27.73;-1000.00;-65.007;-30.871;32;2051.15;72.93;4
+M;0004;030;01;1882;8.85;0.00;6.64;0.00;-1.32;0.00;30.00;30.00;28.40;20.72;-9999.00;85.25;1400;;;;;;61.40;35.80;24.28;26.25;0.00;2.00;11.50;0.00;27.74;-1000.00;-77.997;-30.871;32;2051.18;72.92;4
+M;0004;031;01;1883;8.15;0.00;6.12;0.00;-1.58;0.00;30.00;30.00;28.40;20.72;-9999.00;85.20;1400;;;;;;61.20;35.80;24.25;26.25;0.00;1.50;10.50;0.00;27.74;-1000.00;-90.995;-30.871;32;2051.10;72.95;4
+M;0004;032;01;1885;9.61;0.00;7.21;0.00;-1.75;0.00;30.00;30.00;28.30;20.72;-9999.00;85.16;1399;;;;;;61.10;35.80;24.22;26.25;0.00;1.50;10.50;0.00;27.74;-1000.00;-104.009;-30.871;32;2050.86;72.93;4
+M;0004;033;01;1886;9.22;0.00;6.92;0.00;-1.72;0.00;30.00;30.00;28.30;20.72;-9999.00;85.10;1399;;;;;;61.10;35.80;24.22;26.25;0.00;1.50;10.50;0.00;27.74;-1000.00;-104.009;-17.871;32;2050.90;72.95;4
+M;0004;034;01;1887;7.73;0.00;5.81;0.00;-1.58;0.00;29.90;30.00;28.30;20.72;-9999.00;85.09;1399;;;;;;60.90;35.80;24.31;26.25;0.00;1.50;10.00;0.00;27.74;-1000.00;-91.019;-17.864;32;2050.21;72.95;4
+M;0004;035;01;1888;8.57;0.00;6.44;0.00;-1.90;0.00;29.90;30.00;28.30;20.72;-9999.00;85.06;1400;;;;;;60.90;35.80;24.31;26.25;0.00;1.50;10.00;0.00;27.74;-1000.00;-78.021;-17.864;32;2050.20;72.92;4
+M;0004;036;01;1890;8.91;0.00;6.69;0.00;-1.54;0.00;30.00;30.00;28.30;20.72;-9999.00;85.06;1400;;;;;;60.70;35.80;24.28;26.25;0.00;2.00;9.50;0.00;27.73;-1000.00;-65.031;-17.864;32;2050.22;72.97;4
+M;0004;037;01;1891;8.14;0.00;6.11;0.00;-1.69;0.00;30.00;30.00;28.30;20.72;-9999.00;85.05;1399;;;;;;60.60;35.90;24.31;26.25;0.00;1.50;10.00;0.00;27.74;-1000.00;-52.024;-17.864;32;2050.17;72.92;4
+M;0004;038;01;1892;8.31;0.00;6.24;0.00;-1.63;0.00;30.00;30.00;28.30;20.72;-9999.00;85.05;1398;;;;;;60.60;35.80;24.31;26.25;0.00;1.50;10.00;0.00;27.74;-1000.00;-39.026;-17.864;32;2050.11;72.94;4
+M;0004;039;01;1893;8.18;0.00;6.14;0.00;-1.66;0.00;29.90;30.00;28.30;20.72;-9999.00;85.02;1398;;;;;;60.40;35.80;24.31;26.25;0.00;1.50;10.00;0.00;27.74;-1000.00;-26.028;-17.864;32;2049.69;72.94;4
+M;0004;040;01;1894;7.51;0.00;5.64;0.00;-1.68;0.00;29.90;30.00;28.30;20.72;-9999.00;85.03;1400;;;;;;60.40;35.80;24.31;26.25;0.00;1.50;10.00;0.00;27.74;-1000.00;-13.030;-17.864;32;2049.87;72.93;4
+M;0004;041;01;1896;7.47;0.00;5.61;0.00;-1.60;0.00;29.90;30.00;28.30;20.72;-9999.00;85.03;1400;;;;;;60.30;35.80;24.28;26.25;0.00;2.00;10.00;0.00;27.75;-1000.00;-13.030;-4.880;32;2049.21;72.99;4
+M;0004;042;01;1897;7.47;0.00;5.61;0.00;-1.78;0.00;29.90;30.00;28.20;20.72;-9999.00;85.03;1399;;;;;;60.20;35.80;24.25;26.25;0.00;2.00;10.00;0.00;27.75;-1000.00;-26.004;-4.880;32;2049.26;72.96;4
+M;0004;043;01;1898;7.85;0.00;5.89;0.00;-1.67;0.00;30.00;30.00;28.20;20.72;-9999.00;84.97;1399;;;;;;60.10;35.80;24.25;26.25;0.00;2.00;10.50;0.00;27.75;-1000.00;-39.002;-4.880;32;2049.14;72.94;4
+M;0004;044;01;1899;9.32;0.00;7.00;0.00;-1.67;0.00;30.00;30.00;28.20;20.72;-9999.00;84.96;1399;;;;;;60.10;35.80;24.22;26.25;0.00;2.00;10.50;0.00;27.74;-1000.00;-52.000;-4.880;32;2049.00;72.94;4
+M;0004;045;01;1901;8.52;0.00;6.40;0.00;-1.74;0.00;29.90;30.00;28.20;20.72;-9999.00;84.89;1401;;;;;;60.00;35.80;24.34;26.25;0.00;1.50;10.00;0.00;27.74;-1000.00;-65.007;-4.880;32;2049.66;72.94;4
+M;0004;046;01;1902;8.71;0.00;6.54;0.00;-1.81;0.00;29.90;30.00;28.20;20.72;-9999.00;84.90;1400;;;;;;60.00;35.80;24.34;26.25;0.00;1.50;10.00;0.00;27.74;-1000.00;-77.997;-4.880;32;2049.22;72.96;4
+M;0004;047;01;1903;7.53;0.00;5.65;0.00;-1.66;0.00;30.00;30.00;28.30;20.72;-9999.00;84.93;1400;;;;;;59.80;35.80;24.28;26.25;0.00;2.00;10.50;80.00;27.74;-1000.00;-90.987;-4.880;32;2048.74;72.95;4
+M;0004;048;01;1904;9.09;0.00;6.82;0.00;-1.63;0.00;30.00;30.00;28.30;20.72;-9999.00;84.96;1399;;;;;;63.00;35.80;24.28;26.25;0.00;1.50;10.00;80.00;27.74;-1000.00;-104.001;-4.880;32;2048.72;72.96;4
+P;0004;;;1904;;;;;;;30.00;30.00;28.30;20.72;-9999.00;84.96;1399;;;;;;63.00;35.80;24.28;26.25;0.00;1.50;10.00;80.00;27.74;-1000.00;-104.001;-4.880;32;;;;1.930;0.814;0.803;0.820;0.807
+P;0004;;;1906;;;;;;;30.00;30.00;28.30;20.72;-9999.00;85.03;1401;;;;;;63.00;35.80;24.28;26.25;0.00;1.50;10.00;80.00;27.74;-1000.00;-104.009;-4.880;2;;;;1.931;0.814;0.804;0.821;0.807
+M;0004;001;02;1927;90.96;0.00;0.00;0.00;30.18;6.41;30.00;30.00;28.70;20.72;-9999.00;85.61;1399;;;;;;64.30;35.90;24.31;26.25;0.00;1.50;10.00;0.00;27.74;-1000.00;-101.531;-72.333;22;2341.08;73.33;3
+M;0004;002;02;1928;93.95;0.00;0.00;0.00;29.62;6.44;30.00;30.00;28.70;20.72;-9999.00;85.57;1399;;;;;;63.90;35.90;24.31;26.25;0.00;1.50;10.00;0.00;27.74;-1000.00;-88.525;-72.333;22;2340.53;73.34;3
+M;0004;003;02;1930;91.97;0.00;0.00;0.00;29.26;6.45;30.00;30.00;28.70;20.72;-9999.00;85.55;1399;;;;;;63.90;35.90;24.34;26.25;0.00;1.50;10.00;0.00;27.74;-1000.00;-75.519;-72.333;22;2340.69;73.34;3
+M;0004;004;02;1931;87.46;0.00;0.00;0.00;29.91;6.42;30.00;30.00;28.60;20.72;-9999.00;85.54;1400;;;;;;63.50;35.80;24.34;26.25;0.00;1.50;10.00;0.00;27.74;-1000.00;-62.529;-72.333;22;2340.30;73.35;3
+M;0004;005;02;1932;77.82;0.00;0.00;0.00;30.36;6.40;30.00;29.90;28.60;20.72;-9999.00;85.48;1400;;;;;;63.10;35.80;24.34;26.25;0.00;1.50;10.50;0.00;27.74;-1000.00;-49.530;-72.333;22;2340.29;73.35;3
+M;0004;006;02;1933;91.04;0.00;0.00;0.00;29.11;6.46;30.00;29.90;28.60;20.72;-9999.00;85.46;1400;;;;;;63.10;35.80;24.31;26.25;0.00;1.50;10.50;0.00;27.74;-1000.00;-36.532;-72.333;22;2339.61;73.35;3
+M;0004;007;02;1935;86.31;0.00;0.00;0.00;29.57;6.44;30.00;29.90;28.50;20.72;-9999.00;85.39;1399;;;;;;62.70;35.80;24.31;26.25;0.00;1.50;11.00;0.00;27.74;-1000.00;-23.518;-72.333;22;2339.98;73.34;3
+M;0004;008;02;1936;91.37;0.00;0.00;0.00;28.78;6.48;30.00;29.90;28.50;20.72;-9999.00;85.39;1400;;;;;;62.70;35.80;24.31;26.25;0.00;1.50;11.00;0.00;27.74;-1000.00;-10.536;-72.333;22;2339.83;73.35;3
+M;0004;009;02;1937;85.23;0.00;0.00;0.00;29.70;6.43;30.00;29.90;28.50;20.72;-9999.00;85.36;1400;;;;;;62.50;35.80;24.34;26.25;0.00;1.50;12.50;0.00;27.75;-1000.00;-10.536;-59.365;22;2339.48;73.36;3
+M;0004;010;02;1938;98.74;0.00;0.00;0.00;29.45;6.44;30.00;29.90;28.50;20.72;-9999.00;85.34;1399;;;;;;62.20;35.80;24.34;26.25;0.00;1.50;12.50;0.00;27.75;-1000.00;-23.494;-59.365;22;2338.94;73.37;3
+M;0004;011;02;1940;80.91;0.00;0.00;0.00;30.04;6.42;30.00;29.90;28.50;20.72;-9999.00;85.33;1399;;;;;;62.20;35.80;24.31;26.25;0.00;1.50;12.50;0.00;27.76;-1000.00;-36.508;-59.365;22;2339.13;73.37;3
+M;0004;012;02;1941;82.99;0.00;0.00;0.00;29.64;6.44;30.00;29.90;28.50;20.72;-9999.00;85.31;1398;;;;;;62.00;35.80;24.31;26.25;0.00;1.50;12.50;0.00;27.75;-1000.00;-49.506;-59.365;22;2339.40;73.36;3
+M;0004;013;02;1942;83.74;0.00;0.00;0.00;30.52;6.39;30.00;29.90;28.40;20.72;-9999.00;85.30;1400;;;;;;61.80;35.80;24.31;26.25;0.00;1.00;12.50;0.00;27.75;-1000.00;-62.497;-59.365;22;2338.59;73.37;3
+M;0004;014;02;1943;87.58;0.00;0.00;0.00;29.80;6.43;30.00;29.90;28.40;20.72;-9999.00;85.29;1400;;;;;;61.80;35.80;24.31;26.25;0.00;1.00;12.50;0.00;27.75;-1000.00;-75.495;-59.365;22;2339.09;73.37;3
+M;0004;015;02;1945;43.12;0.00;0.00;0.00;32.38;6.31;30.00;29.90;28.40;20.72;-9999.00;85.26;1399;;;;;;61.60;35.80;24.31;26.25;0.00;1.00;12.50;0.00;27.75;-1000.00;-88.501;-59.365;22;2338.91;73.37;3
+M;0004;016;02;1946;104.89;0.00;0.00;0.00;28.81;6.47;30.00;29.90;28.40;20.72;-9999.00;85.22;1399;;;;;;61.40;35.80;24.31;26.25;0.00;1.50;13.00;0.00;27.75;-1000.00;-101.507;-59.365;22;2338.83;73.38;3
+M;0004;017;02;1947;102.17;0.00;0.00;0.00;30.39;6.40;30.00;29.90;28.40;20.72;-9999.00;85.20;1399;;;;;;61.40;35.80;24.31;26.25;0.00;1.50;13.00;0.00;27.75;-1000.00;-101.507;-46.350;22;2338.84;73.37;3
+M;0004;018;02;1948;81.78;0.00;0.00;0.00;29.67;6.43;30.00;29.90;28.40;20.72;-9999.00;85.15;1399;;;;;;61.20;35.80;24.31;26.25;0.00;1.00;13.00;0.00;27.75;-1000.00;-88.525;-46.350;22;2338.75;73.37;3
+M;0004;019;02;1949;84.40;0.00;0.00;0.00;29.90;6.42;30.00;29.90;28.40;20.72;-9999.00;85.12;1399;;;;;;61.20;35.80;24.31;26.25;0.00;1.00;13.00;0.00;27.75;-1000.00;-75.519;-46.350;22;2338.82;73.37;3
+M;0004;020;02;1951;82.06;0.00;0.00;0.00;30.06;6.42;30.00;29.90;28.30;20.72;-9999.00;85.10;1398;;;;;;61.00;35.90;24.31;26.25;0.00;1.50;13.00;0.00;27.76;-1000.00;-62.529;-46.350;22;2338.59;73.38;3
+M;0004;021;02;1952;73.12;0.00;0.00;0.00;30.38;6.40;30.00;29.90;28.30;20.72;-9999.00;85.08;1398;;;;;;60.90;35.90;24.31;26.25;0.00;1.50;13.00;0.00;27.75;-1000.00;-49.530;-46.350;22;2338.32;73.39;3
+M;0004;022;02;1953;80.16;0.00;0.00;0.00;30.53;6.39;30.00;29.90;28.30;20.72;-9999.00;85.06;1398;;;;;;60.90;35.90;24.38;26.25;0.00;1.50;13.00;0.00;27.75;-1000.00;-36.532;-46.350;22;2338.31;73.38;3
+M;0004;023;02;1954;83.94;0.00;0.00;0.00;29.99;6.42;30.00;29.90;28.30;20.72;-9999.00;85.06;1399;;;;;;60.70;35.90;24.38;26.25;0.00;1.50;13.00;0.00;27.76;-1000.00;-23.518;-46.350;22;2337.73;73.39;3
+M;0004;024;02;1956;85.94;0.00;0.00;0.00;30.09;6.41;30.00;29.90;28.30;20.72;-9999.00;85.05;1399;;;;;;60.70;35.90;24.28;26.25;0.00;1.50;13.00;0.00;27.77;-1000.00;-10.536;-46.350;22;2338.58;73.37;3
+M;0004;025;02;1957;87.95;0.00;0.00;0.00;30.47;6.40;29.90;29.90;28.30;20.72;-9999.00;85.04;1400;;;;;;60.60;35.80;24.31;26.25;0.00;1.50;13.00;0.00;27.76;-1000.00;-10.536;-33.367;22;2338.61;73.38;3
+M;0004;026;02;1958;88.58;0.00;0.00;0.00;30.46;6.40;30.00;29.90;28.30;20.72;-9999.00;85.04;1400;;;;;;60.50;35.80;24.31;26.25;0.00;1.50;13.00;0.00;27.76;-1000.00;-23.494;-33.367;22;2338.29;73.39;3
+M;0004;027;02;1959;80.01;0.00;0.00;0.00;30.58;6.39;30.00;29.90;28.30;20.72;-9999.00;85.04;1400;;;;;;60.50;35.80;24.28;26.25;0.00;1.50;13.00;0.00;27.76;-1000.00;-36.508;-33.367;22;2337.78;73.40;3
+M;0004;028;02;1960;83.20;0.00;0.00;0.00;30.49;6.40;29.90;29.90;28.30;20.72;-9999.00;85.04;1401;;;;;;60.30;35.90;24.28;26.25;0.00;1.50;13.00;0.00;27.76;-1000.00;-49.506;-33.367;22;2337.96;73.40;3
+M;0004;029;02;1962;85.64;0.00;0.00;0.00;30.34;6.40;30.00;29.90;28.30;20.72;-9999.00;85.01;1401;;;;;;60.20;35.90;24.31;26.25;0.00;1.50;13.00;0.00;27.76;-1000.00;-62.505;-33.367;22;2337.80;73.39;3
+M;0004;030;02;1963;82.93;0.00;0.00;0.00;30.55;6.39;30.00;29.90;28.30;20.72;-9999.00;84.99;1401;;;;;;60.20;35.80;24.31;26.25;0.00;1.50;13.00;0.00;27.76;-1000.00;-75.495;-33.367;22;2337.74;73.40;3
+M;0004;031;02;1964;87.13;0.00;0.00;0.00;30.94;6.38;30.00;29.90;28.20;20.72;-9999.00;84.94;1399;;;;;;60.10;35.80;24.31;26.25;0.00;1.50;13.00;0.00;27.76;-1000.00;-88.501;-33.367;22;2337.52;73.39;3
+M;0004;032;02;1965;93.26;0.00;0.00;0.00;29.95;6.42;30.00;29.90;28.20;20.72;-9999.00;84.94;1399;;;;;;60.10;35.80;24.34;26.25;0.00;1.50;13.00;0.00;27.77;-1000.00;-101.507;-33.367;22;2337.80;73.38;3
+M;0004;033;02;1967;96.71;0.00;0.00;0.00;30.59;6.39;30.00;29.90;28.30;20.72;-9999.00;84.94;1400;;;;;;59.90;35.80;24.38;26.25;0.00;1.50;13.00;80.00;27.77;-1000.00;-101.507;-20.360;22;2337.53;73.40;3
+M;0004;034;02;1968;84.61;0.00;0.00;0.00;31.14;6.37;30.00;29.90;28.30;20.72;-9999.00;84.96;1399;;;;;;63.10;35.80;24.38;26.25;0.00;1.50;12.00;80.00;27.77;-1000.00;-88.525;-20.360;22;2337.44;73.41;3
+M;0004;035;02;1969;89.97;0.00;0.00;0.00;30.45;6.40;30.00;29.90;28.30;20.72;-9999.00;85.01;1399;;;;;;63.10;35.80;24.31;26.25;0.00;1.50;12.00;80.00;27.76;-1000.00;-75.519;-20.360;22;2337.47;73.40;3
+M;0004;036;02;1970;83.77;0.00;0.00;0.00;30.84;6.38;30.00;29.90;28.40;20.72;-9999.00;85.04;1398;;;;;;65.80;35.80;24.31;26.25;0.00;1.50;12.00;80.00;27.76;-1000.00;-62.529;-20.360;22;2337.50;73.40;3
+M;0004;037;02;1972;79.21;0.00;0.00;0.00;31.01;6.37;30.00;29.90;28.50;20.72;-9999.00;85.10;1398;;;;;;67.20;35.80;24.31;26.25;0.00;1.00;12.00;80.00;27.76;-1000.00;-49.530;-20.360;22;2337.52;73.41;3
+M;0004;038;02;1973;82.32;0.00;0.00;0.00;30.82;6.38;30.00;29.90;28.50;20.73;-9999.00;85.14;1400;;;;;;67.20;35.80;24.34;26.25;0.00;1.00;12.00;80.00;27.76;-1000.00;-36.532;-20.360;22;2337.62;73.40;3
+M;0004;039;02;1974;81.48;0.00;0.00;0.00;30.58;6.39;30.00;30.00;28.50;20.73;-9999.00;85.19;1400;;;;;;67.60;35.80;24.34;26.25;0.00;1.50;12.00;80.00;27.76;-1000.00;-23.526;-20.360;22;2337.36;73.41;3
+M;0004;040;02;1975;78.79;0.00;0.00;0.00;30.89;6.38;30.00;30.00;28.50;20.73;-9999.00;85.24;1400;;;;;;67.60;35.80;24.34;26.25;0.00;1.50;12.00;80.00;27.77;-1000.00;-10.536;-20.360;22;2337.49;73.41;3
+M;0004;041;02;1976;83.31;0.00;0.00;0.00;30.15;6.41;30.00;30.00;28.60;20.73;-9999.00;85.31;1401;;;;;;67.70;35.90;24.34;26.25;0.00;1.00;11.00;80.00;27.76;-1000.00;-10.536;-7.376;22;2337.54;73.41;3
+M;0004;042;02;1978;88.71;0.00;0.00;0.00;30.62;6.39;30.00;29.90;28.60;20.73;-9999.00;85.35;1401;;;;;;67.80;35.90;24.28;26.25;0.00;1.50;11.00;80.00;27.76;-1000.00;-23.494;-7.376;22;2337.55;73.41;3
+M;0004;043;02;1979;88.62;0.00;0.00;0.00;29.75;6.43;30.00;29.90;28.60;20.73;-9999.00;85.39;1401;;;;;;67.80;35.80;24.31;26.25;0.00;1.50;11.00;80.00;27.76;-1000.00;-36.508;-7.376;22;2337.61;73.41;3
+M;0004;044;02;1980;79.95;0.00;0.00;0.00;31.17;6.37;30.00;30.00;28.70;20.73;-9999.00;85.50;1400;;;;;;67.80;35.80;24.31;26.25;0.00;1.50;11.50;80.00;27.76;-1000.00;-49.506;-7.376;22;2336.50;73.43;3
+M;0004;045;02;1981;85.09;0.00;0.00;0.00;30.11;6.41;30.00;30.00;28.70;20.73;-9999.00;85.53;1400;;;;;;68.30;35.80;24.31;26.25;0.00;1.00;11.00;0.00;27.76;-1000.00;-62.497;-7.376;22;2337.23;73.41;3
+M;0004;046;02;1983;95.49;0.00;0.00;0.00;30.08;6.41;30.00;30.00;28.70;20.73;-9999.00;85.58;1399;;;;;;68.30;35.90;24.28;26.25;0.00;1.00;11.00;0.00;27.76;-1000.00;-75.495;-7.376;22;2336.82;73.41;3
+M;0004;047;02;1984;89.79;0.00;0.00;0.00;30.27;6.41;30.00;30.00;28.70;20.73;-9999.00;85.59;1399;;;;;;67.30;35.80;24.28;26.25;0.00;1.00;11.00;0.00;27.76;-1000.00;-88.501;-7.376;22;2337.13;73.41;3
+M;0004;048;02;1985;98.22;0.00;0.00;0.00;30.39;6.40;30.00;30.00;28.70;20.73;-9999.00;85.63;1399;;;;;;67.30;35.80;24.31;26.25;0.00;1.00;11.00;0.00;27.76;-1000.00;-101.499;-7.376;22;2336.89;73.42;3
+P;0004;;;1985;;;;;;;30.00;30.00;28.70;20.73;-9999.00;85.63;1399;;;;;;67.30;35.80;24.31;26.25;0.00;1.00;11.00;0.00;27.76;-1000.00;-101.499;-7.376;22;;;;1.931;0.814;0.804;0.820;0.805
+P;0004;;;1986;;;;;;;30.00;30.00;28.70;20.73;-9999.00;85.63;1398;;;;;;65.50;35.90;24.31;26.25;0.00;1.50;11.00;0.00;27.76;-1000.00;-101.499;-7.376;1;;;;1.930;0.813;0.803;0.820;0.805
+M;0004;001;03;2008;23.17;0.00;0.00;0.00;41.61;99.83;29.90;30.00;28.40;20.73;-9999.00;85.19;1400;;;;;;61.60;35.80;24.28;26.25;0.00;1.50;9.50;0.00;27.75;-1000.00;-101.531;-67.364;22;2900.53;5.82;3
+M;0004;002;03;2009;23.65;0.00;0.00;0.00;41.58;99.90;30.00;30.00;28.40;20.73;-9999.00;85.18;1400;;;;;;61.40;35.80;24.31;26.25;0.00;2.00;9.50;0.00;27.75;-1000.00;-88.525;-67.364;22;2898.14;5.84;3
+M;0004;003;03;2011;23.59;0.00;0.00;0.00;41.87;98.46;30.00;30.00;28.40;20.73;-9999.00;85.14;1399;;;;;;61.40;35.80;24.31;26.25;0.00;2.00;9.50;0.00;27.75;-1000.00;-75.519;-67.364;22;2896.03;5.90;3
+M;0004;004;03;2012;22.44;0.00;0.00;0.00;41.76;99.07;29.90;30.00;28.30;20.73;-9999.00;85.13;1399;;;;;;61.20;35.80;24.31;26.25;0.00;1.50;10.00;0.00;27.76;-1000.00;-62.529;-67.364;22;2895.16;5.91;3
+M;0004;005;03;2013;22.89;0.00;0.00;0.00;41.75;99.14;29.90;30.00;28.30;20.72;-9999.00;85.05;1399;;;;;;61.20;35.80;24.34;26.25;0.00;1.50;10.00;0.00;27.75;-1000.00;-49.530;-67.364;22;2893.70;5.86;3
+M;0004;006;03;2014;22.13;0.00;0.00;0.00;41.73;99.16;30.00;30.00;28.30;20.72;-9999.00;85.02;1400;;;;;;61.00;35.80;24.34;26.25;0.00;1.50;10.50;0.00;27.75;-1000.00;-36.532;-67.364;22;2893.08;5.88;3
+M;0004;007;03;2016;23.18;0.00;0.00;0.00;41.73;99.17;30.00;29.90;28.30;20.72;-9999.00;85.02;1398;;;;;;60.90;35.80;24.31;26.25;0.00;1.50;11.00;0.00;27.75;-1000.00;-23.518;-67.364;22;2891.97;5.83;3
+M;0004;008;03;2017;23.52;0.00;0.00;0.00;41.60;99.84;30.00;29.90;28.30;20.72;-9999.00;85.02;1398;;;;;;60.90;35.90;24.34;26.25;0.00;1.50;11.00;0.00;27.75;-1000.00;-10.536;-67.364;22;2891.15;5.81;3
+M;0004;009;03;2018;22.60;0.00;0.00;0.00;41.71;99.29;30.00;29.90;28.30;20.72;-9999.00;85.02;1399;;;;;;60.70;35.80;24.34;26.25;0.00;1.50;12.00;0.00;27.75;-1000.00;-10.536;-54.357;22;2890.48;5.84;3
+M;0004;010;03;2019;22.17;0.00;0.00;0.00;41.50;100.39;29.90;29.90;28.30;20.72;-9999.00;85.00;1399;;;;;;60.60;35.80;24.31;26.25;0.00;1.50;12.50;0.00;27.76;-1000.00;-23.494;-54.357;22;2889.25;5.82;3
+M;0004;011;03;2020;24.34;0.00;0.00;0.00;41.88;98.49;29.90;29.90;28.30;20.72;-9999.00;85.00;1400;;;;;;60.60;35.90;24.31;26.25;0.00;1.50;12.50;0.00;27.75;-1000.00;-36.508;-54.357;22;2888.17;5.87;3
+M;0004;012;03;2022;21.74;0.00;0.00;0.00;41.51;100.31;29.90;29.90;28.30;20.72;-9999.00;85.01;1400;;;;;;60.40;35.90;24.34;26.25;0.00;1.50;12.50;0.00;27.76;-1000.00;-49.498;-54.357;22;2887.56;5.85;3
+M;0004;013;03;2023;23.61;0.00;0.00;0.00;41.59;99.87;30.00;29.90;28.40;20.72;-9999.00;85.01;1400;;;;;;60.10;35.90;24.31;26.25;0.00;1.50;13.00;80.00;27.76;-1000.00;-62.497;-54.357;22;2886.54;5.86;3
+M;0004;014;03;2024;22.25;0.00;0.00;0.00;41.76;99.04;30.00;29.90;28.40;20.72;-9999.00;85.03;1401;;;;;;60.10;35.90;24.31;26.25;0.00;1.50;13.00;80.00;27.76;-1000.00;-75.495;-54.349;22;2886.34;5.84;3
+M;0004;015;03;2025;22.74;0.00;0.00;0.00;41.52;100.21;30.00;29.90;28.40;20.72;-9999.00;85.13;1401;;;;;;63.10;35.90;24.31;26.25;0.00;1.50;12.50;80.00;27.75;-1000.00;-88.501;-54.349;22;2885.04;5.88;3
+M;0004;016;03;2027;22.43;0.00;0.00;0.00;41.64;99.63;30.00;29.90;28.40;20.72;-9999.00;85.15;1400;;;;;;63.10;35.90;24.31;26.25;0.00;1.50;12.50;80.00;27.75;-1000.00;-101.507;-54.349;22;2884.38;5.83;3
+M;0004;017;03;2028;22.20;0.00;0.00;0.00;41.80;98.84;30.00;29.90;28.50;20.72;-9999.00;85.18;1399;;;;;;65.70;35.90;24.31;26.25;0.00;1.00;13.00;80.00;27.75;-1000.00;-101.507;-41.358;22;2883.64;5.86;3
+M;0004;018;03;2029;21.14;0.00;0.00;0.00;41.60;99.79;30.00;29.90;28.60;20.72;-9999.00;85.22;1399;;;;;;67.20;35.90;24.31;26.25;0.00;1.00;13.00;80.00;27.75;-1000.00;-88.525;-41.358;22;2883.00;5.89;3
+M;0004;019;03;2030;21.32;0.00;0.00;0.00;41.48;100.40;30.00;29.90;28.60;20.72;-9999.00;85.26;1399;;;;;;67.20;35.90;24.31;26.25;0.00;1.00;13.00;80.00;27.75;-1000.00;-75.519;-41.358;22;2882.48;5.84;3
+M;0004;020;03;2032;20.57;0.00;0.00;0.00;41.47;100.46;30.00;29.90;28.60;20.72;-9999.00;85.32;1399;;;;;;67.60;35.90;24.38;26.25;0.00;1.00;13.00;80.00;27.75;-1000.00;-62.529;-41.358;22;2881.77;5.87;3
+M;0004;021;03;2033;21.96;0.00;0.00;0.00;41.58;99.93;30.00;29.90;28.60;20.72;-9999.00;85.37;1399;;;;;;67.60;35.90;24.38;26.25;0.00;1.00;13.00;80.00;27.75;-1000.00;-49.530;-41.358;22;2881.14;5.87;3
+M;0004;022;03;2034;20.07;0.00;0.00;0.00;41.62;99.70;30.00;29.90;28.70;20.72;-9999.00;85.40;1399;;;;;;67.90;35.90;24.38;26.25;0.00;0.50;13.00;80.00;27.75;-1000.00;-36.532;-41.358;22;2880.87;5.87;3
+M;0004;023;03;2035;20.16;0.00;0.00;0.00;41.35;101.09;30.00;29.90;28.70;20.72;-9999.00;85.45;1399;;;;;;68.20;35.90;24.31;26.25;0.00;1.00;13.00;80.00;27.76;-1000.00;-23.518;-41.358;22;2880.50;5.79;3
+M;0004;024;03;2037;23.27;0.00;0.00;0.00;41.62;99.70;30.00;29.90;28.70;20.72;-9999.00;85.49;1399;;;;;;68.20;35.80;24.31;26.25;0.00;1.00;13.00;80.00;27.75;-1000.00;-10.536;-41.358;22;2879.72;5.83;3
+M;0004;025;03;2038;21.88;0.00;0.00;0.00;41.61;99.78;30.00;29.90;28.80;20.72;-9999.00;85.55;1401;;;;;;68.20;35.90;24.34;26.25;0.00;0.50;13.00;0.00;27.75;-1000.00;-10.536;-28.359;22;2879.22;5.85;3
+M;0004;026;03;2039;22.91;0.00;0.00;0.00;41.69;99.38;30.00;29.90;28.80;20.72;-9999.00;85.61;1401;;;;;;68.40;35.90;24.31;26.25;0.00;1.00;13.00;0.00;27.75;-1000.00;-23.494;-28.359;22;2877.90;5.88;3
+M;0004;027;03;2040;20.95;0.00;0.00;0.00;41.66;99.54;30.00;29.90;28.80;20.72;-9999.00;85.64;1400;;;;;;68.40;35.90;24.31;26.25;0.00;1.00;13.00;0.00;27.75;-1000.00;-36.508;-28.359;22;2878.14;5.84;3
+M;0004;028;03;2041;20.82;0.00;0.00;0.00;41.67;99.46;30.00;29.90;28.80;20.72;-9999.00;85.66;1400;;;;;;66.10;35.90;24.31;26.25;0.00;1.00;13.00;0.00;27.75;-1000.00;-49.506;-28.359;22;2876.88;5.88;3
+M;0004;029;03;2043;22.53;0.00;0.00;0.00;41.66;99.50;30.00;29.90;28.80;20.72;-9999.00;85.67;1399;;;;;;66.10;35.80;24.31;26.25;0.00;1.00;13.00;0.00;27.75;-1000.00;-62.497;-28.359;22;2876.46;5.88;3
+M;0004;030;03;2044;21.99;0.00;0.00;0.00;41.56;100.03;30.00;29.90;28.80;20.72;-9999.00;85.66;1400;;;;;;65.00;35.80;24.31;26.25;0.00;1.00;13.00;0.00;27.76;-1000.00;-75.495;-28.359;22;2875.73;5.86;3
+M;0004;031;03;2045;23.05;0.00;0.00;0.00;41.61;99.78;30.00;29.90;28.70;20.72;-9999.00;85.66;1400;;;;;;64.50;35.80;24.28;26.25;0.00;1.00;13.00;0.00;27.75;-1000.00;-88.501;-28.359;22;2875.93;5.83;3
+M;0004;032;03;2046;22.83;0.00;0.00;0.00;41.61;99.75;30.00;29.90;28.70;20.71;-9999.00;85.65;1399;;;;;;64.50;35.90;24.28;26.25;0.00;1.00;13.00;0.00;27.75;-1000.00;-101.507;-28.359;22;2874.87;5.86;3
+M;0004;033;03;2048;25.18;0.00;0.00;0.00;41.61;99.78;30.00;29.90;28.70;20.71;-9999.00;85.60;1399;;;;;;64.00;35.90;24.31;26.25;0.00;1.00;12.50;0.00;27.75;-1000.00;-101.507;-15.367;22;2874.54;5.84;3
+M;0004;034;03;2049;20.07;0.00;0.00;0.00;41.39;100.87;30.00;29.90;28.60;20.71;-9999.00;85.58;1399;;;;;;63.60;35.90;24.38;26.25;0.00;1.00;12.50;0.00;27.76;-1000.00;-88.525;-15.367;22;2873.75;5.88;3
+M;0004;035;03;2050;20.08;0.00;0.00;0.00;41.67;99.49;30.00;29.90;28.60;20.71;-9999.00;85.55;1400;;;;;;63.60;35.90;24.38;26.25;0.00;1.00;12.50;0.00;27.75;-1000.00;-75.519;-15.367;22;2873.93;5.85;3
+M;0004;036;03;2051;21.83;0.00;0.00;0.00;41.55;100.07;30.00;30.00;28.60;20.71;-9999.00;85.53;1400;;;;;;63.10;35.90;24.25;26.25;0.00;1.00;11.50;0.00;27.76;-1000.00;-62.529;-15.367;22;2873.32;5.83;3
+M;0004;037;03;2053;20.90;0.00;0.00;0.00;41.58;99.92;30.00;30.00;28.60;20.71;-9999.00;85.52;1400;;;;;;63.10;35.90;24.38;26.25;0.00;1.00;11.50;0.00;27.75;-1000.00;-49.530;-15.367;22;2873.34;5.88;3
+M;0004;038;03;2054;21.04;0.00;0.00;0.00;41.32;101.24;30.00;30.00;28.60;20.71;-9999.00;85.51;1399;;;;;;62.80;35.90;24.38;26.25;0.00;1.00;11.50;0.00;27.75;-1000.00;-36.540;-15.367;22;2872.87;5.85;3
+M;0004;039;03;2055;21.62;0.00;0.00;0.00;41.57;99.98;30.00;30.00;28.50;20.71;-9999.00;85.47;1399;;;;;;62.50;35.90;24.28;26.25;0.00;0.50;11.00;0.00;27.75;-1000.00;-23.518;-15.367;22;2871.73;5.88;3
+M;0004;040;03;2056;21.95;0.00;0.00;0.00;41.60;99.81;30.00;30.00;28.50;20.71;-9999.00;85.47;1400;;;;;;62.50;35.90;24.28;26.25;0.00;0.50;11.00;0.00;27.75;-1000.00;-10.536;-15.367;22;2871.15;5.83;3
+M;0004;041;03;2058;18.26;0.00;0.00;0.00;41.58;99.96;29.90;30.00;28.50;20.71;-9999.00;85.42;1400;;;;;;62.20;35.90;24.34;26.25;0.00;1.00;11.00;0.00;27.75;-1000.00;-10.536;-2.376;22;2870.69;5.86;3
+M;0004;042;03;2059;19.96;0.00;0.00;0.00;41.72;99.20;30.00;30.00;28.50;20.71;-9999.00;85.38;1398;;;;;;62.00;35.90;24.38;26.25;0.00;1.50;11.00;0.00;27.76;-1000.00;-23.494;-2.376;22;2870.92;5.86;3
+M;0004;043;03;2060;19.78;0.00;0.00;0.00;41.73;99.17;30.00;30.00;28.50;20.71;-9999.00;85.34;1398;;;;;;62.00;35.90;24.38;26.25;0.00;1.50;11.00;0.00;27.76;-1000.00;-36.508;-2.376;22;2869.95;5.88;3
+M;0004;044;03;2061;20.50;0.00;0.00;0.00;41.54;100.17;29.90;30.00;28.40;20.71;-9999.00;85.32;1398;;;;;;61.70;35.90;24.38;26.25;0.00;1.00;11.00;0.00;27.76;-1000.00;-49.506;-2.376;22;2870.82;5.84;3
+M;0004;045;03;2062;20.83;0.00;0.00;0.00;41.74;99.18;29.90;30.00;28.40;20.71;-9999.00;85.30;1399;;;;;;61.70;35.90;24.38;26.25;0.00;1.00;11.00;0.00;27.76;-1000.00;-62.497;-2.376;22;2869.63;5.88;3
+M;0004;046;03;2064;21.33;0.00;0.00;0.00;41.54;100.11;30.00;30.00;28.40;20.71;-9999.00;85.29;1399;;;;;;61.50;35.90;24.31;26.25;0.00;1.50;10.50;0.00;27.76;-1000.00;-75.495;-2.376;22;2869.34;5.82;3
+M;0004;047;03;2065;21.39;0.00;0.00;0.00;41.68;99.46;29.90;30.00;28.40;20.71;-9999.00;85.23;1399;;;;;;61.30;35.90;24.34;26.25;0.00;1.00;10.50;0.00;27.77;-1000.00;-88.501;-2.376;22;2869.00;5.89;3
+M;0004;048;03;2066;23.43;0.00;0.00;0.00;41.64;99.65;29.90;30.00;28.40;20.71;-9999.00;85.24;1400;;;;;;61.30;35.90;24.34;26.25;0.00;1.00;10.50;0.00;27.77;-1000.00;-101.507;-2.376;22;2868.93;5.83;3
+P;0004;;;2066;;;;;;;29.90;30.00;28.40;20.71;-9999.00;85.24;1400;;;;;;61.30;35.90;24.34;26.25;0.00;1.00;10.50;0.00;27.77;-1000.00;-101.507;-2.376;22;;;;1.929;0.814;0.803;0.820;0.806
+P;0004;;;2102;;;;;;;30.00;30.00;28.80;20.72;-9999.00;85.70;1400;;;;;;66.30;35.90;24.34;26.25;0.00;1.50;11.50;0.00;27.76;-1000.00;-125.993;-69.326;22;;;;1.930;0.814;0.804;0.821;0.806
+=====end_process=====
+[end_date_time] 2019-07-12, 17:29:53
