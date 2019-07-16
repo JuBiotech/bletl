@@ -9,11 +9,11 @@ import configparser
 import pathlib
 from collections.abc import Iterable
 
-from . core import BioLectorModel, BLData, BLDParser, LotInformationError, LotInformationMismatch, InvalidLotNumberError, LotInformationNotFound
+from . core import BioLectorModel, BLData, BLDParser, LotInformationError, LotInformationMismatch, InvalidLotNumberError, LotInformationNotFound, FilterTimeSeries
 from . import parsing
 from . import utils
 
-__version__ = '0.9.2'
+__version__ = '0.9.3'
 
 parsers = {
     (BioLectorModel.BL1, '3.3') : parsing.bl1.BioLector1Parser,
@@ -157,6 +157,10 @@ def parse(filepaths, lot_number:int=None, temp:int=None, drop_incomplete_cycles:
         for filepath in filepaths:
             fragment = _parse_without_calibration(filepath, drop_incomplete_cycles)
             fragments.append(fragment)
+        start_times = [
+            fragment.metadata['date_start']
+            for fragment in fragments
+        ]
         
         data = fragments[0]
 
@@ -168,12 +172,23 @@ def parse(filepaths, lot_number:int=None, temp:int=None, drop_incomplete_cycles:
                     getattr(fragment, attr)
                     for fragment in fragments
                 ]
-                start_times = [
-                    fragment.metadata['date_start']
-                    for fragment in fragments
-                ]
                 stack = utils._concatenate_fragments(fragment_frames, start_times)
                 setattr(data, attr, stack)
+        
+        # also iterate over FilterTimeSeries and concatenate them
+        if len(fragments) > 1:
+            for fs in data.keys():
+                # already increment the time here, because utils._concatenate_fragments won't do that
+                conc_times = utils._concatenate_fragments([
+                   f[fs].time + (fragment_start - start_times[0]).total_seconds() / 3600
+                   for f, fragment_start in zip(fragments, start_times)
+                ], start_times)
+                conc_values = utils._concatenate_fragments([
+                    f[fs].value
+                    for f in fragments
+                ], start_times)
+                # overwrite with concatenated FilterTimeSeries
+                data[fs] = FilterTimeSeries(conc_times, conc_values)
 
         data.metadata['date_end'] = fragments[-1].metadata['date_end']
     else:

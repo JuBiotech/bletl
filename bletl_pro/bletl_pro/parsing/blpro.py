@@ -61,6 +61,14 @@ def parse_metadata_data(fp):
                 key, value = line.split(']')
                 key = key.strip('[')
                 metadata[section][key] = value.strip()
+                
+    # standardize the metadata keys
+    metadata['date_start'] = datetime.datetime.strptime(metadata['process']['start_date_time'], '%Y-%m-%d, %H:%M:%S')
+    if 'end_process' in metadata and 'end_date_time' in metadata['end_process']:
+        metadata['date_end'] = datetime.datetime.strptime(metadata['end_process']['end_date_time'], '%Y-%m-%d, %H:%M:%S')
+    else:
+        metadata['date_end'] = None
+
     datalines = lines[data_start:data_end]
     # append a ; to the header line because the P lines contain a trailing ;
     datalines[0] = 'Type;Cycle;Well;Filterset;Time;Amp_1;Amp_2;AmpRef_1;AmpRef_2;Phase;Cal;' \

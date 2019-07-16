@@ -1,4 +1,5 @@
 """Contains unit tests for the `bletl_pro` package"""
+import datetime
 import numpy
 import pathlib
 import pandas
@@ -42,6 +43,18 @@ class TestBLProParsing(unittest.TestCase):
             except:
                 print('parsing failed for: {}'.format(fp))
                 raise
+        return
+
+    def test_parse_with_concat(self):
+        data = bletl.parse(filepaths=[
+                pathlib.Path(dir_testfiles, 'BLPro', '224-MO_Coryne--2019-07-12-16-54-30.csv'),
+                pathlib.Path(dir_testfiles, 'BLPro', '226-MO_Coryne--2019-07-12-17-38-02.csv'),
+        ])
+        self.assertIsInstance(data, bletl.BLData)
+        self.assertEqual(data.metadata['date_start'], datetime.datetime(2019, 7, 12, 16, 54, 30))
+        self.assertEqual(data.metadata['date_end'], None)
+        numpy.testing.assert_array_equal(data['BS5'].time.index, numpy.arange(1, 4+254+1))
+        numpy.testing.assert_array_almost_equal(data['BS5'].time['A01'][:5], [0.013056, 0.179444, 0.346111, 0.512778, 0.738611])
         return
 
 
