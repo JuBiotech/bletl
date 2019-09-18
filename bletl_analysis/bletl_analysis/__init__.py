@@ -120,7 +120,7 @@ def _get_single_spline(x, y, k_folds:int=5):
     Returns:
         spline (scipy.interpolate.UnivariateSpline): Spline with k-fold crossvalidated smoothing factor
     """
-    opt = scipy.optimize.differential_evolution(_evaluate_smoothing_factor, bounds=[(1, 1000)], args=(x, y, k_folds))    
+    opt = scipy.optimize.differential_evolution(_evaluate_smoothing_factor, bounds=[(1, len(x))], args=(x, y, k_folds))    
     return scipy.interpolate.UnivariateSpline(x, y, s=opt.x)
 
 
