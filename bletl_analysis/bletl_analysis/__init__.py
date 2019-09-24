@@ -61,7 +61,7 @@ def find_do_peak(x, y, *, delay_a:float, threshold_a:float, delay_b:float, thres
     return c_overshot
 
 
-def _evaluate_smoothing_factor(smoothing_factor:float, timepoints, values, k:int):
+def _evaluate_smoothing_factor(smoothing_factor:float, timepoints, values, k:int) -> float:
     """Computes mean sum of squared residuals over K folds of the dataset.
     
     Args:
@@ -91,7 +91,7 @@ def _evaluate_smoothing_factor(smoothing_factor:float, timepoints, values, k:int
     return numpy.mean(ssrs)
 
 
-def _evaluate_spline_test_error(x, y, train_idxs, test_idxs, smoothing_factor:float):
+def _evaluate_spline_test_error(x, y, train_idxs, test_idxs, smoothing_factor:float) -> float:
     """Fits spline to a test set and returns the sum of squared error on the test set.
 
     Args:
@@ -109,18 +109,22 @@ def _evaluate_spline_test_error(x, y, train_idxs, test_idxs, smoothing_factor:fl
     return numpy.sum(numpy.square(y_val_pred - y[test_idxs]))        
 
 
-def _get_single_spline(x, y, k_folds:int=5):
+def _crossvalidate_smoothing_spline(x, y, k_folds:int=5) -> scipy.interpolate.UnivariateSpline:
     """Returns spline with k-fold crossvalidated smoothing factor
     
     Args:
         x (array): time vector
-        y (array): backscatter vector
+        y (array): value vector
         k_folds (int): "k"s for cross-validation
     
     Returns:
         spline (scipy.interpolate.UnivariateSpline): Spline with k-fold crossvalidated smoothing factor
     """
-    opt = scipy.optimize.differential_evolution(_evaluate_smoothing_factor, bounds=[(1, len(x))], args=(x, y, k_folds))    
+    n = len(x)
+    opt = scipy.optimize.differential_evolution(_evaluate_smoothing_factor,
+        bounds=[(0, len(x)/10)],
+        args=(x, y, k_folds)
+    )
     return scipy.interpolate.UnivariateSpline(x, y, s=opt.x)
 
 
@@ -137,7 +141,7 @@ def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_fold
     """
     def get_spline_parallel(arg):
         well, timepoints, values, k_folds = arg
-        spline = _get_single_spline(timepoints, values, k_folds)
+        spline = _crossvalidate_smoothing_spline(timepoints, values, k_folds)
         return (well, spline)
 
     args_get_spline = []
