@@ -6,7 +6,7 @@ import numpy
 import pandas
 import scipy.optimize
 import scipy.interpolate
-
+import csaps
 import bletl
 
 __version__ = '0.2.0'
@@ -109,7 +109,7 @@ def _evaluate_spline_test_error(x, y, train_idxs, test_idxs, smoothing_factor:fl
     return numpy.sum(numpy.square(y_val_pred - y[test_idxs]))        
 
 
-def _crossvalidate_smoothing_spline(x, y, k_folds:int=5) -> scipy.interpolate.UnivariateSpline:
+def _crossvalidate_smoothing_spline(x, y, k_folds:int=5):
     """Returns spline with k-fold crossvalidated smoothing factor
     
     Args:
@@ -120,13 +120,29 @@ def _crossvalidate_smoothing_spline(x, y, k_folds:int=5) -> scipy.interpolate.Un
     Returns:
         spline (scipy.interpolate.UnivariateSpline): Spline with k-fold crossvalidated smoothing factor
     """
-    n = len(x)
     opt = scipy.optimize.differential_evolution(_evaluate_smoothing_factor,
-        bounds=[(0, len(x)/10)],
+        bounds=[(0, 10000)],
         args=(x, y, k_folds)
     )
-    return scipy.interpolate.UnivariateSpline(x, y, s=opt.x)
+    return csaps.UnivariateCubicSmoothingSpline(x, y, smooth=(opt.x[0]/10000))
 
+def _get_derivative(spline:csaps.UnivariateCubicSmoothingSpline):
+    """Returns Derivative of spline
+    
+    Args:
+        spline(csaps.UnivariateCubicSmoothingSpline): Smoothing Spline
+        
+    Returns:
+        Derivative (array): array of floats
+    """
+    x = spline._xdata
+    y = spline(x)
+    der = []
+    der.append((y[1]-y[0])/(x[1]-x[0]))
+    for pos in range(1, len(x)-1):
+        der.append((y[pos+1]-y[pos-1])/(x[pos+1]-x[pos-1]))
+    der.append((y[len(x)-1]-y[len(x)-2])/(x[len(x)-1]-x[len(x)-2]))
+    return der
 
 def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_folds:int=5):
     """Returns multiple splines with k-fold crossvalidated smoothing factor
@@ -152,7 +168,7 @@ def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_fold
 
     return joblib.Parallel(n_jobs=multiprocessing.cpu_count(), verbose=11)(map(joblib.delayed(get_spline_parallel), args_get_spline))
 
-
+#TODO blank_dict
 def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_folds:int=5):
     """Approximation of specific growth rate over time via spline approximation using splines with k-fold cross validated smoothing factor
     
@@ -199,11 +215,12 @@ def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_fo
         der = spline.derivative(1)
 
         if blank == 'first':
-            time[well] = bsdata.time[well][1:]
+            time[well] = bsdata.time[well][0:]
         else:
             time[well] = bsdata.time[well]
 
-        mues[well] = der(time[well])/(spline(time[well]) - blank_dict[well])
+        #mues[well] = der(time[well])/(spline(time[well]) - blank_dict[well])
+        mues[well] = der 
 
     # summarize into FilterTimeSeries
     filtertimeseries = bletl.core.FilterTimeSeries(
