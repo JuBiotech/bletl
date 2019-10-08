@@ -14,16 +14,16 @@ __version__ = '0.2.0'
 class UnivariateCubicSmoothingSpline(csaps.UnivariateCubicSmoothingSpline):
     """add a function to UnivarianteCubicSmoothingSpline
     """
-    def derivative(self, order:int):
+    def derivative(self, order:int, *, epsilon=0.001):
         """returns derivative of UnivarianteCubicSmoothingSpline
         Args:
             order(int): order of derivative
+            epsilon(float): epsilon to calculate derivative
         Returns:
             derivative
         """
         if order > 1:
             raise NotImplementedError(f'{order}-order derivatives are not implemented for the UnivariateCubicSmoothingSpline')
-        epsilon = 0.001
         return lambda x: (self(x + epsilon) - self(x - epsilon)) / (2 * epsilon)
 
 def find_do_peak(x, y, *, delay_a:float, threshold_a:float, delay_b:float, threshold_b:float, initial_delay:float=1):
