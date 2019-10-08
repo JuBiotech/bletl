@@ -1,5 +1,5 @@
 import setuptools
-
+import csaps
 __packagename__ = 'bletl_analysis'
 
 def get_version():

@@ -11,6 +11,20 @@ import bletl
 
 __version__ = '0.2.0'
 
+class UnivariateCubicSmoothingSpline(csaps.UnivariateCubicSmoothingSpline):
+    """add a function to UnivarianteCubicSmoothingSpline
+    """
+    def derivative(self, order:int):
+        """returns derivative of UnivarianteCubicSmoothingSpline
+        Args:
+            order(int): order of derivative
+        Returns:
+            derivative
+        """
+        if order > 1:
+            raise NotImplementedError(f'{order}-order derivatives are not implemented for the UnivariateCubicSmoothingSpline')
+        epsilon = 0.001
+        return lambda x: (self(x + epsilon) - self(x - epsilon)) / (2 * epsilon)
 
 def find_do_peak(x, y, *, delay_a:float, threshold_a:float, delay_b:float, threshold_b:float, initial_delay:float=1):
     """Finds the cycle of the DO peak.
@@ -61,7 +75,7 @@ def find_do_peak(x, y, *, delay_a:float, threshold_a:float, delay_b:float, thres
     return c_overshot
 
 
-def _evaluate_smoothing_factor(smoothing_factor:float, timepoints, values, k:int) -> float:
+def _evaluate_smoothing_factor(smoothing_factor:float, timepoints, values, k:int, method:str) -> float:
     """Computes mean sum of squared residuals over K folds of the dataset.
     
     Args:
@@ -69,6 +83,7 @@ def _evaluate_smoothing_factor(smoothing_factor:float, timepoints, values, k:int
         timepoints (array): timepoints of the data
         values (array): values of the data
         k (int): number of train/test splits
+        method (str): Kind of spline, Choices: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline
         
     Returns:
         mssr (float): mean sum of squared residuals
@@ -86,12 +101,13 @@ def _evaluate_smoothing_factor(smoothing_factor:float, timepoints, values, k:int
                 train_idxs=train_mask,
                 test_idxs=test_mask,
                 smoothing_factor=smoothing_factor,
+                method=method
             )
         )
     return numpy.mean(ssrs)
 
 
-def _evaluate_spline_test_error(x, y, train_idxs, test_idxs, smoothing_factor:float) -> float:
+def _evaluate_spline_test_error(x, y, train_idxs, test_idxs, smoothing_factor:float, method:str) -> float:
     """Fits spline to a test set and returns the sum of squared error on the test set.
 
     Args:
@@ -100,64 +116,60 @@ def _evaluate_spline_test_error(x, y, train_idxs, test_idxs, smoothing_factor:fl
         train_idxs (array): indices or bool mask of training data points
         test_idxs (array): indices or bool mask of test data points
         smoothing_factor (float): smoothing factor for the univariate spline
+        method (str): Kind of spline, Choices: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline
 
     Returns:
         ssr (float): sum of squared residuals on test set
     """
-    spline = scipy.interpolate.UnivariateSpline(x[train_idxs], y[train_idxs], s=smoothing_factor)
+    if method == 'ucss':
+        spline = csaps.UnivariateCubicSmoothingSpline(x[train_idxs], y[train_idxs], smooth=smoothing_factor[0])
+    elif method == 'us':
+        spline = scipy.interpolate.UnivariateSpline(x[train_idxs], y[train_idxs], s=smoothing_factor)
+    else:
+        raise NotImplementedError(f'Unknown method "{method}"')
     y_val_pred = spline(x[test_idxs])
-    return numpy.sum(numpy.square(y_val_pred - y[test_idxs]))        
+    return numpy.sum(numpy.square(y_val_pred - y[test_idxs]))      
 
 
-def _crossvalidate_smoothing_spline(x, y, k_folds:int=5):
+def _crossvalidate_smoothing_spline(x, y, k_folds:int=5, method:str='ucss'):
     """Returns spline with k-fold crossvalidated smoothing factor
     
     Args:
         x (array): time vector
         y (array): value vector
         k_folds (int): "k"s for cross-validation
-    
+        method (str): Kind of spline, Choices: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline  
     Returns:
         spline (scipy.interpolate.UnivariateSpline): Spline with k-fold crossvalidated smoothing factor
     """
     opt = scipy.optimize.differential_evolution(_evaluate_smoothing_factor,
-        bounds=[(0, 10000)],
-        args=(x, y, k_folds)
+        bounds=[(0, 1)],
+        args=(x, y, k_folds, method)
     )
-    return csaps.UnivariateCubicSmoothingSpline(x, y, smooth=(opt.x[0]/10000))
+    if method == 'ucss':
+        s_csaps = 1 - opt.x[0]
+        return UnivariateCubicSmoothingSpline(x, y, smooth=s_csaps)
+    elif method == 'us':
+        amplitude = (numpy.max(y) - numpy.min(y)) / 2
+        s_scipy = opt.x[0] * amplitude * 10
+        return scipy.interpolate.UnivariateSpline(x, y, s=s_scipy)
+    else:
+        raise NotImplementedError(f'Unknown method "{method}"')
 
-def _get_derivative(spline:csaps.UnivariateCubicSmoothingSpline):
-    """Returns Derivative of spline
-    
-    Args:
-        spline(csaps.UnivariateCubicSmoothingSpline): Smoothing Spline
-        
-    Returns:
-        Derivative (array): array of floats
-    """
-    x = spline._xdata
-    y = spline(x)
-    der = []
-    der.append((y[1]-y[0])/(x[1]-x[0]))
-    for pos in range(1, len(x)-1):
-        der.append((y[pos+1]-y[pos-1])/(x[pos+1]-x[pos-1]))
-    der.append((y[len(x)-1]-y[len(x)-2])/(x[len(x)-1]-x[len(x)-2]))
-    return der
-
-def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_folds:int=5):
+def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_folds:int=5, method:str='ucss'):
     """Returns multiple splines with k-fold crossvalidated smoothing factor
     
     Args:
         bsdata (bletl.core.FilterTimeSeries): FilterTimeSeries containing timepoints and backscatter data
         wells (list): List of wells to calculate specific growth rate for.
         k_folds (int): "k"s for cross-validation
-        
+        method (str): Kind of spline, Choices: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline 
     Returns:
         splines (dict): Dict with well:spline for each well of "wells"
     """
     def get_spline_parallel(arg):
         well, timepoints, values, k_folds = arg
-        spline = _crossvalidate_smoothing_spline(timepoints, values, k_folds)
+        spline = _crossvalidate_smoothing_spline(timepoints, values, k_folds, method=method)
         return (well, spline)
 
     args_get_spline = []
@@ -168,8 +180,7 @@ def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_fold
 
     return joblib.Parallel(n_jobs=multiprocessing.cpu_count(), verbose=11)(map(joblib.delayed(get_spline_parallel), args_get_spline))
 
-#TODO blank_dict
-def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_folds:int=5):
+def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_folds:int=5, method:str='ucss'):
     """Approximation of specific growth rate over time via spline approximation using splines with k-fold cross validated smoothing factor
     
     Args:
@@ -180,7 +191,7 @@ def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_fo
             - (float): Apply this blank value to all wells
             - (dict): Containing well id as key and scalar or vector as blank value(s) for the respective well
         k_folds (int): "k"s for cross-validation
-        
+        method (str): Calculates Spline, Choices: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline
     Returns:
         filtertimeseries (bletl.core.FilterTimeSeries): FilterTimeSeries with specific growth rate over time
 
@@ -204,7 +215,7 @@ def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_fo
         raise ValueError('Please provide proper blank option.')
 
     # run spline fitting
-    results = _get_multiple_splines(bsdata, wells)
+    results = _get_multiple_splines(bsdata, wells, method=method)
     
     # compute derivatives
     time = {}
@@ -213,19 +224,15 @@ def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_fo
         well = result[0]
         spline = result[1]
         der = spline.derivative(1)
-
         if blank == 'first':
-            time[well] = bsdata.time[well][0:]
+            time[well] = bsdata.time[well][1:]
         else:
             time[well] = bsdata.time[well]
 
-        #mues[well] = der(time[well])/(spline(time[well]) - blank_dict[well])
-        mues[well] = der 
-
+        mues[well] = der(time[well])/(spline(time[well]) - blank_dict[well])
     # summarize into FilterTimeSeries
     filtertimeseries = bletl.core.FilterTimeSeries(
         pandas.DataFrame(time),
         pandas.DataFrame(mues),
     )
-
     return filtertimeseries
