@@ -26,6 +26,7 @@ class UnivariateCubicSmoothingSpline(csaps.UnivariateCubicSmoothingSpline):
             raise NotImplementedError(f'{order}-order derivatives are not implemented for the UnivariateCubicSmoothingSpline')
         return lambda x: (self(x + epsilon) - self(x - epsilon)) / (2 * epsilon)
 
+
 def find_do_peak(x, y, *, delay_a:float, threshold_a:float, delay_b:float, threshold_b:float, initial_delay:float=1):
     """Finds the cycle of the DO peak.
     
@@ -131,7 +132,7 @@ def _evaluate_spline_test_error(x, y, train_idxs, test_idxs, smoothing_factor:fl
     return numpy.sum(numpy.square(y_val_pred - y[test_idxs]))      
 
 
-def _crossvalidate_smoothing_spline(x, y, k_folds:int=5, method:str='ucss'):
+def _crossvalidate_smoothing_spline(x, y, k_folds:int=5, method:str='ucss', bounds=(0,1)):
     """Returns spline with k-fold crossvalidated smoothing factor
     
     Args:
@@ -143,9 +144,10 @@ def _crossvalidate_smoothing_spline(x, y, k_folds:int=5, method:str='ucss'):
         spline (scipy.interpolate.UnivariateSpline): Spline with k-fold crossvalidated smoothing factor
     """
     opt = scipy.optimize.differential_evolution(_evaluate_smoothing_factor,
-        bounds=[(0, 1)],
+        bounds=[bounds],
         args=(x, y, k_folds, method)
     )
+    print(opt)
     if method == 'ucss':
         s_csaps = 1 - opt.x[0]
         return UnivariateCubicSmoothingSpline(x, y, smooth=s_csaps)
@@ -155,6 +157,7 @@ def _crossvalidate_smoothing_spline(x, y, k_folds:int=5, method:str='ucss'):
         return scipy.interpolate.UnivariateSpline(x, y, s=s_scipy)
     else:
         raise NotImplementedError(f'Unknown method "{method}"')
+
 
 def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_folds:int=5, method:str='ucss'):
     """Returns multiple splines with k-fold crossvalidated smoothing factor
@@ -179,6 +182,7 @@ def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_fold
         args_get_spline.append(args)
 
     return joblib.Parallel(n_jobs=multiprocessing.cpu_count(), verbose=11)(map(joblib.delayed(get_spline_parallel), args_get_spline))
+
 
 def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_folds:int=5, method:str='ucss'):
     """Approximation of specific growth rate over time via spline approximation using splines with k-fold cross validated smoothing factor
