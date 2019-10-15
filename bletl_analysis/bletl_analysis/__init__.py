@@ -27,6 +27,24 @@ class UnivariateCubicSmoothingSpline(csaps.UnivariateCubicSmoothingSpline):
         return lambda x: (self(x + epsilon) - self(x - epsilon)) / (2 * epsilon)
 
 
+def _normalize_smoothing_factor(method:str, smooth:float, y):
+    """normalization of smoothing factor
+    Args:
+        method(str): kind of spline 
+        smooth(float): smoothing factor
+        y: spline
+    Returns:
+        normailzed smoothing factor
+    """
+    if method == 'ucss':
+        return 1 - smooth
+    elif method == 'us':
+        amplitude = (numpy.max(y) - numpy.min(y)) / 2
+        return smooth * amplitude * 10
+    else:
+        raise NotImplementedError(f'Unknown method "{method}"')
+
+
 def find_do_peak(x, y, *, delay_a:float, threshold_a:float, delay_b:float, threshold_b:float, initial_delay:float=1):
     """Finds the cycle of the DO peak.
     
@@ -122,10 +140,11 @@ def _evaluate_spline_test_error(x, y, train_idxs, test_idxs, smoothing_factor:fl
     Returns:
         ssr (float): sum of squared residuals on test set
     """
+    smooth = _normalize_smoothing_factor(method, smoothing_factor[0], y)
     if method == 'ucss':
-        spline = csaps.UnivariateCubicSmoothingSpline(x[train_idxs], y[train_idxs], smooth=smoothing_factor[0])
+        spline = csaps.UnivariateCubicSmoothingSpline(x[train_idxs], y[train_idxs], smooth=smooth)
     elif method == 'us':
-        spline = scipy.interpolate.UnivariateSpline(x[train_idxs], y[train_idxs], s=smoothing_factor)
+        spline = scipy.interpolate.UnivariateSpline(x[train_idxs], y[train_idxs], s=smooth)
     else:
         raise NotImplementedError(f'Unknown method "{method}"')
     y_val_pred = spline(x[test_idxs])
@@ -147,14 +166,11 @@ def _crossvalidate_smoothing_spline(x, y, k_folds:int=5, method:str='ucss', boun
         bounds=[bounds],
         args=(x, y, k_folds, method)
     )
-    print(opt)
+    smooth = _normalize_smoothing_factor(method, opt.x[0], y)
     if method == 'ucss':
-        s_csaps = 1 - opt.x[0]
-        return UnivariateCubicSmoothingSpline(x, y, smooth=s_csaps)
+        return UnivariateCubicSmoothingSpline(x, y, smooth=smooth)
     elif method == 'us':
-        amplitude = (numpy.max(y) - numpy.min(y)) / 2
-        s_scipy = opt.x[0] * amplitude * 10
-        return scipy.interpolate.UnivariateSpline(x, y, s=s_scipy)
+        return scipy.interpolate.UnivariateSpline(x, y, s=smooth)
     else:
         raise NotImplementedError(f'Unknown method "{method}"')
 
