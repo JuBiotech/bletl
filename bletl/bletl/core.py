@@ -72,6 +72,67 @@ class BLData(dict):
     def calibrate(self, calibration_dict):
         raise NotImplementedError()
 
+    def get_narrow_data(self) -> pandas.DataFrame:
+        """Retrieves data in a narrow format. 
+        
+        Returns:
+            narrow (pandas.DataFrame): data in a narrow format.
+        """
+        narrow = pandas.DataFrame(columns=['well', 'filterset', 'time', 'value'])
+
+        for filterset, filtertimeseries in self.items():
+            to_add = pandas.melt(filtertimeseries.time, value_name='time')
+            to_add['value'] = pandas.melt(filtertimeseries.value, value_name='value').loc[:, 'value']
+            to_add['filterset'] = filterset
+            narrow = narrow.append(to_add, sort=False)
+
+        return narrow
+
+    def get_unified_narrow_data(self, source_well='first', source_filterset='first') -> pandas.DataFrame:
+        """Retrieves data with unified time in a narrow format. Each filterset forms a seperate column.
+        
+        Returns:
+            u_narrow (pandas.DataFrame): data with unified time in a narrow format.
+        """        
+        if source_filterset == 'first':
+            _source_filterset = list(self.keys())[0]
+        else:
+            assert source_filterset in self.keys()
+            _source_filterset = source_filterset
+        
+        if source_well == 'first':
+            _source_well = self[_source_filterset].time.columns[0]
+        else:
+            assert source_well in self[_source_filterset].time.columns
+            _source_well = source_well
+        
+        u_narrow = pandas.DataFrame(
+            columns=['well', 'cycle', 'time'] + list(self.keys()),
+        )
+
+        wells = self[_source_filterset].time.columns
+        cycles = self[_source_filterset].time.index
+        times = self[_source_filterset].time.loc[:, _source_well]
+
+        u_narrow['well'] =  [well for well in wells for _ in cycles]
+        u_narrow['cycle'] =  [cycle for _ in wells for cycle in cycles]
+        u_narrow['time'] =  [time for _ in wells for time in times]
+        
+        u_narrow = u_narrow.set_index(['well', 'cycle'])
+
+        for filterset, filtertimeseries in self.items():
+            fcycles = filtertimeseries.value.index
+            fwells = filtertimeseries.value.columns
+            
+            molten_values = filtertimeseries.value.melt(value_name=filterset)
+            molten_values['cycle'] = [cycle for _ in fwells for cycle in fcycles]
+            molten_values = molten_values.set_index(['well', 'cycle'])
+            u_narrow.update(molten_values)
+
+        u_narrow = u_narrow.reset_index()
+
+        return u_narrow
+
 
 class FilterTimeSeries():
     """Generalizable data type for calibrated timeseries."""
