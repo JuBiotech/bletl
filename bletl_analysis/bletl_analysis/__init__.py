@@ -9,12 +9,12 @@ import scipy.interpolate
 import csaps
 import bletl
 
-__version__ = '0.2.0'
+__version__ = '1.0.0'
 
 class UnivariateCubicSmoothingSpline(csaps.UnivariateCubicSmoothingSpline):
     """add a function to UnivarianteCubicSmoothingSpline
     """
-    def derivative(self, order:int, *, epsilon=0.001):
+    def derivative(self, order:int=1, *, epsilon=0.001):
         """returns derivative of UnivarianteCubicSmoothingSpline
         Args:
             order(int): order of derivative
@@ -22,9 +22,13 @@ class UnivariateCubicSmoothingSpline(csaps.UnivariateCubicSmoothingSpline):
         Returns:
             derivative
         """
-        if order > 1:
-            raise NotImplementedError(f'{order}-order derivatives are not implemented for the UnivariateCubicSmoothingSpline')
-        return lambda x: (self(x + epsilon) - self(x - epsilon)) / (2 * epsilon)
+        if order == 1:
+            return lambda x: (self(x + epsilon) - self(x - epsilon)) / (2 * epsilon)
+        elif order == 2:
+            der = self.derivative(1)
+            der1 = lambda x: der(x)
+            return lambda x: (der1(x + epsilon) - der1(x - epsilon)) / (2 * epsilon)
+        raise NotImplementedError(f'{order}-order derivatives are not implemented for the UnivariateCubicSmoothingSpline')
 
 
 def _normalize_smoothing_factor(method:str, smooth:float, y):
