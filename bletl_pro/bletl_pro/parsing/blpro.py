@@ -305,14 +305,12 @@ def transform_into_filtertimeseries(metadata:dict, measurements:pandas.DataFrame
             key = fs.filter_type
             times = measurements.xs(filter_number, level='filterset')['time'].unstack()
             values = measurements.xs(filter_number, level='filterset')['cal'].unstack()
+        elif fs.filter_type == 'Intensity':
+            key = fs.filter_name
+            times = measurements.xs(filter_number, level='filterset')['time'].unstack()
+            values = measurements.xs(filter_number, level='filterset')['amp_ref_1'].unstack()       
         else:
-            if fs.filter_type == 'Intensity':
-                logger.warn(
-                    f'Skipping Intensity channel because no processing method could be chosen from its name {fs.filter_name}.' + 
-                    ' Biomass filters should contain "Biomass" or "BS" in their name.'
-                )
-            else:
-                logger.warn(f'Skipped {fs.filter_type} channel with name "{fs.filter_name}" because no processing routine is implemented.')
+            logger.warn(f'Skipped {fs.filter_type} channel with name "{fs.filter_name}" because no processing routine is implemented.')
             continue
 
         # transform into nicely formatted DataFrames for FilterTimeSeries
