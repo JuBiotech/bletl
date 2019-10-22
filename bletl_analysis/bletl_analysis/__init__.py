@@ -204,7 +204,7 @@ def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_fold
     return joblib.Parallel(n_jobs=multiprocessing.cpu_count(), verbose=11)(map(joblib.delayed(get_spline_parallel), args_get_spline))
 
 
-def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_folds:int=5, method:str='ucss'):
+def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_folds:int=5, method:str='ucss', last_cycle:int=None):
     """Approximation of specific growth rate over time via spline approximation using splines with k-fold cross validated smoothing factor
     
     Args:
@@ -215,7 +215,8 @@ def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_fo
             - (float): Apply this blank value to all wells
             - (dict): Containing well id as key and scalar or vector as blank value(s) for the respective well
         k_folds (int): "k"s for cross-validation
-        method (str): Calculates Spline, Choices: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline
+        method (str): Kind of Spline, Choices: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline
+        last_cycle (int): ignores data after last_cycle
     Returns:
         filtertimeseries (bletl.core.FilterTimeSeries): FilterTimeSeries with specific growth rate over time
 
@@ -237,9 +238,16 @@ def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_fo
         blank_dict = blank
     else:
         raise ValueError('Please provide proper blank option.')
+      
+    x, y = bsdata.get_timeseries(wells[0])
+    if last_cycle == None:
+        last_cycle = len(x)
+    elif last_cycle > len(x):
+        raise ValueError('Please change last_cycle.')    
 
     # run spline fitting
     results = _get_multiple_splines(bsdata, wells, method=method)
+
     
     # compute derivatives
     time = {}
@@ -249,14 +257,16 @@ def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_fo
         spline = result[1]
         der = spline.derivative(1)
         if blank == 'first':
-            time[well] = bsdata.time[well][1:]
+            time[well] = bsdata.time[well][1:last_cycle]
         else:
-            time[well] = bsdata.time[well]
+            time[well] = bsdata.time[well][:last_cycle]
 
         mues[well] = der(time[well])/(spline(time[well]) - blank_dict[well])
+        
     # summarize into FilterTimeSeries
     filtertimeseries = bletl.core.FilterTimeSeries(
         pandas.DataFrame(time),
         pandas.DataFrame(mues),
     )
     return filtertimeseries
+
