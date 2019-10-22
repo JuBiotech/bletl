@@ -24,10 +24,10 @@ class UnivariateCubicSmoothingSpline(csaps.UnivariateCubicSmoothingSpline):
         """
         if order == 1:
             return lambda x: (self(x + epsilon) - self(x - epsilon)) / (2 * epsilon)
-        elif order == 2:
-            der = self.derivative(1)
-            der1 = lambda x: der(x)
-            return lambda x: (der1(x + epsilon) - der1(x - epsilon)) / (2 * epsilon)
+        elif order > 1:
+            der = self.derivative(order - 1)
+            der_f = lambda x: der(x)
+            return lambda x: (der_f(x + epsilon) - der_f(x - epsilon)) / (2 * epsilon)
         raise NotImplementedError(f'{order}-order derivatives are not implemented for the UnivariateCubicSmoothingSpline')
 
 
@@ -155,7 +155,7 @@ def _evaluate_spline_test_error(x, y, train_idxs, test_idxs, smoothing_factor:fl
     return numpy.sum(numpy.square(y_val_pred - y[test_idxs]))      
 
 
-def _crossvalidate_smoothing_spline(x, y, k_folds:int=5, method:str='ucss', bounds=(0,1)):
+def get_crossvalidate_spline(x, y, k_folds:int=5, method:str='ucss', bounds=(0,1)):
     """Returns spline with k-fold crossvalidated smoothing factor
     
     Args:
@@ -192,7 +192,7 @@ def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_fold
     """
     def get_spline_parallel(arg):
         well, timepoints, values, k_folds = arg
-        spline = _crossvalidate_smoothing_spline(timepoints, values, k_folds, method=method)
+        spline = get_crossvalidate_spline(timepoints, values, k_folds, method=method)
         return (well, spline)
 
     args_get_spline = []
