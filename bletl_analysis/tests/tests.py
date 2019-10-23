@@ -26,6 +26,7 @@ class TestDOPeakDetection(unittest.TestCase):
 
 class TestSplineMueScipy(unittest.TestCase):
     def test_get_single_spline(self):
+        """Tests the interpolation of backscatters works with an absolute tolerance of <0.1."""
         bldata = bletl.parse(FP_TESTFILE)
         numpy.random.seed(9001)
 
@@ -34,21 +35,27 @@ class TestSplineMueScipy(unittest.TestCase):
         spline = bletl_analysis.get_crossvalidate_spline(x, y, method='us')
         
         self.assertIsInstance(spline, scipy.interpolate.UnivariateSpline)
-        self.assertAlmostEqual(spline(10), 12.4433285)
+        
+        # the last point should be very close
+        numpy.testing.assert_allclose(spline(19.4275), 23.66, atol=0.01)
+
+        # a range of points at the end of the curve
+        numpy.testing.assert_allclose(spline([18.8275, 19.0275, 19.22777778]), [23.75, 23.67, 23.68], atol=0.1)
         return
 
     def test_get_mue_wells(self):
+        """Tests that the growth rate at the end of the exponential phase is calculated with <0.001 absolute deviance."""
         bldata = bletl.parse(FP_TESTFILE)
         numpy.random.seed(9001)
         wells = 'A01,A02,B03,C05'.split(',')
 
         # automatic blank
         mue_blank_first = bletl_analysis.get_mue(bldata['BS3'], wells=wells, method='us')
-        self.assertAlmostEqual(mue_blank_first.value.loc[25, 'B03'], 0.599476, places=5)
+        numpy.testing.assert_allclose(mue_blank_first.value.loc[50, 'B03'], 0.375, atol=0.001)
 
         # scalar blank for all
         mue_blank_scalar = bletl_analysis.get_mue(bldata['BS3'], blank=2, wells=wells, method='us')
-        self.assertAlmostEqual(mue_blank_scalar.value.loc[25, 'B03'], 0.052083, places=5)
+        numpy.testing.assert_allclose(mue_blank_scalar.value.loc[50, 'B03'], 0.174, atol=0.001)
         
         # dictionary of scalars (first 5 cycles)
         blank_dict = {
@@ -56,8 +63,8 @@ class TestSplineMueScipy(unittest.TestCase):
             for well, data in bldata['BS3'].value.iteritems()
             if well in wells
         }
-        mue_blank_dict = bletl_analysis.get_mue(bldata['BS3'], wells=wells, blank=blank_dict)
-        self.assertAlmostEqual(mue_blank_dict.value.loc[25, 'B03'], 0.534138, places=5)
+        mue_blank_dict = bletl_analysis.get_mue(bldata['BS3'], wells=wells, blank=blank_dict, method='us')
+        numpy.testing.assert_allclose(mue_blank_dict.value.loc[50, 'B03'], 0.369, atol=0.001)
 
         # check value error when the wells dictionary is incorrect
         with self.assertRaises(ValueError):
@@ -68,6 +75,7 @@ class TestSplineMueScipy(unittest.TestCase):
         return
 
     def test_get_mue_on_all(self):
+        """Tests that the growth rate at the end of the exponential phase is calculated with <0.001 absolute deviance."""
         bldata = bletl.parse(FP_TESTFILE)
         wells = list('A01,A02,B03,C05'.split(','))
         bldata['BS3'].time = bldata['BS3'].time[wells]
@@ -75,20 +83,20 @@ class TestSplineMueScipy(unittest.TestCase):
         numpy.random.seed(9001)
         
         # automatic
-        mue_blank_first = bletl_analysis.get_mue(bldata['BS3'])
-        self.assertAlmostEqual(mue_blank_first.value.loc[25, 'B03'], 0.599476, places=5)
+        mue_blank_first = bletl_analysis.get_mue(bldata['BS3'], method='us')
+        numpy.testing.assert_allclose(mue_blank_first.value.loc[50, 'B03'], 0.375, atol=0.001)
 
         # scalar blank for all
-        mue_blank_scalar = bletl_analysis.get_mue(bldata['BS3'], blank=2)
-        self.assertAlmostEqual(mue_blank_scalar.value.loc[25, 'B03'], 0.052083, places=5)
+        mue_blank_scalar = bletl_analysis.get_mue(bldata['BS3'], blank=2, method='us')
+        numpy.testing.assert_allclose(mue_blank_scalar.value.loc[50, 'B03'], 0.174, atol=0.001)
         
         # dictionary of scalars (first 5 cycles)
         blank_dict = {
             well : data.iloc[:5].mean()
             for well, data in bldata['BS3'].value.iteritems()
         }
-        mue_blank_dict = bletl_analysis.get_mue(bldata['BS3'], blank=blank_dict)
-        self.assertAlmostEqual(mue_blank_dict.value.loc[25, 'B03'], 0.534138, places=5)
+        mue_blank_dict = bletl_analysis.get_mue(bldata['BS3'], blank=blank_dict, method='us')
+        numpy.testing.assert_allclose(mue_blank_dict.value.loc[50, 'B03'], 0.369, atol=0.001)
         return
 
 
