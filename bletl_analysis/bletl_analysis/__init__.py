@@ -179,7 +179,7 @@ def get_crossvalidate_spline(x, y, k_folds:int=5, method:str='ucss', bounds=(0,1
         raise NotImplementedError(f'Unknown method "{method}"')
 
 
-def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_folds:int=5, method:str='ucss'):
+def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_folds:int=5, method:str='ucss', last_cycle:int=None):
     """Returns multiple splines with k-fold crossvalidated smoothing factor
     
     Args:
@@ -190,17 +190,20 @@ def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_fold
     Returns:
         splines (dict): Dict with well:spline for each well of "wells"
     """
+    x, y = bsdata.get_timeseries(wells[0])
+    if last_cycle == None:
+        last_cycle = len(x)
+    elif last_cycle > len(x):
+        raise ValueError('Please change last_cycle.')  
     def get_spline_parallel(arg):
         well, timepoints, values, k_folds = arg
         spline = get_crossvalidate_spline(timepoints, values, k_folds, method=method)
         return (well, spline)
-
     args_get_spline = []
     for well in wells:
         timepoints, values = bsdata.get_timeseries(well)
-        args = (copy.deepcopy(well), copy.deepcopy(timepoints), copy.deepcopy(values), copy.deepcopy(k_folds))
+        args = (copy.deepcopy(well), copy.deepcopy(timepoints[:last_cycle]), copy.deepcopy(values[:last_cycle]), copy.deepcopy(k_folds))
         args_get_spline.append(args)
-
     return joblib.Parallel(n_jobs=multiprocessing.cpu_count(), verbose=11)(map(joblib.delayed(get_spline_parallel), args_get_spline))
 
 
@@ -227,7 +230,6 @@ def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_fo
     # check inputs
     if wells == 'all':
         wells = list(bsdata.time.columns)
-
     if blank == 'first':
         blank_dict = {well:data.iloc[0] for well, data in bsdata.value.iteritems()}
     elif isinstance(blank, numbers.Number):
@@ -238,17 +240,8 @@ def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_fo
         blank_dict = blank
     else:
         raise ValueError('Please provide proper blank option.')
-      
-    x, y = bsdata.get_timeseries(wells[0])
-    if last_cycle == None:
-        last_cycle = len(x)
-    elif last_cycle > len(x):
-        raise ValueError('Please change last_cycle.')    
-
     # run spline fitting
-    results = _get_multiple_splines(bsdata, wells, method=method)
-
-    
+    results = _get_multiple_splines(bsdata, wells, method=method, last_cycle=last_cycle)   
     # compute derivatives
     time = {}
     mues = {}
@@ -260,13 +253,10 @@ def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_fo
             time[well] = bsdata.time[well][1:last_cycle]
         else:
             time[well] = bsdata.time[well][:last_cycle]
-
-        mues[well] = der(time[well])/(spline(time[well]) - blank_dict[well])
-        
+        mues[well] = der(time[well])/(spline(time[well]) - blank_dict[well])      
     # summarize into FilterTimeSeries
     filtertimeseries = bletl.core.FilterTimeSeries(
         pandas.DataFrame(time),
         pandas.DataFrame(mues),
     )
     return filtertimeseries
-
