@@ -6,7 +6,7 @@ import pathlib
 import bletl
 import bletl_pro
 import bletl_analysis
-from scipy.interpolate import UnivariateSpline
+import scipy.interpolate
 
 dir_testfiles = pathlib.Path(pathlib.Path(__file__).absolute().parent, 'data')
 FP_TESTFILE = pathlib.Path(dir_testfiles, '107-AR_Coryne-AR-2019-04-15-12-39-30.csv')
@@ -24,16 +24,16 @@ class TestDOPeakDetection(unittest.TestCase):
         return
 
 
-class TestSplineMue(unittest.TestCase):
+class TestSplineMueScipy(unittest.TestCase):
     def test_get_single_spline(self):
         bldata = bletl.parse(FP_TESTFILE)
         numpy.random.seed(9001)
 
         x, y = bldata['BS3'].get_timeseries('F05')
 
-        spline = bletl_analysis._get_single_spline(x, y)
+        spline = bletl_analysis.get_crossvalidate_spline(x, y, method='us')
         
-        self.assertIsInstance(spline, UnivariateSpline)
+        self.assertIsInstance(spline, scipy.interpolate.UnivariateSpline)
         self.assertAlmostEqual(spline(10), 12.4433285)
         return
 
@@ -43,11 +43,11 @@ class TestSplineMue(unittest.TestCase):
         wells = 'A01,A02,B03,C05'.split(',')
 
         # automatic blank
-        mue_blank_first = bletl_analysis.get_mue(bldata['BS3'], wells=wells)
+        mue_blank_first = bletl_analysis.get_mue(bldata['BS3'], wells=wells, method='us')
         self.assertAlmostEqual(mue_blank_first.value.loc[25, 'B03'], 0.599476, places=5)
 
         # scalar blank for all
-        mue_blank_scalar = bletl_analysis.get_mue(bldata['BS3'], blank=2, wells=wells)
+        mue_blank_scalar = bletl_analysis.get_mue(bldata['BS3'], blank=2, wells=wells, method='us')
         self.assertAlmostEqual(mue_blank_scalar.value.loc[25, 'B03'], 0.052083, places=5)
         
         # dictionary of scalars (first 5 cycles)
@@ -61,10 +61,10 @@ class TestSplineMue(unittest.TestCase):
 
         # check value error when the wells dictionary is incorrect
         with self.assertRaises(ValueError):
-            bletl_analysis.get_mue(bldata['BS3'], wells=wells, blank=dict(A01=3, C02=4))
+            bletl_analysis.get_mue(bldata['BS3'], wells=wells, blank=dict(A01=3, C02=4), method='us')
         # check value error on invalid blank option
         with self.assertRaises(ValueError):
-            bletl_analysis.get_mue(bldata['BS3'], wells=wells, blank='last')
+            bletl_analysis.get_mue(bldata['BS3'], wells=wells, blank='last', method='us')
         return
 
     def test_get_mue_on_all(self):
@@ -91,6 +91,6 @@ class TestSplineMue(unittest.TestCase):
         self.assertAlmostEqual(mue_blank_dict.value.loc[25, 'B03'], 0.534138, places=5)
         return
 
-        
+
 if __name__ == '__main__':
     unittest.main()
