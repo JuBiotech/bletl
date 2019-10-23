@@ -11,8 +11,9 @@ import bletl
 
 __version__ = '1.0.0'
 
+
 class UnivariateCubicSmoothingSpline(csaps.UnivariateCubicSmoothingSpline):
-    """add a function to UnivarianteCubicSmoothingSpline
+    """Overrides csaps type to align its API with the scipy.interpolate splines.
     """
     def derivative(self, order:int=1, *, epsilon=0.001):
         """returns derivative of UnivarianteCubicSmoothingSpline
@@ -29,6 +30,12 @@ class UnivariateCubicSmoothingSpline(csaps.UnivariateCubicSmoothingSpline):
             der_f = lambda x: der(x)
             return lambda x: (der_f(x + epsilon) - der_f(x - epsilon)) / (2 * epsilon)
         raise NotImplementedError(f'{order}-order derivatives are not implemented for the UnivariateCubicSmoothingSpline')
+
+    def __call__(self, xi):
+        # scipy splines can be called on scalars
+        xi_arr = numpy.atleast_1d(xi)
+        result = super().__call__(xi_arr)
+        return result[0] if isinstance(xi, (int, float)) else result
 
 
 def _normalize_smoothing_factor(method:str, smooth:float, y):
