@@ -173,7 +173,7 @@ def _evaluate_spline_test_error(x, y, train_idxs, test_idxs, smoothing_factor:fl
     return numpy.sum(numpy.square(y_val_pred - y[test_idxs]))      
 
 
-def get_crossvalidated_spline(x, y, k_folds:int=5, method:str='ucss', bounds=(0.001,1)):
+def get_crossvalidated_spline(x, y, k_folds:int=5, method:str='us', bounds=(0.001,1)):
     """Returns spline with k-fold crossvalidated smoothing factor
     
     Args:
@@ -197,7 +197,7 @@ def get_crossvalidated_spline(x, y, k_folds:int=5, method:str='ucss', bounds=(0.
         raise NotImplementedError(f'Unknown method "{method}"')
 
 
-def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_folds:int=5, method:str='ucss', last_cycle:int=None):
+def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_folds:int=5, method:str='us', last_cycle:int=None):
     """Returns multiple splines with k-fold crossvalidated smoothing factor
     
     Args:
@@ -225,7 +225,7 @@ def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_fold
     return joblib.Parallel(n_jobs=multiprocessing.cpu_count(), verbose=11)(map(joblib.delayed(get_spline_parallel), args_get_spline))
 
 
-def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_folds:int=5, method:str='ucss', last_cycle:int=None):
+def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_folds:int=5, method:str='us', last_cycle:int=None):
     """Approximation of specific growth rate over time via spline approximation using splines with k-fold cross validated smoothing factor
     
     Args:
