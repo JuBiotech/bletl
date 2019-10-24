@@ -7,6 +7,7 @@ import numpy
 import pandas
 import scipy.optimize
 import scipy.interpolate
+import scipy.stats
 import csaps
 import bletl
 
@@ -42,20 +43,26 @@ class UnivariateCubicSmoothingSpline(csaps.UnivariateCubicSmoothingSpline):
         return result[0] if isinstance(xi, (int, float)) else result
 
 
-def _normalize_smoothing_factor(method:str, smooth:float, y):
-    """normalization of smoothing factor
+def _normalize_smoothing_factor(method:str, smooth:float, x, y):
+    """Normalization of smoothing factor from the interval [0,1] to the value required by the Spline type.
+
     Args:
         method(str): kind of spline 
-        smooth(float): smoothing factor
-        y: spline
+        smooth(float): smoothing factor in the interval [0,1], where 0 results in interpolation through all data points
+        x: timepoints of the entire dataset
+        y: values of the entire dataset
+
     Returns:
-        normailzed smoothing factor
+        spline-specific smoothing factor
     """
     if method == 'ucss':
         return 1 - smooth
     elif method == 'us':
-        amplitude = (numpy.max(y) - numpy.min(y)) / 2
-        return smooth * amplitude * 10
+        # the s parameter of the UnivariateSpline describes the maximum sum squared error of the fit
+        # a reasonable upper bound for this SSE is the SSE of a linear fit
+        slope, intercept, _, _, _ = scipy.stats.linregress(x, y)
+        max_sse = numpy.sum(numpy.square((intercept + slope * x) - y))
+        return smooth * max_sse
     else:
         raise NotImplementedError(f'Unknown method "{method}"')
 
@@ -155,7 +162,7 @@ def _evaluate_spline_test_error(x, y, train_idxs, test_idxs, smoothing_factor:fl
     Returns:
         ssr (float): sum of squared residuals on test set
     """
-    smooth = _normalize_smoothing_factor(method, smoothing_factor[0], y)
+    smooth = _normalize_smoothing_factor(method, smoothing_factor[0], x, y)
     if method == 'ucss':
         spline = csaps.UnivariateCubicSmoothingSpline(x[train_idxs], y[train_idxs], smooth=smooth)
     elif method == 'us':
@@ -181,7 +188,7 @@ def get_crossvalidated_spline(x, y, k_folds:int=5, method:str='ucss', bounds=(0.
         bounds=[bounds],
         args=(x, y, k_folds, method)
     )
-    smooth = _normalize_smoothing_factor(method, opt.x[0], y)
+    smooth = _normalize_smoothing_factor(method, opt.x[0], x, y)
     if method == 'ucss':
         return UnivariateCubicSmoothingSpline(x, y, smooth=smooth)
     elif method == 'us':
