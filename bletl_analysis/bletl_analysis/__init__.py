@@ -1,5 +1,6 @@
 import copy
 import joblib
+import logging
 import multiprocessing
 import numbers
 import numpy
@@ -10,6 +11,9 @@ import csaps
 import bletl
 
 __version__ = '1.0.0'
+
+
+logger = logging.getLogger('bletl_analysis')
 
 
 class UnivariateCubicSmoothingSpline(csaps.UnivariateCubicSmoothingSpline):
