@@ -166,7 +166,7 @@ def _evaluate_spline_test_error(x, y, train_idxs, test_idxs, smoothing_factor:fl
     return numpy.sum(numpy.square(y_val_pred - y[test_idxs]))      
 
 
-def get_crossvalidate_spline(x, y, k_folds:int=5, method:str='ucss', bounds=(0,1)):
+def get_crossvalidated_spline(x, y, k_folds:int=5, method:str='ucss', bounds=(0.001,1)):
     """Returns spline with k-fold crossvalidated smoothing factor
     
     Args:
@@ -208,7 +208,7 @@ def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_fold
         raise ValueError('Please change last_cycle.')  
     def get_spline_parallel(arg):
         well, timepoints, values, k_folds = arg
-        spline = get_crossvalidate_spline(timepoints, values, k_folds, method=method)
+        spline = get_crossvalidated_spline(timepoints, values, k_folds, method=method)
         return (well, spline)
     args_get_spline = []
     for well in wells:

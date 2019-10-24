@@ -32,7 +32,7 @@ class TestSplineMueScipy(unittest.TestCase):
 
         x, y = bldata['BS3'].get_timeseries('F05')
 
-        spline = bletl_analysis.get_crossvalidate_spline(x, y, method='us')
+        spline = bletl_analysis.get_crossvalidated_spline(x, y, method='us')
         
         self.assertIsInstance(spline, scipy.interpolate.UnivariateSpline)
         
