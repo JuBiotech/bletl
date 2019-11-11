@@ -201,7 +201,7 @@ class TestSplineMethodEquivalence(unittest.TestCase):
         self.assertIsNotNone(der_3(x))
         return
 
-    def test_ideal_exponetial_mue(self):
+    def test_ideal_exponential_mue(self):
         # generate data of ideal exponential growth
         mue = 0.352
         y0 = 0.05
@@ -211,14 +211,16 @@ class TestSplineMethodEquivalence(unittest.TestCase):
         spline_us = bletl_analysis.get_crossvalidated_spline(t, y, method='us')
         spline_ucss = bletl_analysis.get_crossvalidated_spline(t, y, method='ucss')
 
-        # test that both spline approximations have residuals of less than 1 % of the signal amplitude
-        numpy.testing.assert_allclose(spline_us(t), y, atol=y.max()*0.03)
-        numpy.testing.assert_allclose(spline_ucss(t), y, atol=y.max()*0.03)
+        # test that both spline approximations have residuals of less than 3 % of the signal amplitude
+        diff_us = numpy.abs(spline_us(t) - y)
+        diff_ucss = numpy.abs(spline_ucss(t) - y)
+        self.assertTrue(numpy.all(numpy.max(diff_us) < numpy.ptp(y)*0.03))
+        self.assertTrue(numpy.all(numpy.max(diff_ucss) < numpy.ptp(y)*0.03))
 
         # test that the median specific growth rate is close to the true value
         mue_us = spline_us.derivative(1)(t[1:]) / spline_us(t[1:])
         mue_ucss = spline_ucss.derivative(1)(t[1:]) / spline_us(t[1:])
-
+        
         numpy.testing.assert_almost_equal(numpy.median(mue_us), mue, decimal=2)
         numpy.testing.assert_almost_equal(numpy.median(mue_ucss), mue, decimal=2)
         return
