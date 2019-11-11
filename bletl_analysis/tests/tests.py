@@ -208,8 +208,10 @@ class TestSplineMethodEquivalence(unittest.TestCase):
         t = numpy.linspace(0, 20, 50)
         y = y0 * numpy.exp(mue*t)
 
+        numpy.random.seed(25)
         spline_us = bletl_analysis.get_crossvalidated_spline(t, y, method='us')
         spline_ucss = bletl_analysis.get_crossvalidated_spline(t, y, method='ucss')
+        numpy.random.seed(None)
 
         # test that both spline approximations have residuals of less than 3 % of the signal amplitude
         diff_us = numpy.abs(spline_us(t) - y)
