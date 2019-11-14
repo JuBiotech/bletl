@@ -181,9 +181,39 @@ class TestBL1Parsing(unittest.TestCase):
         fp = pathlib.Path(dir_testfiles, 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
         data = bletl.parse(fp, lot_number=calibration_test_lot_number, temp=30)
         x, y = data['pH'].get_timeseries('A03')
+        self.assertEqual(len(x), len(y))
+        self.assertEqual(len(x), 103)
         self.assertEqual(numpy.sum(x), 1098.50712)
         self.assertEqual(numpy.sum(y), 746.2625060506602)
         return
+
+    def test_get_timeseries_last_cycle(self):
+        fp = pathlib.Path(dir_testfiles, 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
+        data = bletl.parse(fp, lot_number=calibration_test_lot_number, temp=30)
+        
+        # default to all
+        x, y = data['pH'].get_timeseries('A03')
+        self.assertEqual(len(x), len(y))
+        self.assertEqual(len(x), 103)
+
+        # invalid values
+        with self.assertRaises(ValueError):
+            data['pH'].get_timeseries('A03', last_cycle=-1)
+
+        # valid settings
+        x, y = data['pH'].get_timeseries('A03', last_cycle=1)
+        self.assertEqual(len(x), 1)
+        self.assertEqual(len(y), 1)
+
+        x, y = data['pH'].get_timeseries('A03', last_cycle=50)
+        self.assertEqual(len(x), 50)
+        self.assertEqual(len(y), 50)
+
+        # more than available
+        x, y = data['pH'].get_timeseries('A03', last_cycle=200)
+        self.assertEqual(len(x), 103)
+        self.assertEqual(len(y), 103)
+        pass
 
     def test_get_unified_dataframe(self):
         fp = pathlib.Path(dir_testfiles, 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
