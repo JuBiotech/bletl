@@ -80,7 +80,7 @@ class FilterTimeSeries():
         self.time = time_df
         self.value = value_df
 
-    def get_timeseries(self, well:str, last_cycle:int=None) -> tuple:
+    def get_timeseries(self, well:str, *, last_cycle:int=None) -> tuple:
         """Retrieves (time, value) for a specific well.
         
         Args:
