@@ -200,6 +200,9 @@ class TestBL1Parsing(unittest.TestCase):
         with self.assertRaises(ValueError):
             data['pH'].get_timeseries('A03', last_cycle=-1)
 
+        with self.assertRaises(ValueError):
+            data['pH'].get_timeseries('A03', last_cycle=0)
+
         # valid settings
         x, y = data['pH'].get_timeseries('A03', last_cycle=1)
         self.assertEqual(len(x), 1)

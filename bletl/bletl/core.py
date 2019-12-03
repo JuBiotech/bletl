@@ -91,8 +91,8 @@ class FilterTimeSeries():
             x (numpy.ndarray): timepoints of measurements
             y (numpy.ndarray): measured values
         """
-        if last_cycle and last_cycle < 0:
-            raise ValueError(f'last_cycle must be >= 0')
+        if last_cycle is not None and last_cycle <= 0:
+            raise ValueError(f'last_cycle must be > 0')
         x = numpy.array(self.time[well])[:last_cycle]
         y = numpy.array(self.value[well])[:last_cycle]
         return x, y
