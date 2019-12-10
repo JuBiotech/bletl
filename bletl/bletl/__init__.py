@@ -13,7 +13,7 @@ from . core import BioLectorModel, BLData, BLDParser, LotInformationError, LotIn
 from . import parsing
 from . import utils
 
-__version__ = '0.9.3'
+__version__ = '0.11.0'
 
 parsers = {
     (BioLectorModel.BL1, '3.3') : parsing.bl1.BioLector1Parser,
