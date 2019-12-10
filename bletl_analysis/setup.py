@@ -1,5 +1,4 @@
 import setuptools
-
 __packagename__ = 'bletl_analysis'
 
 def get_version():
@@ -38,6 +37,7 @@ setuptools.setup(name = __packagename__,
             'numpy',
             'scipy',
             'joblib',
+            'csaps',
         ]
 )
 

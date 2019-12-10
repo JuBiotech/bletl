@@ -143,18 +143,21 @@ class FilterTimeSeries():
         self.time = time_df
         self.value = value_df
 
-    def get_timeseries(self, well:str) -> tuple:
+    def get_timeseries(self, well:str, *, last_cycle:int=None) -> tuple:
         """Retrieves (time, value) for a specific well.
         
         Args:
             well (str): Well id to retrieve
+            last_cycle (int): cycle number of the last cycle to be included (defaults to all cycles)
 
         Returns:
             x (numpy.ndarray): timepoints of measurements
             y (numpy.ndarray): measured values
         """
-        x = numpy.array(self.time[well])
-        y = numpy.array(self.value[well])
+        if last_cycle is not None and last_cycle <= 0:
+            raise ValueError(f'last_cycle must be > 0')
+        x = numpy.array(self.time[well])[:last_cycle]
+        y = numpy.array(self.value[well])[:last_cycle]
         return x, y
 
     def get_unified_dataframe(self, well:str=None) -> pandas.DataFrame:
