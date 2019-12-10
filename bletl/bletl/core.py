@@ -84,7 +84,8 @@ class BLData(dict):
             to_add = pandas.melt(filtertimeseries.time, value_name='time')
             to_add['value'] = pandas.melt(filtertimeseries.value, value_name='value').loc[:, 'value']
             to_add['filterset'] = filterset
-            narrow = narrow.append(to_add, sort=False)
+            to_add.astype({'value': float})
+            narrow = narrow.append(to_add, sort=False)     
 
         return narrow
 
@@ -112,7 +113,7 @@ class BLData(dict):
 
         wells = self[_source_filterset].time.columns
         cycles = self[_source_filterset].time.index
-        times = self[_source_filterset].time.loc[:, _source_well]
+        times = self[_source_filterset].time.loc[:, _source_well].astype(float)
 
         u_narrow['well'] =  [well for well in wells for _ in cycles]
         u_narrow['cycle'] =  [cycle for _ in wells for cycle in cycles]
@@ -129,6 +130,7 @@ class BLData(dict):
             molten_values = molten_values.set_index(['well', 'cycle'])
             u_narrow.update(molten_values)
 
+        u_narrow = u_narrow.astype(dict(zip(self.keys(), [float]*len(self.keys()))))
         u_narrow = u_narrow.reset_index()
 
         return u_narrow
