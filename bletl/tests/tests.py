@@ -263,6 +263,12 @@ class TestBL1Parsing(unittest.TestCase):
             places=4
         )
 
+        with self.assertRaises(KeyError):
+            data.get_unified_narrow_data(source_filterset='machine_that_goes_ping')
+        
+        with self.assertRaises(KeyError):
+            data.get_unified_narrow_data(source_well='O9000')
+
 class TestBL1Calibration(unittest.TestCase):
     def test_calibration_data_type(self):
         data = bletl.parse(calibration_test_file, calibration_test_lot_number, calibration_test_temp)
