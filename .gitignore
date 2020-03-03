@@ -11,9 +11,7 @@
 *.pyperf
 /examples/Sandbox.ipynb
 /~$*.xlsx
-/bletl/build/lib/bletl
-/bletl/dist
-/bletl/bletl/cache
+**/build
+**/dist
+**/cache
 **/.coverage
-/bletl_pro/build/lib/bletl_pro
-/bletl_pro/dist
