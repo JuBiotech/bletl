@@ -94,17 +94,22 @@ class BLData(dict):
         
         Returns:
             u_narrow (pandas.DataFrame): data with unified time in a narrow format.
+
+        Raises:
+            KeyError: If specified source filterset or well cannot be found.
         """        
         if source_filterset == 'first':
             _source_filterset = list(self.keys())[0]
         else:
-            assert source_filterset in self.keys()
+            if not source_filterset in self.keys():
+               raise KeyError('Specified source filterset not found.') 
             _source_filterset = source_filterset
         
         if source_well == 'first':
             _source_well = self[_source_filterset].time.columns[0]
         else:
-            assert source_well in self[_source_filterset].time.columns
+            if not source_well in self[_source_filterset].time.columns:
+                raise KeyError('Specified source well not found.') 
             _source_well = source_well
         
         u_narrow = pandas.DataFrame(
