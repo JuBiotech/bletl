@@ -233,6 +233,17 @@ class TestBL1Parsing(unittest.TestCase):
             places=4,
         )
 
+    def test_get_narrow_data(self):
+        fp = pathlib.Path(dir_testfiles, 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
+        data = bletl.parse(fp)
+        narrow_data = data.get_narrow_data()
+        self.assertIsInstance(narrow_data, pandas.DataFrame)
+        self.assertAlmostEqual(
+            narrow_data.loc[52884, 'value'],
+            100.8726865,
+            places=4
+        )
+
 
 class TestBL1Calibration(unittest.TestCase):
     def test_calibration_data_type(self):

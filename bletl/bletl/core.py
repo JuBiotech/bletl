@@ -87,7 +87,7 @@ class BLData(dict):
             to_add.astype({'value': float})
             narrow = narrow.append(to_add, sort=False)     
 
-        return narrow
+        return narrow.reset_index()
 
     def get_unified_narrow_data(self, source_well='first', source_filterset='first') -> pandas.DataFrame:
         """Retrieves data with unified time in a narrow format. Each filterset forms a seperate column.
