@@ -102,14 +102,14 @@ class BLData(dict):
             _source_filterset = list(self.keys())[0]
         else:
             if not source_filterset in self.keys():
-                raise KeyError('Specified source filterset not found.') 
+                raise KeyError(f'Specified source filterset "{source_filterset}" not found.') 
             _source_filterset = source_filterset
         
         if source_well == 'first':
             _source_well = self[_source_filterset].time.columns[0]
         else:
             if not source_well in self[_source_filterset].time.columns:
-                raise KeyError('Specified source well not found.') 
+                raise KeyError(f'Specified source well "{source_well}" not found.') 
             _source_well = source_well
         
         u_narrow = pandas.DataFrame(
