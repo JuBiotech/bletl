@@ -102,7 +102,7 @@ class BLData(dict):
             _source_filterset = list(self.keys())[0]
         else:
             if not source_filterset in self.keys():
-               raise KeyError('Specified source filterset not found.') 
+                raise KeyError('Specified source filterset not found.') 
             _source_filterset = source_filterset
         
         if source_well == 'first':
@@ -120,9 +120,9 @@ class BLData(dict):
         cycles = self[_source_filterset].time.index
         times = self[_source_filterset].time.loc[:, _source_well].astype(float)
 
-        u_narrow['well'] =  [well for well in wells for _ in cycles]
-        u_narrow['cycle'] =  [cycle for _ in wells for cycle in cycles]
-        u_narrow['time'] =  [time for _ in wells for time in times]
+        u_narrow['well'] = [well for well in wells for _ in cycles]
+        u_narrow['cycle'] = [cycle for _ in wells for cycle in cycles]
+        u_narrow['time'] = [time for _ in wells for time in times]
         
         u_narrow = u_narrow.set_index(['well', 'cycle'])
 
