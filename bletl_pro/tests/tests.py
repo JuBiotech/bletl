@@ -57,6 +57,11 @@ class TestBLProParsing(unittest.TestCase):
         numpy.testing.assert_array_almost_equal(data['BS5'].time['A01'][:5], [0.013056, 0.179444, 0.346111, 0.512778, 0.738611])
         return
 
+    def test_parse_file_with_defects(self):
+        # this file has some broken & duplicate data line lines 25857-25877
+        bletl.parse(pathlib.Path(dir_testfiles, 'BLPro', '247-AH_Bacillus_Batch-AH-2020-01-22-12-48-45.csv'))
+        pass
+
 
 class TestBLProCalibration(unittest.TestCase):
     def test_filtertimeseries_presence(self):
