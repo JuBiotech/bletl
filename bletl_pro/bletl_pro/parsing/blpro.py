@@ -36,6 +36,16 @@ class BioLectorProParser(core.BLDParser):
         return bld
 
 
+def _parse_datalines(datalines) -> pandas.DataFrame:
+    dfraw = pandas.read_csv(
+        io.StringIO(''.join(datalines)), sep=';', low_memory=False,
+        converters={
+            'Filterset': str
+        }
+    )
+    return dfraw
+
+
 def parse_metadata_data(fp):
     with open(fp, 'r', encoding='utf-8') as f:
         lines = f.readlines()
@@ -77,10 +87,20 @@ def parse_metadata_data(fp):
         'X-Pos;Y-Pos;T_LED;Ref_Int;Ref_Phase;Ref_Gain;Ch1-MP;Ch2-MF;Ch3-FA;Ch4-OP;Ch5-FB;IGNORE\n'
 
     # parse the data as a DataFrame
-    dfraw = pandas.read_csv(io.StringIO(''.join(datalines)), sep=';', low_memory=False,
-                            converters={
-                                'Filterset': str
-                            })
+    try:
+        dfraw = _parse_datalines(datalines)
+    except pandas.errors.ParserError:
+        n_allowed = datalines[0].count(';')
+        filtered_datalines = []
+        defect_lines = []
+        for l, line in enumerate(datalines):
+            # ignore lines with too many columns, DEL or NUL characters
+            if line.count(';') <= n_allowed and not ('\x10' in line or '\x00' in line):
+                filtered_datalines.append(line)
+            else:
+                defect_lines.append(data_start + l)
+        dfraw = _parse_datalines(filtered_datalines).drop_duplicates(keep='first')
+        logger.warning(f'{fp} contains defects in lines {defect_lines}. Be extra skeptical about the parsed results.')
 
     return metadata, dfraw[list(dfraw.columns)[:-1]]
 
