@@ -11,7 +11,7 @@ import scipy.stats
 import csaps
 import bletl
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 
 logger = logging.getLogger('bletl_analysis')
