@@ -13,7 +13,7 @@ from . core import BioLectorModel, BLData, BLDParser, LotInformationError, LotIn
 from . import parsing
 from . import utils
 
-__version__ = '0.12.1'
+__version__ = '0.12.2'
 
 parsers = {
     (BioLectorModel.BL1, '3.3') : parsing.bl1.BioLector1Parser,
@@ -53,7 +53,7 @@ def get_parser(filepath) -> BLDParser:
         model = BioLectorModel.BL1
         version = lines[2][13:-2]
     else:
-        raise NotImplementedError('Unsupported file version')
+        raise NotImplementedError(f'Unsupported file version: {version}')
 
     # select a parser for this version
     parser_cls = parsers[(model, version)]
