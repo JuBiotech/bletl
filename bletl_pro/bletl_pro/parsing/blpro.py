@@ -47,7 +47,7 @@ def _parse_datalines(datalines) -> pandas.DataFrame:
 
 
 def parse_metadata_data(fp):
-    with open(fp, 'r', encoding='utf-8') as f:
+    with open(fp, 'r', encoding='utf-8-sig') as f:
         lines = f.readlines()
 
     metadata = collections.defaultdict(dict)
@@ -71,6 +71,10 @@ def parse_metadata_data(fp):
                 key, value = line.split(']')
                 key = key.strip('[')
                 metadata[section][key] = value.strip()
+    if not 'process' in metadata and 'parameters' in metadata:
+        # this is to be BL2 compatible
+        metadata['process'] = metadata['parameters']
+        # TODO: BioLector II files don't contain section headers, causing the next steps to fail
                 
     # standardize the metadata keys
     metadata['date_start'] = datetime.datetime.strptime(metadata['process']['start_date_time'], '%Y-%m-%d, %H:%M:%S')
