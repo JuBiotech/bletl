@@ -33,7 +33,10 @@ def get_parser(filepath) -> BLDParser:
         NotImlementedError: when the file contents do not match with a known BioLector CSV style
     """
     try:
-        with open(filepath, 'r', encoding='utf-8') as f:
+        # Note:
+        # BioLector II files are encoded as UTF8-BOM
+        # BioLector Pro files are encoded as UTF-8
+        with open(filepath, 'r', encoding='utf-8-sig') as f:
             lines = f.readlines()
     except UnicodeDecodeError:
         with open(filepath, 'r', encoding='latin-1') as f:
@@ -42,18 +45,24 @@ def get_parser(filepath) -> BLDParser:
     model = None
     version = None
 
-    if lines[0].startswith('='):
-        model = BioLectorModel.BLPro
+    if '=====' in lines[0]:
+        if 'parameters' in lines[0]:
+            model = BioLectorModel.BL2
+        elif 'process' in lines[0]:
+            model = BioLectorModel.BLPro
         for line in lines:
             if line.startswith('[file_version_number]'):
-                version = line.split(' ')[1].strip()
+                version = line.split(']')[1].strip()
                 break
-    elif lines[0].startswith('FILENAME;'):
-        # TODO: detect logfiles from BioLector 2
+    elif 'FILENAME;' in lines[0]:
         model = BioLectorModel.BL1
         version = lines[2][13:-2]
-    else:
-        raise NotImplementedError(f'Unsupported file version: {version}')
+    if not model:
+        raise ValueError('Unable to detect the BioLector model from the file contents.')
+    if not version :
+        raise ValueError('Unable to detect the file version from the contents.')
+    if not (model, version) in parsers:
+        raise NotImplementedError(f'Unsupported {model} file version: {version}')
 
     # select a parser for this version
     parser_cls = parsers[(model, version)]

@@ -13,13 +13,21 @@ from bletl_pro import parsing
 dir_testfiles = pathlib.Path(pathlib.Path(__file__).absolute().parent, 'data')
 
 BL1_file = pathlib.Path(dir_testfiles, 'BL1', 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv')
+BLII_files = list(pathlib.Path(dir_testfiles, 'BLII').iterdir())
 BLPro_files = list(pathlib.Path(dir_testfiles, 'BLPro').iterdir())
 calibration_test_file = pathlib.Path(dir_testfiles, 'BLPro', '18-FZJ-Test2--2018-02-07-10-01-11.csv')
 
 
 class TestParserSelection(unittest.TestCase):
-    def test_selects_parsers(self):
+    def test_selects_parsers_pro(self):
         for fp in BLPro_files:
+            parser = bletl.get_parser(fp)
+            self.assertIsInstance(parser, core.BLDParser)
+            self.assertIsInstance(parser, parsing.blpro.BioLectorProParser)
+        return
+
+    def test_selects_parsers_ii(self):
+        for fp in BLII_files:
             parser = bletl.get_parser(fp)
             self.assertIsInstance(parser, core.BLDParser)
             self.assertIsInstance(parser, parsing.blpro.BioLectorProParser)

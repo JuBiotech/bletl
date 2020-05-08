@@ -8,7 +8,8 @@ import bletl
 from bletl import *
 from . parsing import blpro
 
-__version__ = '0.3.2'
+__version__ = '0.3.3'
 
 # register the pro-parser
 bletl.parsers[(BioLectorModel.BLPro, '0.0.0')] = parsing.blpro.BioLectorProParser
+bletl.parsers[(BioLectorModel.BL2, '0.0.0')] = parsing.blpro.BioLectorProParser
