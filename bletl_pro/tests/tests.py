@@ -16,7 +16,7 @@ BL1_file = pathlib.Path(dir_testfiles, 'BL1', 'NT_1400rpm_30C_BS15_5min_20180618
 BL2_files = list(pathlib.Path(dir_testfiles, 'BLII').iterdir())
 BLPro_files = list(pathlib.Path(dir_testfiles, 'BLPro').iterdir())
 calibration_test_file = pathlib.Path(dir_testfiles, 'BLPro', '18-FZJ-Test2--2018-02-07-10-01-11.csv')
-incompatible_file = pathlib.Path(dir_testfiles, 'BLPro', 'incompatible_files', 'BL2-file-saved-with-biolection.csv')
+incompatible_file = pathlib.Path(dir_testfiles, 'incompatible_files', 'BL2-file-saved-with-biolection.csv')
 
 class TestParserSelection(unittest.TestCase):
     def test_selects_parsers_pro(self):
