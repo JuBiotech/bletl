@@ -9,7 +9,8 @@ import configparser
 import pathlib
 from collections.abc import Iterable
 
-from . core import BioLectorModel, BLData, BLDParser, LotInformationError, LotInformationMismatch, InvalidLotNumberError, LotInformationNotFound, FilterTimeSeries
+from . core import BioLectorModel, BLData, BLDParser
+from . core import LotInformationError, LotInformationMismatch, InvalidLotNumberError, LotInformationNotFound, FilterTimeSeries, IncompatibleFileError
 from . import parsing
 from . import utils
 
@@ -46,6 +47,8 @@ def get_parser(filepath) -> BLDParser:
     version = None
 
     if '=====' in lines[0]:
+        if 'parameters' in lines[0]:
+            raise IncompatibleFileError('It seems like this file has been edited by the BioLection software. Please provide the raw data file.')
         model = BioLectorModel.BLPro
         for line in lines:
             if line.startswith('[file_version_number]'):

@@ -204,11 +204,18 @@ class BLDParser(object):
 class LotInformationError(Exception):
     pass
 
+
 class InvalidLotNumberError(Exception):
     pass
+
 
 class LotInformationMismatch(Warning):
     pass
 
+
 class LotInformationNotFound(Warning):
+    pass
+
+
+class IncompatibleFileError(Exception):
     pass
