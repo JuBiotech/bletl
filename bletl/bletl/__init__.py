@@ -14,7 +14,7 @@ from . core import LotInformationError, LotInformationMismatch, InvalidLotNumber
 from . import parsing
 from . import utils
 
-__version__ = '0.12.2'
+__version__ = '0.13.0'
 
 parsers = {
     (BioLectorModel.BL1, '3.3') : parsing.bl1.BioLector1Parser,
