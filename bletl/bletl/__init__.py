@@ -46,10 +46,7 @@ def get_parser(filepath) -> BLDParser:
     version = None
 
     if '=====' in lines[0]:
-        if 'parameters' in lines[0]:
-            model = BioLectorModel.BL2
-        elif 'process' in lines[0]:
-            model = BioLectorModel.BLPro
+        model = BioLectorModel.BLPro
         for line in lines:
             if line.startswith('[file_version_number]'):
                 version = line.split(']')[1].strip()
