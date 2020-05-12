@@ -37,7 +37,7 @@ def get_parser(filepath) -> BLDParser:
         # Note:
         # BioLector II files are encoded as UTF8-BOM
         # BioLector Pro files are encoded as UTF-8
-        with open(filepath, 'r', encoding='utf-8-sig') as f:
+        with open(filepath, 'r', encoding='utf-8') as f:
             lines = f.readlines()
     except UnicodeDecodeError:
         with open(filepath, 'r', encoding='latin-1') as f:
