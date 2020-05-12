@@ -13,17 +13,49 @@ from bletl_pro import parsing
 dir_testfiles = pathlib.Path(pathlib.Path(__file__).absolute().parent, 'data')
 
 BL1_file = pathlib.Path(dir_testfiles, 'BL1', 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv')
+BL2_files = list(pathlib.Path(dir_testfiles, 'BLII').iterdir())
 BLPro_files = list(pathlib.Path(dir_testfiles, 'BLPro').iterdir())
 calibration_test_file = pathlib.Path(dir_testfiles, 'BLPro', '18-FZJ-Test2--2018-02-07-10-01-11.csv')
-
+incompatible_file = pathlib.Path(dir_testfiles, 'incompatible_files', 'BL2-file-saved-with-biolection.csv')
 
 class TestParserSelection(unittest.TestCase):
-    def test_selects_parsers(self):
+    def test_selects_parsers_pro(self):
         for fp in BLPro_files:
             parser = bletl.get_parser(fp)
             self.assertIsInstance(parser, core.BLDParser)
             self.assertIsInstance(parser, parsing.blpro.BioLectorProParser)
         return
+
+    def test_selects_parsers_ii(self):
+        for fp in BL2_files:
+            parser = bletl.get_parser(fp)
+            self.assertIsInstance(parser, core.BLDParser)
+            self.assertIsInstance(parser, parsing.blpro.BioLectorProParser)
+        return
+
+    def test_incompatible_file_detecion(self):
+        with self.assertRaises(bletl.IncompatibleFileError):
+            bletl.get_parser(incompatible_file)
+
+    
+class TestBL2Parsing(unittest.TestCase):
+    def test_parse_metadata_data(self):
+        for fp in BL2_files:
+            metadata, data = parsing.blpro.parse_metadata_data(fp)
+            
+            self.assertIsInstance(metadata, dict)
+            self.assertIsInstance(data, pandas.DataFrame)
+        pass
+
+    def test_parsing(self):
+        for fp in BL2_files:
+            try:
+                data = bletl.parse(fp)
+                self.assertIsInstance(data, dict)
+            except:
+                print('parsing failed for: {}'.format(fp))
+                raise
+        pass
 
 
 class TestBLProParsing(unittest.TestCase):

@@ -62,7 +62,7 @@ class TestParserSelection(unittest.TestCase):
         return
 
     def test_fail_on_unsupported(self):
-        self.assertRaises(NotImplementedError, bletl.get_parser, not_a_bl_file)
+        self.assertRaises(ValueError, bletl.get_parser, not_a_bl_file)
         return
 
 
