@@ -89,7 +89,7 @@ class TestBLProParsing(unittest.TestCase):
         bldata = bletl.parse(fp)
         assert 'BS3' in bldata
         t, y = bldata['BS3'].get_timeseries('A01')
-        numpy.testing.assert_array_equal(y, [0.01111111, 0.08888889])
+        numpy.testing.assert_array_equal(t, [0.01111111, 0.08888889])
         numpy.testing.assert_array_equal(y, [4.19, 2.81])
         pass
 
