@@ -3,6 +3,7 @@ import collections
 import datetime
 import io
 import logging
+import numpy
 import pandas
 
 from .. import core
@@ -36,6 +37,16 @@ class BioLectorProParser(core.BLDParser):
         return bld
 
 
+def _filter_datalines(datalines:list) -> list:
+    """ Filters out unnecessary intermediate header sections. """
+    datalines = [
+        dl
+        for l, dl in enumerate(datalines)
+        if len(dl) > 1 and dl[1] == ';'
+    ]
+    return datalines
+
+
 def _parse_datalines(datalines) -> pandas.DataFrame:
     dfraw = pandas.read_csv(
         io.StringIO(''.join(datalines)), sep=';', low_memory=False,
@@ -54,23 +65,18 @@ def parse_metadata_data(fp):
     datalines = collections.defaultdict(list)
     section = None
     data_start = None
-    data_end = None
 
     for l, line in enumerate(lines):
-        if line != '\n':
-            if line.startswith('='):
-                # the first section after the data table...
-                if data_start is not None:
-                    data_end = l
-                # any section header encountered
-                section = line.strip().strip('=').strip()
-                if not data_start and section == 'data':
-                    data_start = l + 1
-            elif line.startswith('['):
-                # register the value
-                key, value = line.split(']')
-                key = key.strip('[')
-                metadata[section][key] = value.strip()
+        if line.startswith('='):
+            # any section header encountered
+            section = line.strip().strip('=').strip()
+            if not data_start and section == 'data':
+                data_start = l + 1
+        elif line.startswith('['):
+            # register the value
+            key, value = line.split(']')
+            key = key.strip('[')
+            metadata[section][key] = value.strip()
                 
     # standardize the metadata keys
     metadata['date_start'] = datetime.datetime.strptime(metadata['process']['start_date_time'], '%Y-%m-%d, %H:%M:%S')
@@ -79,13 +85,19 @@ def parse_metadata_data(fp):
     else:
         metadata['date_end'] = None
 
-    datalines = lines[data_start:data_end]
+    datalines = lines[data_start:]
+    
+    datalines = _filter_datalines(datalines)
+    # insert full-length section headers
     # append a ; to the header line because the P lines contain a trailing ;
-    datalines[0] = 'Type;Cycle;Well;Filterset;Time;Amp_1;Amp_2;AmpRef_1;AmpRef_2;Phase;Cal;' \
+    datalines.insert(
+        0,
+        'Type;Cycle;Well;Filterset;Time;Amp_1;Amp_2;AmpRef_1;AmpRef_2;Phase;Cal;' \
         'Temp_up;Temp_down;Temp_water;O2;CO2;Humidity;Shaker;Service;User_Comment;Sys_Comment;' \
         'Reservoir;MF_Volume;Temp_Ch4;T_144;T_180;T_181_1;T_192;P_Ch1;P_Ch2;P_Ch3;T_Hum;T_CO2;' \
         'X-Pos;Y-Pos;T_LED;Ref_Int;Ref_Phase;Ref_Gain;Ch1-MP;Ch2-MF;Ch3-FA;Ch4-OP;Ch5-FB;IGNORE\n'
-
+    )
+    
     # parse the data as a DataFrame
     try:
         dfraw = _parse_datalines(datalines)
@@ -188,7 +200,9 @@ def extract_references(dfraw):
         ('Amp_2', 'amp_2', float),
         ('Phase', 'phase', float),
     ]
-    df = utils.__to_typed_cols__(dfraw[dfraw['Type'] == 'R'], ocol_ncol_type)
+    df = dfraw[dfraw['Type'] == 'R']
+    df['Phase'] = df['Phase'].map({'Phase': numpy.nan})
+    df = utils.__to_typed_cols__(df, ocol_ncol_type)
     return standardize(df).set_index(['cycle', 'filterset'])
 
 

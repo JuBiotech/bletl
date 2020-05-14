@@ -49,7 +49,7 @@
     <Content Include="tests\data\BL1\NT_1400_BS20BS10_15min_20160222_151645.csv" />
     <Content Include="tests\data\BL1\NT_1400_BS20BS10_15min_20160222_151645_TRANSFORM_CALIBIOMASS_CALIPH_CALI....csv" />
     <Content Include="tests\data\BL1\rj-cg-res_20170927_084112.csv" />
-    <Content Include="tests\data\BLII\16_SiS_1200rpm_BS4_DO_pH_30C_REDUCTION-1.csv" />
+    <Content Include="tests\data\BLII\16-SiS_1200rpm_BS4_DO_pH_30C-SiS-2020-04-29-13-48-38.csv" />
     <Content Include="tests\data\BLPro\107-AR_Coryne-AR-2019-04-15-12-39-30.csv" />
     <Content Include="tests\data\BLPro\18-FZJ-Test2--2018-02-07-10-01-11.csv" />
     <Content Include="tests\data\BLPro\18-HM_CoryneBatch-HM-2018-04-26-07-27-33.csv" />
@@ -60,6 +60,7 @@
     <Content Include="tests\data\BLPro\3-RobertHansen-RobertHansen-2018-04-04-16-14-10.csv" />
     <Content Include="tests\data\BLPro\6-HM_CoryneBatch-HM-2018-04-06-14-55-50.csv" />
     <Content Include="tests\data\BLPro\8-HM_CoryneBatch-HM-2018-04-11-14-52-54.csv" />
+    <Content Include="tests\data\BLPro\Ms000367.LG.csv" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="CondaEnv|CondaEnv|bletl-dev" />

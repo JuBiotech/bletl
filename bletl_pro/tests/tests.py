@@ -77,6 +77,22 @@ class TestBLProParsing(unittest.TestCase):
                 raise
         return
 
+    def test_parse_metadata_data_new_format(self):
+        fp = pathlib.Path(dir_testfiles, 'BLPro', 'Ms000367.LG.csv')
+        metadata, data = parsing.blpro.parse_metadata_data(fp)
+        assert isinstance(metadata, dict)
+        assert isinstance(data, pandas.DataFrame)
+        pass
+
+    def test_parse_new_format(self):
+        fp = pathlib.Path(dir_testfiles, 'BLPro', 'Ms000367.LG.csv')
+        bldata = bletl.parse(fp)
+        assert 'BS3' in bldata
+        t, y = bldata['BS3'].get_timeseries('A01')
+        numpy.testing.assert_array_almost_equal(t, [0.01111111, 0.08888889])
+        numpy.testing.assert_array_almost_equal(y, [4.19, 1.96])
+        pass
+
     def test_parse_with_concat(self):
         data = bletl.parse(filepaths=[
                 pathlib.Path(dir_testfiles, 'BLPro', '224-MO_Coryne--2019-07-12-16-54-30.csv'),
