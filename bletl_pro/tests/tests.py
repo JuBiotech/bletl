@@ -90,7 +90,7 @@ class TestBLProParsing(unittest.TestCase):
         assert 'BS3' in bldata
         t, y = bldata['BS3'].get_timeseries('A01')
         numpy.testing.assert_array_almost_equal(t, [0.01111111, 0.08888889])
-        numpy.testing.assert_array_almost_equal(y, [4.19, 2.81])
+        numpy.testing.assert_array_almost_equal(y, [4.19, 1.96])
         pass
 
     def test_parse_with_concat(self):
