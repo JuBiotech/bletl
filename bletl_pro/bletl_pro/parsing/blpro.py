@@ -201,7 +201,7 @@ def extract_references(dfraw):
         ('Phase', 'phase', float),
     ]
     df = dfraw[dfraw['Type'] == 'R']
-    df['Phase'] = df['Phase'].map({'Phase': numpy.nan})
+    df.loc[df['Phase'] == 'Phase', 'Phase'] = numpy.nan
     df = utils.__to_typed_cols__(df, ocol_ncol_type)
     return standardize(df).set_index(['cycle', 'filterset'])
 
