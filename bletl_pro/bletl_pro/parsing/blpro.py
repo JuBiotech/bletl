@@ -200,8 +200,8 @@ def extract_references(dfraw):
         ('Amp_2', 'amp_2', float),
         ('Phase', 'phase', float),
     ]
-    df = dfraw[dfraw['Type'] == 'R']
-    df.loc[df['Phase'] == 'Phase', 'Phase'] = numpy.nan
+    df = dfraw[dfraw['Type'] == 'R'].copy()
+    df['Phase'] = pandas.to_numeric(df['Phase'], errors='coerce')
     df = utils.__to_typed_cols__(df, ocol_ncol_type)
     return standardize(df).set_index(['cycle', 'filterset'])
 
