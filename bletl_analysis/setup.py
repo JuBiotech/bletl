@@ -37,7 +37,7 @@ setuptools.setup(name = __packagename__,
             'numpy',
             'scipy',
             'joblib',
-            'csaps',
+            'csaps>=0.11',
         ]
 )
 

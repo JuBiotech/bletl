@@ -11,13 +11,13 @@ import scipy.stats
 import csaps
 import bletl
 
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 
 logger = logging.getLogger('bletl_analysis')
 
 
-class UnivariateCubicSmoothingSpline(csaps.UnivariateCubicSmoothingSpline):
+class UnivariateCubicSmoothingSpline(csaps.CubicSmoothingSpline):
     """Overrides csaps type to align its API with the scipy.interpolate splines.
     """
     def derivative(self, order:int=1, *, epsilon=0.001):
@@ -164,7 +164,7 @@ def _evaluate_spline_test_error(x, y, train_idxs, test_idxs, smoothing_factor:fl
     """
     smooth = _normalize_smoothing_factor(method, smoothing_factor[0], x, y)
     if method == 'ucss':
-        spline = csaps.UnivariateCubicSmoothingSpline(x[train_idxs], y[train_idxs], smooth=smooth)
+        spline = csaps.CubicSmoothingSpline(x[train_idxs], y[train_idxs], smooth=smooth)
     elif method == 'us':
         spline = scipy.interpolate.UnivariateSpline(x[train_idxs], y[train_idxs], s=smooth)
     else:
