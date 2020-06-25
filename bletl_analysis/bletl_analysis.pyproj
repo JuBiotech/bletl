@@ -23,6 +23,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="bletl_analysis\features.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="bletl_analysis\splines.py" />
     <Compile Include="bletl_analysis\trigger.py" />
     <Compile Include="setup.py" />
