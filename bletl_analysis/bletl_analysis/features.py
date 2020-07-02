@@ -36,7 +36,7 @@ class Extractor(abc.ABC):
 def from_bldata(
     bldata: bletl.BLData,
     extractors: typing.Dict[str, typing.Sequence[Extractor]],
-    last_cyces: typing.Optional[typing.Dict[str, int]]=None,
+    last_cycles: typing.Optional[typing.Dict[str, int]]=None,
 ) -> pandas.DataFrame:
     """ Apply feature extractors to a dataset.
 
@@ -46,6 +46,8 @@ def from_bldata(
         a dataset to extract from
     extractors : dict
         map of { filterset : [extractor, ...] }
+    last_cycles :  optional, dict
+        maps well ids to the number of the last cycle to consider
         
     Returns
     -------
@@ -53,6 +55,8 @@ def from_bldata(
         well-indexed features
     """
     # create useful local variables from inputs
+    if not last_cycles:
+        last_cycles = {}
     filtersets = set(extractors.keys())
     wells = tuple(sorted(bldata[filtersets[0]].value.columns))
     for fs in filtersets.difference(set(data.keys())):
@@ -67,7 +71,7 @@ def from_bldata(
     s_time = time.time()
     df_result = pandas.DataFrame(index=wells)
     for well in fastprogress.progress_bar(wells):
-        t, y = bldata[fs].get_timeseries(well)
+        t, y = bldata[fs].get_timeseries(well, last_cycle=last_cycles.get(well, d=None))
         for mname, method in extractextraction_methods.items():
             df_results.loc[well, mname] = method(t, y)
     _log.info("Extraction finished in: %s minutes", round((time.time() - s_time) / 60, ndigits=1))
