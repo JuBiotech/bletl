@@ -8,8 +8,9 @@ import typing
 import tsfresh
 
 import bletl
-import bletl_analysis
 
+from . import splines
+from . import trigger
 
 _log = logging.getLogger(__file__)
 
@@ -179,12 +180,12 @@ class DOFeatureExtractor(Extractor):
     """ Class for feature extraction of dissolved oxygen"""
     
     def extract_peak(self, x, y):
-        """ Extracts the dissolved oxygen limitation.
+        """ Extracts the duration of DO < 5
         
         Returns
         -------
         result : float
-            time spans of all values under 5
+            duration of DO < 5
         """
         tmp = 0
         boolean = False
@@ -205,7 +206,7 @@ class DOFeatureExtractor(Extractor):
 class BSFeatureExtractor(Extractor):
     """ Class for feature extraction of backscatter. """
     
-    def extract_turning_point(self, x, y):
+    def extract_inflection_point_t(self, x, y):
         """ Extracts value at the turning point.
         
         Parameters
@@ -220,11 +221,11 @@ class BSFeatureExtractor(Extractor):
         result : float
             turning point
         """
-        spline = bletl_analysis.get_crossvalidated_spline(x, y)
+        spline = splines.get_crossvalidated_spline(x, y)
         y_der1 = spline.derivative(1)(x)
         return y[numpy.argmax(y_der1)]
     
-    def extract_time_turning_point(self, x, y):
+    def extract_inflection_point_y(self, x, y):
         """ Extracts time at the turning point.
         
         Parameters
@@ -239,7 +240,7 @@ class BSFeatureExtractor(Extractor):
         result : float
             time of turning point
         """
-        spline = bletl_analysis.get_crossvalidated_spline(x, y)
+        spline = splines.get_crossvalidated_spline(x, y)
         y_der1 = spline.derivative(1)(x)
         return x[numpy.argmax(y_der1)]
     
@@ -264,7 +265,7 @@ class BSFeatureExtractor(Extractor):
         mid_i = int(numpy.where(y > mid_y)[0][0]/2)
         #get mue
         bsdata = bletl.core.FilterTimeSeries(pandas.DataFrame(x),pandas.DataFrame(y))
-        mue = bletl_analysis.get_mue(bsdata, method='us')
+        mue = splines.get_mue(bsdata, method='us')
         var = 0.1 #allowed variance
         mue_val = numpy.array(mue.value) 
         list_values = [mue_val[mid_i]] #list of mue values, which lie in ex. phase 
@@ -283,6 +284,46 @@ class BSFeatureExtractor(Extractor):
 
 class pHFeatureExtractor(Extractor):
     """ Class for feature extraction of pH."""
+    
+    def extract_sum_of_reduction(self, x, y):
+        """ Extracts sum of reduction.
+        
+        Parameters
+        ----------
+        x : []
+            list of time values
+        y : []
+            list of values
+        
+        Returns
+        -------
+        result : float
+            sum of reduction
+        """
+        spline = splines.get_crossvalidated_spline(x, y)
+        y = spline(x)
+        changes = numpy.diff(y)
+        return numpy.sum(changes[changes < 0])
+    
+    def extract_sum_of_increase(self, x, y):
+        """ Extracts sum of increase.
+        
+        Parameters
+        ----------
+        x : []
+            list of time values
+        y : []
+            list of values
+        
+        Returns
+        -------
+        result : float
+            sum of increase
+        """
+        spline = splines.get_crossvalidated_spline(x, y)
+        y = spline(x)
+        changes = numpy.diff(y)
+        return numpy.sum(changes[changes > 0])
     
     
 class TSFreshExtractor():
@@ -343,7 +384,7 @@ def from_bldata(
     df_result = pandas.DataFrame(index=wells)
     for well in fastprogress.progress_bar(wells):
         t, y = bldata[fs].get_timeseries(well, last_cycle=last_cycles.get(well, d=None))
-        for mname, method in extractextraction_methods.items():
-            df_results.loc[well, mname] = method(t, y)
+        for mname, method in extraction_methods.items():
+            df_result.loc[well, mname] = method(t, y)
     _log.info("Extraction finished in: %s minutes", round((time.time() - s_time) / 60, ndigits=1))
     return df_result
