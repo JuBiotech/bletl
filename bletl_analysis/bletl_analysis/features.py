@@ -6,6 +6,7 @@ import pandas
 import time
 import typing
 import tsfresh
+import fastprogress
 
 import bletl
 
@@ -342,7 +343,7 @@ class TSFreshExtractor():
         result : pandas.DataFrame
             DataFrame with extracted features
         """
-        return tsfresh.extract_features(data, column_id="id", column_sort="time").T
+        return tsfresh.extract_features(data, column_id="id", column_sort="time")
     
     
 def from_bldata(
@@ -375,8 +376,16 @@ def from_bldata(
         _log.warning('No "%s" filterset in the data. Skipping extractors.', fs)
     extraction_methods = {
         f'{fs}_{mname}': method
-        for fs, methods in extractors.items()
-        for mname, method in methods.items()
+        for fs, fs_extrators in extractors.items()
+        for extractor in fs_extractors
+        if not isinstance(extractor, TSFreshExtractor)
+        for mname, method in extractor.get_methods().items()
+    }
+    ts_extractors = { 
+    fs : TSFreshExtractor 
+    for fs, fs_extractors in extractors.items() 
+    for extractor in fs_extractors
+    if isinstance(extractor, TSFreshExtractor)
     }
 
     _log.info("Extracting from %i wells.", len(wells))
@@ -386,5 +395,14 @@ def from_bldata(
         t, y = bldata[fs].get_timeseries(well, last_cycle=last_cycles.get(well, d=None))
         for mname, method in extraction_methods.items():
             df_result.loc[well, mname] = method(t, y)
+    narrow = bldata.get_unified_narrow_data()
+    for fs, nts_extractor in ts_extractors.items():
+        data = pandas.DataFrame(columns=["id","time","x"])
+        data["id"] = wells
+        data["time"] = narrow["time"]
+        data["x"] = narrow[fs]
+        df_fs = TSFreshExtractor()._extract(data)
+        for i, mname in enumerate(df_fs.columns):
+            df_result[f'{fs}_{mname}'] = df_fs.to_numpy()[:,i]
     _log.info("Extraction finished in: %s minutes", round((time.time() - s_time) / 60, ndigits=1))
     return df_result
