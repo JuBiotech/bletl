@@ -5,6 +5,7 @@ import io
 import logging
 import numpy
 import pandas
+import re
 
 from .. import core
 from .. import utils
@@ -107,10 +108,10 @@ def parse_metadata_data(fp):
         defect_lines = []
         for l, line in enumerate(datalines):
             # ignore lines with too many columns, DEL or NUL characters
-            if line.count(';') <= n_allowed and not ('\x10' in line or '\x00' in line):
+            if line.count(';') <= n_allowed and not ('\x10' in line or '\x00' in line) and not re.search(r'\d*\.\d*\.\d*', line):
                 filtered_datalines.append(line)
             else:
-                defect_lines.append(data_start + l)
+                defect_lines.append(data_start + l + 1)
         dfraw = _parse_datalines(filtered_datalines).drop_duplicates(keep='first')
         logger.warning(f'{fp} contains defects in lines {defect_lines}. Be extra skeptical about the parsed results.')
 
