@@ -38,7 +38,8 @@ setuptools.setup(name = __packagename__,
             'scipy',
             'joblib',
             'csaps>=0.11',
-            'tsfresh'
+            'tsfresh',
+            'fastprogress'
         ]
 )
 
