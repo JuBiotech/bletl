@@ -18,7 +18,7 @@ _log = logging.getLogger(__file__)
 
 class Extractor(abc.ABC):
     """ Common base class for all feature extractors. """  
-
+    
     def get_methods(self) -> typing.Dict[str, typing.Callable[[numpy.ndarray, numpy.ndarray], float]]:
         """ Returns the extration methods by name.
 
@@ -371,29 +371,29 @@ def from_bldata(
     if not last_cycles:
         last_cycles = {}
     filtersets = set(extractors.keys())
-    wells = tuple(sorted(bldata[filtersets[0]].value.columns))
-    for fs in filtersets.difference(set(data.keys())):
+    for fs in filtersets.difference(set(bldata.keys())):
         _log.warning('No "%s" filterset in the data. Skipping extractors.', fs)
+    wells = tuple(sorted(bldata[list(filtersets)[0]].value.columns))
     extraction_methods = {
         f'{fs}_{mname}': method
-        for fs, fs_extrators in extractors.items()
+        for fs, fs_extractors in extractors.items()
         for extractor in fs_extractors
-        if not isinstance(extractor, TSFreshExtractor)
-        for mname, method in extractor.get_methods().items()
+        if not extractor == TSFreshExtractor
+        for mname, method in extractor().get_methods().items() 
     }
     ts_extractors = { 
-    fs : TSFreshExtractor 
-    for fs, fs_extractors in extractors.items() 
-    for extractor in fs_extractors
-    if isinstance(extractor, TSFreshExtractor)
+        fs : TSFreshExtractor 
+        for fs, fs_extractors in extractors.items() 
+        for extractor in fs_extractors
+        if extractor == TSFreshExtractor
     }
 
     _log.info("Extracting from %i wells.", len(wells))
     s_time = time.time()
     df_result = pandas.DataFrame(index=wells)
     for well in fastprogress.progress_bar(wells):
-        t, y = bldata[fs].get_timeseries(well, last_cycle=last_cycles.get(well, d=None))
         for mname, method in extraction_methods.items():
+            t, y = bldata[mname.split("__")[0]].get_timeseries(well, last_cycle=last_cycles.get(well))
             df_result.loc[well, mname] = method(t, y)
     narrow = bldata.get_unified_narrow_data()
     for fs, nts_extractor in ts_extractors.items():
