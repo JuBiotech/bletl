@@ -235,9 +235,9 @@ class TestFeatureExtraction(unittest.TestCase):
         bldata = bletl.parse(FP_TESTFILE)
         #extraction with last_cycles
         extractors = {
-            "pH" : [features.pHFeatureExtractor, features.TSFreshExtractor,
-                    features.DOFeatureExtractor, features.BSFeatureExtractor,
-                    features.StatisticalFeatureExtractor],
+            "pH" : [features.pHFeatureExtractor(), features.TSFreshExtractor(),
+                    features.DOFeatureExtractor(), features.BSFeatureExtractor(),
+                    features.StatisticalFeatureExtractor()],
         }
         last_cycles = {
             "A01" : 20,
@@ -252,7 +252,7 @@ class TestFeatureExtraction(unittest.TestCase):
         
         #extraction with false filterset
         extractors = {
-            "xyz" : [features.BSFeatureExtractor]
+            "xyz" : [features.BSFeatureExtractor()]
             }
         with self.assertRaises(KeyError):
             features.from_bldata(bldata, extractors, None)

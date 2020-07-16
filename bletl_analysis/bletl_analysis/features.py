@@ -378,14 +378,14 @@ def from_bldata(
         f'{fs}_{mname}': method
         for fs, fs_extractors in extractors.items()
         for extractor in fs_extractors
-        if not extractor == TSFreshExtractor
-        for mname, method in extractor().get_methods().items() 
+        if not isinstance(extractor, TSFreshExtractor)
+        for mname, method in extractor.get_methods().items() 
     }
     ts_extractors = { 
         fs : TSFreshExtractor 
         for fs, fs_extractors in extractors.items() 
         for extractor in fs_extractors
-        if extractor == TSFreshExtractor
+        if isinstance(extractor, TSFreshExtractor)
     }
 
     _log.info("Extracting from %i wells.", len(wells))
