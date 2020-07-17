@@ -245,7 +245,7 @@ class TestFeatureExtraction(unittest.TestCase):
         }
         extracted_features = features.from_bldata(bldata, extractors, last_cycles)
         self.assertIsInstance(extracted_features, pandas.DataFrame)
-        x, y = bldata["pH"].get_timeseries["A01"]
+        x, y = bldata["pH"].get_timeseries("A01")
         self.assertTrue(extracted_features.at["A01","pH__max"] == numpy.max(y[:20]))
         
         #extraction without last_cycles
