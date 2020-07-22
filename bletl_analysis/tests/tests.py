@@ -2,10 +2,12 @@
 import numpy
 import unittest
 import pathlib
+import pandas
 
 import bletl
 import bletl_pro
 import bletl_analysis
+from bletl_analysis import features
 import scipy.interpolate
 
 dir_testfiles = pathlib.Path(pathlib.Path(__file__).absolute().parent, 'data')
@@ -46,7 +48,7 @@ class TestSplineMueScipy(unittest.TestCase):
         """Tests that the median growth rate over 15 exponential cycles is calculated with <0.02 absolute deviance."""
         bldata = bletl.parse(FP_TESTFILE)
         wells = 'A01,A02,B03,C05'.split(',')
-
+ 
         # automatic blank
         mue_blank_first = bletl_analysis.get_mue(bldata['BS3'], wells=wells, method='us')
         mue_median = numpy.median(mue_blank_first.value.loc[60:75, 'B03'])
@@ -225,6 +227,37 @@ class TestSplineMethodEquivalence(unittest.TestCase):
         
         numpy.testing.assert_almost_equal(numpy.median(mue_us), mue, decimal=2)
         numpy.testing.assert_almost_equal(numpy.median(mue_ucss), mue, decimal=2)
+        return
+
+
+class TestFeatureExtraction(unittest.TestCase):
+    def test_feature_extraction(self):
+        bldata = bletl.parse(FP_TESTFILE)
+        #extraction with last_cycles
+        extractors = {
+            "pH" : [features.pHFeatureExtractor(), features.TSFreshExtractor(),
+                    features.DOFeatureExtractor(), features.BSFeatureExtractor(),
+                    features.StatisticalFeatureExtractor()],
+        }
+        last_cycles = {
+            "A01" : 20,
+            "B01" : 50
+        }
+        extracted_features = features.from_bldata(bldata, extractors, last_cycles)
+        self.assertIsInstance(extracted_features, pandas.DataFrame)
+        x, y = bldata["pH"].get_timeseries("A01")
+        self.assertTrue(extracted_features.at["A01","pH__max"] == numpy.max(y[:20]))
+        
+        #extraction without last_cycles
+        extracted_features = features.from_bldata(bldata, extractors, None)
+        self.assertIsInstance(extracted_features, pandas.DataFrame)
+        
+        #extraction with false filterset
+        extractors = {
+            "xyz" : [features.BSFeatureExtractor()]
+        }
+        with self.assertRaises(KeyError):
+            features.from_bldata(bldata, extractors, None)
         return
 
 
