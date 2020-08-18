@@ -162,6 +162,7 @@ def fit_mu_t(
     σ:float=0.01,
     x0_prior:float=0.25,
     student_t:typing.Optional[bool]=None,
+    replicate_id:str='unnamed'
 ):
     """ Models a vector of growth rates to describe the observations.
 
@@ -188,6 +189,8 @@ def fit_mu_t(
     student_t : optional, bool
         switches between a Gaussian or StudentT random walk
         if not set, it defaults to the expression `len(t_switchpoints) == 0`
+    replicate_id : str
+        name of the replicate that the data belongs to (defaults to "unnamed")
 
     Returns
     -------
@@ -203,6 +206,8 @@ def fit_mu_t(
     t_switchpoints_known = numpy.sort(list(switchpoints.keys()))
     if student_t is None:
         student_t = len(t_switchpoints) == 0
+    # build a dict of known switchpoint begin cycle indices so they can be ignored in autodetection
+    c_switchpoints_known = [0]
 
     # build PyMC3 model
     coords = {
@@ -224,6 +229,8 @@ def fit_mu_t(
                     _make_random_walk(f'mu_phase_{i}', sigma=σ, length=i_len, student_t=student_t)
                 )
                 i_from += i_len
+                # remember the index to ignore it in potential autodetection
+                c_switchpoints_known.append(i_from)
             # the last segment until the end
             i_len = len(t[i_from:])
             mu_segments.append(
@@ -239,8 +246,8 @@ def fit_mu_t(
         error_model.loglikelihood(
             x=Xt,
             y=pymc3.Data('backscatter', y, dims=('time',)),
-            replicate_id='D06',
-            dependent_key='BS3'
+            replicate_id=replicate_id,
+            dependent_key=error_model.dependent_key
         )
 
     # MAP fit
@@ -268,8 +275,9 @@ def fit_mu_t(
             cdf_evals > 0.995,
         )
         # add these autodetected timepoints to the switchpoints-dict
-        for t_switch in numpy.insert(t, 0, 0)[:-1][significance_mask]:
-            if not t_switch in switchpoints:
+        # (ignore the first timepoint)
+        for c_switch, (t_switch, is_switchpoint) in enumerate(zip(numpy.insert(t, 0, 0), significance_mask)):
+            if is_switchpoint and c_switch not in c_switchpoints_known:
                 switchpoints[t_switch] = 'detected'
     
     # bundle up all relevant variables into a result object
