@@ -33,7 +33,7 @@ def find_do_peak(x, y, *, delay_a:float, threshold_a:float, delay_b:float, thres
             c_undershot = None
         if c_undershot is not None:
             undershot_since = x[c] - x[c_undershot]
-            if undershot_since > delay_a:
+            if undershot_since >= delay_a:
                 # the DO has remained below the threshold for long enough
                 break
 
@@ -48,7 +48,7 @@ def find_do_peak(x, y, *, delay_a:float, threshold_a:float, delay_b:float, thres
                 c_overshot = None
             if c_overshot is not None:
                 overshot_since = x[c] - x[c_overshot]
-                if overshot_since > delay_b:
+                if overshot_since >= delay_b:
                     # the DO has remained above the threshold for long enough
                     break
     return c_overshot
