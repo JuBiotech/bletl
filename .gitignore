@@ -523,5 +523,6 @@ MigrationBackup/
 **/cache
 **/settings.json
 *.pyperf
-# ignore Sandbox notebooks
+# ignore Sandbox stuff
+**/Sandbox*
 Sandbox*.ipynb
