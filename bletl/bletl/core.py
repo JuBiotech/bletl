@@ -4,6 +4,7 @@ import enum
 import numpy
 import pandas
 import pathlib
+import typing
 
 
 class BioLectorModel(enum.Enum):
@@ -140,6 +141,26 @@ class BLData(dict):
 
         return u_narrow
 
+    def get_timeseries(self, filterset:str, well:str, *, last_cycle:int=None) -> typing.Tuple[numpy.ndarray, numpy.ndarray]:
+        """Retrieves (time, value) for a specific well in a specified filterset.
+        
+        Args:
+            filterset (str): name of the filterset to read from
+            well (str): well id to retrieve
+            last_cycle (int): cycle number of the last cycle to be included (defaults to all cycles)
+
+        Returns:
+            x (numpy.ndarray): timepoints of measurements
+            y (numpy.ndarray): measured values
+        """
+        return self[filterset].get_timeseries(well, last_cycle=last_cycle)
+
+    def __repr__(self):
+        return f'BLData(model={self.model.name})' + ' {\n' + '\n'.join([
+            f'  "{key}": {fts.__repr__()},'
+            for key, fts in self.items()
+        ]) + '\n}'
+
 
 class FilterTimeSeries():
     """Generalizable data type for calibrated timeseries."""
@@ -148,11 +169,11 @@ class FilterTimeSeries():
         self.time = time_df
         self.value = value_df
 
-    def get_timeseries(self, well:str, *, last_cycle:int=None) -> tuple:
+    def get_timeseries(self, well:str, *, last_cycle:int=None) -> typing.Tuple[numpy.ndarray, numpy.ndarray]:
         """Retrieves (time, value) for a specific well.
         
         Args:
-            well (str): Well id to retrieve
+            well (str): well id to retrieve
             last_cycle (int): cycle number of the last cycle to be included (defaults to all cycles)
 
         Returns:
@@ -184,6 +205,9 @@ class FilterTimeSeries():
         new_index = pandas.Index(time, name='time in h')
         unified_df = self.value.set_index(new_index)
         return unified_df
+
+    def __repr__(self):
+        return f'FilterTimeSeries({len(self.time)} cycles, {len(self.time.columns)} wells)'
 
 
 class BLDParser(object):
