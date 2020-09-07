@@ -1,12 +1,12 @@
 import logging
 import numpy
-
+import typing
 
 _log = logging.getLogger(__file__)
 
 
-def find_do_peak(x, y, *, delay_a:float, threshold_a:float, delay_b:float, threshold_b:float, initial_delay:float=1):
-    """Finds the cycle of the DO peak.
+def find_do_peak(x, y, *, delay_a:float, threshold_a:float, delay_b:float, threshold_b:float, initial_delay:float=1) -> typing.Optional[int]:
+    """Finds the index of a DO peak in the inputs [x] and [y].
     
     Args:
         x (array): time vector
@@ -18,37 +18,38 @@ def find_do_peak(x, y, *, delay_a:float, threshold_a:float, delay_b:float, thres
         threshold_b (float): DO threshold that must be OVERshot for at least <delay_b> hours
         
     Returns:
-        c_trigger (int): cycle number of the DO peak
+        i_overshoot (int): index (w.r.t. inputs [x] and [y]) at which the DO peak was detected
+            None is returned if no peak was detected according to the given conditions.
     """
-    C = len(x)
-    c_silencing = numpy.argmax(x > initial_delay)
+    i_total = len(x)
+    i_silencing = numpy.argmax(x > initial_delay)
 
-    c_undershot = None
-    for c in range(c_silencing, C):
-        if y[c] < threshold_a and c_undershot is None:
+    i_undershot = None
+    for i in range(i_silencing, i_total):
+        if y[i] < threshold_a and i_undershot is None:
             # crossing the threshold from above
-            c_undershot = c
-        elif y[c] > threshold_a:
+            i_undershot = i
+        elif y[i] > threshold_a:
             # the DO is above the threshold
-            c_undershot = None
-        if c_undershot is not None:
-            undershot_since = x[c] - x[c_undershot]
+            i_undershot = None
+        if i_undershot is not None:
+            undershot_since = x[i] - x[i_undershot]
             if undershot_since >= delay_a:
                 # the DO has remained below the threshold for long enough
                 break
 
-    c_overshot = None
-    if c_undershot is not None:
-        for c in range(c_undershot, C):
-            if y[c] > threshold_b and c_overshot is None:
+    i_overshot = None
+    if i_undershot is not None:
+        for i in range(i_undershot, i_total):
+            if y[i] > threshold_b and i_overshot is None:
                 # crossing the threshold from below
-                c_overshot = c
-            elif y[c] < threshold_b:
+                i_overshot = i
+            elif y[i] < threshold_b:
                 # the DO is below the threshold
-                c_overshot = None
-            if c_overshot is not None:
-                overshot_since = x[c] - x[c_overshot]
+                i_overshot = None
+            if i_overshot is not None:
+                overshot_since = x[i] - x[i_overshot]
                 if overshot_since >= delay_b:
                     # the DO has remained above the threshold for long enough
                     break
-    return c_overshot
+    return i_overshot
