@@ -127,16 +127,16 @@ def _last_full_cycle(measurements:pandas.DataFrame) -> int:
 
 
 def _parse_calibration_info(calibration_info:str):
-    """Find the number of the last cycle that was measured for all wells and filters.
+    """Extracts lot number and temperature for a line of calibration info.
 
-        Args:
-            calibration_info (str): Calibration info e. g. from CSV file such as '1818-hc-Temp30'
+    Args:
+        calibration_info (str): Calibration info e. g. from CSV file such as '1818-hc-Temp30'
 
-        Returns:
-            lot_number (int): Lot number
-            temp (int): Temperature
+    Returns:
+        lot_number (int): Lot number
+        temp (int): Temperature
     """
-    result = re.findall(r'(\d{4})-hc-Temp(\d{2})', calibration_info)
+    result = re.findall(r'(\d*)-hc-Temp(\d{2})', calibration_info)
     lot_number = int(result[0][0])
     temp = int(result[0][1])
 

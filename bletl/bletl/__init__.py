@@ -122,21 +122,26 @@ def _apply_calibration(data:BLData, lot_number:int=None, temp:int=None) -> BLDat
             else:
                 cal_data = fetch_calibration_data(*utils._parse_calibration_info(data.metadata['lot']))
                 if cal_data is None:
-                    raise LotInformationNotFound("""Lot information was found in the CSV file,
-                        but the calibration data was not found in the cache and the cache could not be updated.
-                        No calibration for pH and DO is applied.""")
+                    raise LotInformationNotFound(
+                        "Lot information was found in the CSV file, but the calibration data was not found in the cache and the cache could not be updated. "
+                        "No calibration for pH and DO is applied."
+                    )
                 data.calibrate(cal_data)
 
         if isinstance(lot_number, int) and isinstance(temp, int):
             if not (data.metadata['lot'] in {'UNKNOWN', 'UNKOWN'}):
                 lot_from_csv, temp_from_csv = utils._parse_calibration_info(data.metadata['lot'])
                 if (lot_number != lot_from_csv) or (temp != temp_from_csv):
-                    raise LotInformationMismatch('The lot information provided mismatches with lot information found in the data file.\
-                        The provided lot information is used for calibration.')
+                    raise LotInformationMismatch(
+                        f'The lot information (lot_number={lot_number}, temp={temp}) provided mismatches with '
+                        f'lot information found in the data file (lot_number={lot_from_csv}, temp={temp_from_csv}). '
+                    )
             cal_data = fetch_calibration_data(lot_number, temp)
             if cal_data is None:
-                raise LotInformationError('Data for the lot information provided was not found in the cached file \
-                    and we were unable to update it. If you want to proceed without calibration, pass no lot number and temperature')
+                raise LotInformationError(
+                    'Data for the lot information provided was not found in the cached file and we were unable to update it. '
+                    'If you want to proceed without calibration, pass no lot number and temperature'
+                )
             data.calibrate(cal_data)
                 
     return data
@@ -319,8 +324,12 @@ def fetch_calibration_data(lot_number:int, temp:int):
         }
         return calibration_dict
     else:
-        raise InvalidLotNumberError("""Latest calibration information was downloaded from m2p-labs, 
-            but the provided lot number/temperature combination could not be found. Please check the parameters.""")
+        raise InvalidLotNumberError(
+            "Latest calibration information was downloaded from m2p-labs, "
+            f"but the provided lot number/temperature combination (lot_number={lot_number}, temp={temp}) could not be found. "
+            "Please check the parameters."
+        )
+
 
 def download_calibration_data():
     """Loads calibration data from m2p-labs website
