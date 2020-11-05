@@ -18,11 +18,11 @@ class BLData(dict):
     """
     def __init__(self, model, environment, filtersets, references, measurements, comments):
         self._model = model
-        self.environment = environment
-        self.filtersets = filtersets
-        self.references = references
-        self.measurements = measurements
-        self.comments = comments
+        self._environment = environment
+        self._filtersets = filtersets
+        self._references = references
+        self._measurements = measurements
+        self._comments = comments
         super().__init__()
         return 
 
@@ -34,41 +34,21 @@ class BLData(dict):
     def environment(self) -> str:
     	return self._environment
 
-    @environment.setter
-    def environment(self, value:str):
-    	self._environment = value
-
     @property
     def filtersets(self) -> str:
     	return self._filtersets
-
-    @filtersets.setter
-    def filtersets(self, value:str):
-    	self._filtersets = value
 
     @property
     def references(self) -> pandas.DataFrame:
     	return self._references
 
-    @references.setter
-    def references(self, value:pandas.DataFrame):
-    	self._references = value
-
     @property
     def measurements(self) -> str:
     	return self._measurements
 
-    @measurements.setter
-    def measurements(self, value:str):
-    	self._measurements = value
-
     @property
     def comments(self) -> pandas.DataFrame:
         return self._comments
-
-    @comments.setter
-    def comments(self, value:pandas.DataFrame):
-        self._comments = value
 
     def calibrate(self, calibration_dict):
         raise NotImplementedError()
