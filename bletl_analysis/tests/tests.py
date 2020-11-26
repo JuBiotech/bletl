@@ -5,7 +5,6 @@ import pathlib
 import pandas
 
 import bletl
-import bletl_pro
 import bletl_analysis
 from bletl_analysis import features
 import scipy.interpolate
