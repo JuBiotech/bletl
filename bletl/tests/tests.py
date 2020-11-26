@@ -3,36 +3,41 @@ import numpy
 import pathlib
 import pandas
 import unittest
+import datetime
 
 import bletl
 from bletl import core
 from bletl import parsing
 from bletl import utils
 
-dir_testfiles = pathlib.Path(pathlib.Path(__file__).absolute().parent, 'data', 'BL1')
+dir_testfiles = pathlib.Path(pathlib.Path(__file__).absolute().parent, 'data')
 
 BL1_files =  [
-    pathlib.Path(dir_testfiles, 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv'),
-    pathlib.Path(dir_testfiles, 'JH_ShakerSteps_20170302_070206.csv'),
-    pathlib.Path(dir_testfiles, 'rj-cg-res_20170927_084112.csv'),
-    pathlib.Path(dir_testfiles, 'incremental', 'NT_1400rpm_30C_BS15_5min_20180503_132133.csv'),
+    pathlib.Path(dir_testfiles, 'BL1', 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv'),
+    pathlib.Path(dir_testfiles, 'BL1', 'JH_ShakerSteps_20170302_070206.csv'),
+    pathlib.Path(dir_testfiles, 'BL1', 'rj-cg-res_20170927_084112.csv'),
+    pathlib.Path(dir_testfiles, 'BL1', 'incremental', 'NT_1400rpm_30C_BS15_5min_20180503_132133.csv'),
 ]
 
 BL1_fragment_files = [
-    pathlib.Path(dir_testfiles, 'fragments', 'fragment0.csv'),
-    pathlib.Path(dir_testfiles, 'fragments', 'fragment1.csv'),
-    pathlib.Path(dir_testfiles, 'fragments', 'fragment2.csv'),
+    pathlib.Path(dir_testfiles, 'BL1', 'fragments', 'fragment0.csv'),
+    pathlib.Path(dir_testfiles, 'BL1', 'fragments', 'fragment1.csv'),
+    pathlib.Path(dir_testfiles, 'BL1', 'fragments', 'fragment2.csv'),
 ]
 
 BL1_files_without_calibration_info = [
-    pathlib.Path(dir_testfiles, 'NT_1400_BS20BS10_15min_20160222_151645.csv'),
+    pathlib.Path(dir_testfiles, 'BL1', 'NT_1400_BS20BS10_15min_20160222_151645.csv'),
 ]
 
-not_a_bl_file = pathlib.Path(dir_testfiles, 'incremental', 'C42.tmp')
+not_a_bl_file = pathlib.Path(dir_testfiles, 'BL1', 'incremental', 'C42.tmp')
 
-file_with_no_measurements = pathlib.Path(dir_testfiles, 'broken_or_incomplete', 'file_with_no_measurements.csv')
+BL2_files = list(pathlib.Path(dir_testfiles, 'BLII').iterdir())
+BLPro_files = list(pathlib.Path(dir_testfiles, 'BLPro').iterdir())
+calibration_test_file = pathlib.Path(dir_testfiles, 'BLPro', '18-FZJ-Test2--2018-02-07-10-01-11.csv')
+incompatible_file = pathlib.Path(dir_testfiles, 'incompatible_files', 'BL2-file-saved-with-biolection.csv')
 
-calibration_test_file = pathlib.Path(dir_testfiles, 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
+calibration_test_file_pro = pathlib.Path(dir_testfiles, 'BLPro', '18-FZJ-Test2--2018-02-07-10-01-11.csv')
+calibration_test_file = pathlib.Path(dir_testfiles, 'BL1', 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
 calibration_test_cal_data = {
     'cal_0': 65.91,
     'cal_100': 40.60,
@@ -51,7 +56,8 @@ calibration_test_values = {
 calibration_test_lot_number = 1515
 calibration_test_temp = 30
 
-file_with_lot_info = pathlib.Path(dir_testfiles, 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
+file_with_lot_info = pathlib.Path(dir_testfiles, 'BL1', 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
+file_with_no_measurements = pathlib.Path(dir_testfiles, 'BL1', 'broken_or_incomplete', 'file_with_no_measurements.csv')
 
 
 class TestParserSelection(unittest.TestCase):
@@ -67,6 +73,23 @@ class TestParserSelection(unittest.TestCase):
         self.assertRaises(ValueError, bletl.get_parser, not_a_bl_file)
         return
 
+    def test_selects_parsers_pro(self):
+        for fp in BLPro_files:
+            parser = bletl.get_parser(fp)
+            self.assertIsInstance(parser, core.BLDParser)
+            self.assertIsInstance(parser, parsing.blpro.BioLectorProParser)
+        return
+
+    def test_selects_parsers_ii(self):
+        for fp in BL2_files:
+            parser = bletl.get_parser(fp)
+            self.assertIsInstance(parser, core.BLDParser)
+            self.assertIsInstance(parser, parsing.blpro.BioLectorProParser)
+        return
+
+    def test_incompatible_file_detecion(self):
+        with self.assertRaises(bletl.IncompatibleFileError):
+            bletl.get_parser(incompatible_file)
 
 class TestUtils(unittest.TestCase):
     def test_last_well_in_cycle(self):
@@ -151,7 +174,7 @@ class TestBL1Parsing(unittest.TestCase):
         return
 
     def test_temp_setpoint_parsing(self):
-        fp = pathlib.Path(dir_testfiles, 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv')
+        fp = pathlib.Path(dir_testfiles, 'BL1', 'NT_1400rpm_30C_BS15_5min_20180618_102917.csv')
         data = bletl.parse(fp)
         df = data.environment
         temps = set(df['temp_setpoint'].unique())
@@ -164,7 +187,7 @@ class TestBL1Parsing(unittest.TestCase):
         return
 
     def test_shaker_setpoint_parsing(self):
-        fp = pathlib.Path(dir_testfiles, 'JH_ShakerSteps_20170302_070206.csv')
+        fp = pathlib.Path(dir_testfiles, 'BL1', 'JH_ShakerSteps_20170302_070206.csv')
         data = bletl.parse(fp)
         df = data.environment
         rpms = set(df['shaker_setpoint'].unique())
@@ -180,7 +203,7 @@ class TestBL1Parsing(unittest.TestCase):
         return
 
     def test_get_timeseries(self):
-        fp = pathlib.Path(dir_testfiles, 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
+        fp = pathlib.Path(dir_testfiles, 'BL1', 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
         data = bletl.parse(fp, lot_number=calibration_test_lot_number, temp=30)
         x, y = data['pH'].get_timeseries('A03')
         self.assertEqual(len(x), len(y))
@@ -190,7 +213,7 @@ class TestBL1Parsing(unittest.TestCase):
         return
 
     def test_get_timeseries_last_cycle(self):
-        fp = pathlib.Path(dir_testfiles, 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
+        fp = pathlib.Path(dir_testfiles, 'BL1', 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
         data = bletl.parse(fp, lot_number=calibration_test_lot_number, temp=30)
         
         # default to all
@@ -221,7 +244,7 @@ class TestBL1Parsing(unittest.TestCase):
         pass
 
     def test_get_unified_dataframe(self):
-        fp = pathlib.Path(dir_testfiles, 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
+        fp = pathlib.Path(dir_testfiles, 'BL1', 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
         data = bletl.parse(fp)
         unified_df = data['BS20'].get_unified_dataframe()
         self.assertIsInstance(unified_df, pandas.DataFrame)
@@ -236,7 +259,7 @@ class TestBL1Parsing(unittest.TestCase):
         )
 
     def test_get_narrow_data(self):
-        fp = pathlib.Path(dir_testfiles, 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
+        fp = pathlib.Path(dir_testfiles, 'BL1', 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
         data = bletl.parse(fp)
         narrow_data = data.get_narrow_data()
         self.assertIsInstance(narrow_data, pandas.DataFrame)
@@ -247,7 +270,7 @@ class TestBL1Parsing(unittest.TestCase):
         )
 
     def test_get_unified_narrow_data(self):
-        fp = pathlib.Path(dir_testfiles, 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
+        fp = pathlib.Path(dir_testfiles, 'BL1', 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
         data = bletl.parse(fp)
 
         unified_narrow_data_1 = data.get_unified_narrow_data()
@@ -352,6 +375,148 @@ class TestOnlineMethods(unittest.TestCase):
 
     def test_download_calibration_data(self):
         bletl.download_calibration_data()        
+        return
+
+
+class TestBL2Parsing(unittest.TestCase):
+    def test_parse_metadata_data(self):
+        for fp in BL2_files:
+            metadata, data = parsing.blpro.parse_metadata_data(fp)
+            
+            self.assertIsInstance(metadata, dict)
+            self.assertIsInstance(data, pandas.DataFrame)
+        pass
+
+    def test_parsing(self):
+        for fp in BL2_files:
+            try:
+                data = bletl.parse(fp)
+                self.assertIsInstance(data, dict)
+            except:
+                print('parsing failed for: {}'.format(fp))
+                raise
+        pass
+
+
+class TestBLProParsing(unittest.TestCase):
+    def test_parse_metadata_data(self):
+        for fp in BLPro_files:
+            metadata, data = parsing.blpro.parse_metadata_data(fp)
+            
+            self.assertIsInstance(metadata, dict)
+            self.assertIsInstance(data, pandas.DataFrame)
+        return
+
+    def test_parsing(self):
+        for fp in BLPro_files:
+            try:
+                data = bletl.parse(fp)
+                self.assertIsInstance(data, dict)
+            except:
+                print('parsing failed for: {}'.format(fp))
+                raise
+        return
+
+    def test_parse_metadata_data_new_format(self):
+        fp = pathlib.Path(dir_testfiles, 'BLPro', 'Ms000367.LG.csv')
+        metadata, data = parsing.blpro.parse_metadata_data(fp)
+        assert isinstance(metadata, dict)
+        assert isinstance(data, pandas.DataFrame)
+        pass
+
+    def test_parse_new_format(self):
+        fp = pathlib.Path(dir_testfiles, 'BLPro', 'Ms000367.LG.csv')
+        bldata = bletl.parse(fp)
+        assert 'BS3' in bldata
+        t, y = bldata['BS3'].get_timeseries('A01')
+        numpy.testing.assert_array_almost_equal(t, [0.01111111, 0.08888889])
+        numpy.testing.assert_array_almost_equal(y, [4.19, 1.96])
+        pass
+
+    def test_parse_with_concat(self):
+        data = bletl.parse(filepaths=[
+                pathlib.Path(dir_testfiles, 'BLPro', '224-MO_Coryne--2019-07-12-16-54-30.csv'),
+                pathlib.Path(dir_testfiles, 'BLPro', '226-MO_Coryne--2019-07-12-17-38-02.csv'),
+        ])
+        self.assertIsInstance(data, bletl.BLData)
+        self.assertEqual(data.metadata['date_start'], datetime.datetime(2019, 7, 12, 16, 54, 30))
+        self.assertEqual(data.metadata['date_end'], None)
+        numpy.testing.assert_array_equal(data['BS5'].time.index, numpy.arange(1, 4+254+1))
+        numpy.testing.assert_array_almost_equal(data['BS5'].time['A01'][:5], [0.013056, 0.179444, 0.346111, 0.512778, 0.738611])
+        return
+
+    def test_parse_file_with_defects(self):
+        # this file has some broken & duplicate data line lines 25857-25877
+        bletl.parse(pathlib.Path(dir_testfiles, 'BLPro', '247-AH_Bacillus_Batch-AH-2020-01-22-12-48-45.csv'))
+        pass
+
+
+class TestBLProCalibration(unittest.TestCase):
+    def test_filtertimeseries_presence(self):
+        bd = bletl.parse(calibration_test_file_pro)
+        self.assertIsInstance(bd, dict)
+        self.assertTrue('BS2' in bd)
+        self.assertTrue('BS5' in bd)
+        self.assertTrue('pH' in bd)
+        self.assertTrue('DO' in bd)
+        return
+
+    def test_correct_well_association(self):
+        bd = bletl.parse(calibration_test_file_pro)
+        
+        # F01
+        x, y = bd['pH'].get_timeseries('F01')
+        self.assertTrue(numpy.allclose(x[:3], [0.07972222,  0.16166667,  0.24472222]))
+        self.assertTrue(numpy.allclose(y[:3], [8.15, 7.93, 7.78]))
+
+        # D02
+        x, y = bd['DO'].get_timeseries('D02')
+        self.assertTrue(numpy.allclose(x[:3], [0.09166667,  0.17305556,  0.25611111]))
+        self.assertTrue(numpy.allclose(y[:3], [92.09, 93.84, 94.65]))
+        return
+
+
+class TestDataEquivalence(unittest.TestCase):
+    def test_model(self):
+        data = bletl.parse(BLPro_files[0])
+        
+        self.assertIsInstance(data.model, core.BioLectorModel)
+        self.assertEqual(data.model, core.BioLectorModel.BLPro)
+        return
+
+    def test_environment(self):
+        d_1 = bletl.parse(BL1_files[0], 1818, 30)
+        d_p = bletl.parse(BLPro_files[0])
+
+        self.assertSequenceEqual(list(d_1.environment.columns), list(d_p.environment.columns))
+        return
+
+    def test_filtersets(self):
+        d_1 = bletl.parse(BL1_files[0], 1818, 30)
+        d_p = bletl.parse(BLPro_files[0])
+
+        self.assertSequenceEqual(list(d_1.filtersets.columns), list(d_p.filtersets.columns))
+        return
+
+    def test_references(self):
+        d_1 = bletl.parse(BL1_files[0], 1818, 30)
+        d_p = bletl.parse(BLPro_files[0])
+
+        self.assertSequenceEqual(list(d_1.references.columns), list(d_p.references.columns))
+        return
+
+    def test_measurements(self):
+        d_1 = bletl.parse(BL1_files[0], 1818, 30)
+        d_p = bletl.parse(BLPro_files[0])
+
+        self.assertSequenceEqual(list(d_1.measurements.columns), list(d_p.measurements.columns))
+        return
+
+    def test_comments(self):
+        d_1 = bletl.parse(BL1_files[0], 1818, 30)
+        d_p = bletl.parse(BLPro_files[0])
+
+        self.assertSequenceEqual(list(d_1.comments.columns), list(d_p.comments.columns))
         return
 
 

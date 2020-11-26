@@ -3,20 +3,11 @@ stages:
   - test
   - release
 
-
 test-bletl-py36:
   stage: test
   image: python:3.6
   script:
     - cd bletl && python setup.py develop
-    - python -m unittest discover -s tests -v
-
-test-bletl-pro-py36:
-  stage: test
-  image: python:3.6
-  script:
-    - cd bletl && python setup.py develop && cd ..
-    - cd bletl_pro && python setup.py develop 
     - python -m unittest discover -s tests -v
 
 test-bletl-analysis-py36:
@@ -28,20 +19,11 @@ test-bletl-analysis-py36:
     - cd bletl_analysis && python setup.py develop
     - python -m unittest discover -s tests -v
 
-
 test-bletl-py37:
   stage: test
   image: python:3.7
   script:
     - cd bletl && python setup.py develop
-    - python -m unittest discover -s tests -v
-
-test-bletl-pro-py37:
-  stage: test
-  image: python:3.7
-  script:
-    - cd bletl && python setup.py develop && cd ..
-    - cd bletl_pro && python setup.py develop 
     - python -m unittest discover -s tests -v
 
 test-bletl-analysis-py37:
@@ -53,21 +35,11 @@ test-bletl-analysis-py37:
     - cd bletl_analysis && python setup.py develop
     - python -m unittest discover -s tests -v
 
-
 coverage-bletl:
   stage: test
   image: python:3.6
   script:
     - cd bletl && python setup.py develop
-    - pip install coverage
-    - coverage run tests/tests.py && coverage report -m
-
-coverage-bletl-pro:
-  stage: test
-  image: python:3.6
-  script:
-    - cd bletl && python setup.py develop && cd ..
-    - cd bletl_pro && python setup.py develop 
     - pip install coverage
     - coverage run tests/tests.py && coverage report -m
 
@@ -93,22 +65,6 @@ release-bletl:
   only:
     # only run on refs that are named like v1.2 or v1.2.3
     - /^bletl_v(\d+\.)?(\d+\.)?(\*|\d+)$/
-  except:
-    - branches
-
-release-bletl-pro:
-  stage: release
-  image: python:3.6
-  script:
-    - cd bletl && python setup.py develop && cd ..
-    - cd bletl_pro && python setup.py bdist_wheel && cp dist/*.whl ..
-  artifacts:
-    paths:
-      - ./*.whl
-    expire_in: 30 yrs
-  only:
-    # only run on refs that are named like v1.2 or v1.2.3
-    - /^bletl_pro_v(\d+\.)?(\d+\.)?(\*|\d+)$/
   except:
     - branches
 

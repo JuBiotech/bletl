@@ -20,6 +20,7 @@ __version__ = '0.14.0'
 
 parsers = {
     (BioLectorModel.BL1, '3.3') : parsing.bl1.BioLector1Parser,
+    (BioLectorModel.BLPro, '0.0.0') : parsing.blpro.BioLectorProParser,
 }
 
 
