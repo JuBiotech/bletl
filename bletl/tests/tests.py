@@ -30,6 +30,8 @@ BL1_files_without_calibration_info = [
 
 not_a_bl_file = pathlib.Path(dir_testfiles, 'incremental', 'C42.tmp')
 
+file_with_no_measurements = pathlib.Path(dir_testfiles, 'broken_or_incomplete', 'file_with_no_measurements.csv')
+
 calibration_test_file = pathlib.Path(dir_testfiles, 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
 calibration_test_cal_data = {
     'cal_0': 65.91,
@@ -269,6 +271,10 @@ class TestBL1Parsing(unittest.TestCase):
         with self.assertRaises(KeyError):
             data.get_unified_narrow_data(source_well='O9000')
 
+    def test_NoMeasurements_Warning(self):
+        with self.assertWarns(core.NoMeasurementData):
+            bletl.parse(file_with_no_measurements)
+
 class TestBL1Calibration(unittest.TestCase):
     def test_calibration_data_type(self):
         data = bletl.parse(calibration_test_file, calibration_test_lot_number, calibration_test_temp)
@@ -328,7 +334,7 @@ class TestBL1Calibration(unittest.TestCase):
         return
 
     def test_mismatch_warning(self):
-        with self.assertRaises(core.LotInformationMismatch):
+        with self.assertWarns(core.LotInformationMismatch):
             bletl.parse(file_with_lot_info, 1818, 37)
         return
 

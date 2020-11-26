@@ -233,13 +233,17 @@ class InvalidLotNumberError(Exception):
     pass
 
 
-class LotInformationMismatch(Warning):
+class LotInformationMismatch(UserWarning):
     pass
 
 
-class LotInformationNotFound(Warning):
+class LotInformationNotFound(UserWarning):
     pass
 
 
 class IncompatibleFileError(Exception):
+    pass
+
+
+class NoMeasurementData(UserWarning):
     pass

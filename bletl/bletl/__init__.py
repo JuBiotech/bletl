@@ -8,13 +8,15 @@ import urllib.error
 import configparser
 import pathlib
 from collections.abc import Iterable
+import warnings
 
-from . core import BioLectorModel, BLData, BLDParser
-from . core import LotInformationError, LotInformationMismatch, InvalidLotNumberError, LotInformationNotFound, FilterTimeSeries, IncompatibleFileError
+from . core import BioLectorModel, BLData, BLDParser, FilterTimeSeries
+from . core import LotInformationError, LotInformationMismatch, InvalidLotNumberError
+from . core import NoMeasurementData, IncompatibleFileError, LotInformationNotFound
 from . import parsing
 from . import utils
 
-__version__ = '0.13.2'
+__version__ = '0.14.0'
 
 parsers = {
     (BioLectorModel.BL1, '3.3') : parsing.bl1.BioLector1Parser,
@@ -86,7 +88,7 @@ def _parse_without_calibration(filepath:str, drop_incomplete_cycles:bool) -> BLD
     parser = get_parser(filepath)
     data = parser.parse(filepath)
 
-    if drop_incomplete_cycles:
+    if (not data.measurements.empty) and drop_incomplete_cycles:
         index_names, measurements = utils._unindex(data.measurements)
         latest_full_cycle = utils._last_full_cycle(measurements)
         measurements = measurements[measurements.cycle <= latest_full_cycle]
@@ -122,9 +124,9 @@ def _apply_calibration(data:BLData, lot_number:int=None, temp:int=None) -> BLDat
             else:
                 cal_data = fetch_calibration_data(*utils._parse_calibration_info(data.metadata['lot']))
                 if cal_data is None:
-                    raise LotInformationNotFound(
+                    warnings.warn(
                         "Lot information was found in the CSV file, but the calibration data was not found in the cache and the cache could not be updated. "
-                        "No calibration for pH and DO is applied."
+                        "No calibration for pH and DO is applied.", LotInformationNotFound
                     )
                 data.calibrate(cal_data)
 
@@ -132,9 +134,10 @@ def _apply_calibration(data:BLData, lot_number:int=None, temp:int=None) -> BLDat
             if not (data.metadata['lot'] in {'UNKNOWN', 'UNKOWN'}):
                 lot_from_csv, temp_from_csv = utils._parse_calibration_info(data.metadata['lot'])
                 if (lot_number != lot_from_csv) or (temp != temp_from_csv):
-                    raise LotInformationMismatch(
+                    warnings.warn(
                         f'The lot information (lot_number={lot_number}, temp={temp}) provided mismatches with '
-                        f'lot information found in the data file (lot_number={lot_from_csv}, temp={temp_from_csv}). '
+                        f'lot information found in the data file (lot_number={lot_from_csv}, temp={temp_from_csv}). ',
+                        LotInformationMismatch
                     )
             cal_data = fetch_calibration_data(lot_number, temp)
             if cal_data is None:
