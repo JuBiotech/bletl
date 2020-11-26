@@ -57,6 +57,7 @@ calibration_test_lot_number = 1515
 calibration_test_temp = 30
 
 file_with_lot_info = pathlib.Path(dir_testfiles, 'BL1', 'example_with_cal_data_NT_1400rpm_30C_BS20-pH-DO_10min_20180607_115856.csv')
+file_with_no_measurements = pathlib.Path(dir_testfiles, 'BL1', 'broken_or_incomplete', 'file_with_no_measurements.csv')
 
 
 class TestParserSelection(unittest.TestCase):
