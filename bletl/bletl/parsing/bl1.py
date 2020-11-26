@@ -81,6 +81,10 @@ class BL1Data(core.BLData):
             DO = (1 / ksv) * ((S_cal_0 / numpy.tan(raw_data_df * numpy.pi / 180)) - 1)
             return DO
 
+        if self.measurements.empty:
+            warnings.warn('The data yor are parsing contains no measurement data', core.NoMeasurementData)
+            return
+
         for row in self.filtersets.iterrows():
             filter_number = row[1]['filter_number']
             filter_name = row[1]['filter_name']

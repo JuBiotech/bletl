@@ -294,6 +294,10 @@ class TestBL1Parsing(unittest.TestCase):
         with self.assertRaises(KeyError):
             data.get_unified_narrow_data(source_well='O9000')
 
+    def test_NoMeasurements_Warning(self):
+        with self.assertWarns(core.NoMeasurementData):
+            bletl.parse(file_with_no_measurements)
+
 class TestBL1Calibration(unittest.TestCase):
     def test_calibration_data_type(self):
         data = bletl.parse(calibration_test_file, calibration_test_lot_number, calibration_test_temp)
@@ -353,7 +357,7 @@ class TestBL1Calibration(unittest.TestCase):
         return
 
     def test_mismatch_warning(self):
-        with self.assertRaises(core.LotInformationMismatch):
+        with self.assertWarns(core.LotInformationMismatch):
             bletl.parse(file_with_lot_info, 1818, 37)
         return
 
