@@ -31,11 +31,11 @@ class BLData(dict):
     	return self._model
     
     @property
-    def environment(self) -> str:
+    def environment(self) -> pandas.DataFrame:
     	return self._environment
 
     @property
-    def filtersets(self) -> str:
+    def filtersets(self) -> pandas.DataFrame:
     	return self._filtersets
 
     @property
@@ -43,7 +43,7 @@ class BLData(dict):
     	return self._references
 
     @property
-    def measurements(self) -> str:
+    def measurements(self) -> pandas.DataFrame:
     	return self._measurements
 
     @property
