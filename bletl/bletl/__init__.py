@@ -93,7 +93,7 @@ def _parse_without_calibration(filepath:str, drop_incomplete_cycles:bool) -> BLD
         index_names, measurements = utils._unindex(data.measurements)
         latest_full_cycle = utils._last_full_cycle(measurements)
         measurements = measurements[measurements.cycle <= latest_full_cycle]
-        data.measurements = utils._reindex(measurements, index_names)
+        data._measurements = utils._reindex(measurements, index_names)
 
     return data
 
