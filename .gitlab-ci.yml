@@ -3,22 +3,6 @@ stages:
   - test
   - release
 
-test-bletl-py36:
-  stage: test
-  image: python:3.6
-  script:
-    - cd bletl && python setup.py develop
-    - python -m unittest discover -s tests -v
-
-test-bletl-analysis-py36:
-  stage: test
-  image: python:3.6
-  script:
-    - cd bletl && python setup.py develop && cd ..
-    - cd bletl_pro && python setup.py develop && cd ..
-    - cd bletl_analysis && python setup.py develop
-    - python -m unittest discover -s tests -v
-
 test-bletl-py37:
   stage: test
   image: python:3.7
@@ -35,9 +19,25 @@ test-bletl-analysis-py37:
     - cd bletl_analysis && python setup.py develop
     - python -m unittest discover -s tests -v
 
+test-bletl-py38:
+  stage: test
+  image: python:3.8
+  script:
+    - cd bletl && python setup.py develop
+    - python -m unittest discover -s tests -v
+
+test-bletl-analysis-py38:
+  stage: test
+  image: python:3.8
+  script:
+    - cd bletl && python setup.py develop && cd ..
+    - cd bletl_pro && python setup.py develop && cd ..
+    - cd bletl_analysis && python setup.py develop
+    - python -m unittest discover -s tests -v
+
 coverage-bletl:
   stage: test
-  image: python:3.6
+  image: python:3.7
   script:
     - cd bletl && python setup.py develop
     - pip install coverage
@@ -45,7 +45,7 @@ coverage-bletl:
 
 coverage-bletl-analysis:
   stage: test
-  image: python:3.6
+  image: python:3.7
   script:
     - cd bletl && python setup.py develop && cd ..
     - cd bletl_pro && python setup.py develop && cd ..
@@ -55,7 +55,7 @@ coverage-bletl-analysis:
 
 release-bletl:
   stage: release
-  image: python:3.6
+  image: python:3.7
   script:
     - cd bletl && python setup.py bdist_wheel && cp dist/*.whl ..
   artifacts:
@@ -70,7 +70,7 @@ release-bletl:
 
 release-bletl-analysis:
   stage: release
-  image: python:3.6
+  image: python:3.7
   script:
     - cd bletl && python setup.py develop && cd ..
     - cd bletl_pro && python setup.py develop && cd ..

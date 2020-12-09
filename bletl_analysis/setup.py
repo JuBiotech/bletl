@@ -34,7 +34,7 @@ setuptools.setup(name = __packagename__,
         install_requires=[
             'pandas',
             'bletl>=0.9',
-            'numpy',
+            'numpy==1.19.4',
             'scipy',
             'joblib',
             'csaps>=0.11',
