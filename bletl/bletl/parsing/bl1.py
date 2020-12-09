@@ -5,42 +5,65 @@ import numpy
 import pathlib
 import pandas
 import warnings
-
+import configparser
 
 from .. import core
 from .. import utils
 
 
 class BioLector1Parser(core.BLDParser):
-    def parse(self, filepath):
-        headerlines, data = split_header_data(filepath)
+    def calibrate_with_lot(self, data:core.BLData, lot_number:int=None, temp:int=None):
+        """Applies calibration.
 
-        metadata = extract_metadata(headerlines)
-        process_parameters = extract_process_parameters(headerlines)
-        filtersets = extract_filtersets(headerlines)
-        comments = extract_comments(data)
-        references = extract_references(data)
-        measurements = extract_measurements(data)
+        Args:
+            data (BLdata): BLdata object to calibrate
+            lot_number (int or None): lot number of the microtiter plate used
+            temp (int or None): Temperature to be used for calibration
 
-        data = BL1Data(
-            model=core.BioLectorModel.BL1,
-            environment = extract_environment(data, process_parameters, comments),
-            filtersets=filtersets,
-            references=references,
-            measurements=measurements,
-            comments=comments,
-        )
+        Returns:
+            BLData: calibrated data object
 
-        data.metadata = metadata
+        Raises:
+            TypeError: when either lot number or temperature, but not both, are None
+            NotImplementedError: when the file contents do not match with a known BioLector CSV style
+            LotInformationError: when no information about the lot can be found
+            LotInformationMismatch: when lot information given as parameters is not equal to lot information found in data file
+        """
+        if (lot_number is None) ^ (temp is None):
+            raise TypeError('Lot number and temperature should be either left None or be set to an appropriate value.')
+        
+        if (lot_number is None) and (temp is None):
+            if (data.metadata['lot'] in {'UNKNOWN', 'UNKOWN'}):
+                data = self.calibrate_with_parameters(data)
+            else:
+                cal_data = fetch_calibration_data(*utils._parse_calibration_info(data.metadata['lot']))
+                if cal_data is None:
+                    warnings.warn(
+                        "Lot information was found in the CSV file, but the calibration data was not found in the cache and the cache could not be updated. "
+                        "No calibration for pH and DO is applied.", core.LotInformationNotFound
+                    )
+                data = self.calibrate_with_parameters(data, **cal_data)
+
+        if isinstance(lot_number, int) and isinstance(temp, int):
+            if not (data.metadata['lot'] in {'UNKNOWN', 'UNKOWN'}):
+                lot_from_csv, temp_from_csv = utils._parse_calibration_info(data.metadata['lot'])
+                if (lot_number != lot_from_csv) or (temp != temp_from_csv):
+                    warnings.warn(
+                        f'The lot information (lot_number={lot_number}, temp={temp}) provided mismatches with '
+                        f'lot information found in the data file (lot_number={lot_from_csv}, temp={temp_from_csv}). ',
+                        core.LotInformationMismatch
+                    )
+            cal_data = fetch_calibration_data(lot_number, temp)
+            if cal_data is None:
+                raise core.LotInformationError(
+                    'Data for the lot information provided was not found in the cached file and we were unable to update it. '
+                    'If you want to proceed without calibration, pass no lot number and temperature'
+                )
+            data = self.calibrate_with_parameters(data, **cal_data)
 
         return data
 
-
-class BL1Data(core.BLData):
-    def calibrate(self, calibration_dict:dict=None):
-        if not calibration_dict:
-            calibration_dict = dict()
-
+    def calibrate_with_parameters(self, data:core.BLData, cal_0:float=None, cal_100:float=None, phi_min:float=None, phi_max:float=None, pH_0:float=None, dpH:float=None):
         def process_backscatter(raw_data_df, cycle_ref_df, global_ref):
             """
             Calculation of referenced BS signal:
@@ -55,19 +78,18 @@ class BL1Data(core.BLData):
                 BS.loc[current_cycle, :] = current_values
             return BS
 
-        def process_pH(raw_data_df, cal_data):
+        def process_pH(raw_data_df, phi_min, phi_max, pH_0, dpH):
             """
             Calculation of pH:
             pH_0 + dpH * log((phi_min - phase_shift) / (phase_shift - phi_max))
             """
-            kappa = raw_data_df - cal_data['phi_max']
+            kappa = raw_data_df - phi_max
             kappa[kappa <= 0] = numpy.nan
 
-            pH = cal_data['pH_0'] + cal_data['dpH'] * \
-                numpy.log((cal_data['phi_min'] - raw_data_df) / kappa)
+            pH = pH_0 + dpH * numpy.log((phi_min - raw_data_df) / kappa)
             return pH
 
-        def process_DO(raw_data_df, cal_data):
+        def process_DO(raw_data_df, cal_0, cal_100):
             """
             Calculation of DO:
             S_cal_0 = tan(cal_0 * pi / 180)
@@ -75,52 +97,82 @@ class BL1Data(core.BLData):
             ksv = 0.01 * ((S_cal_0 / S_cal_100) - 1)
             DO = (1 / ksv) * ((S_cal_0 / tan(phase_shift * pi / 180)) - 1)
             """
-            S_cal_0 = numpy.tan(cal_data['cal_0'] * numpy.pi / 180)
-            S_cal_100 = numpy.tan(cal_data['cal_100'] * numpy.pi / 180)
+            S_cal_0 = numpy.tan(cal_0 * numpy.pi / 180)
+            S_cal_100 = numpy.tan(cal_100 * numpy.pi / 180)
             ksv = 0.01 * ((S_cal_0 / S_cal_100) - 1)
             DO = (1 / ksv) * ((S_cal_0 / numpy.tan(raw_data_df * numpy.pi / 180)) - 1)
             return DO
 
-        if self.measurements.empty:
+        if data.measurements.empty:
             warnings.warn('The data yor are parsing contains no measurement data', core.NoMeasurementData)
-            return
+            return data
 
-        for row in self.filtersets.iterrows():
+        for row in data.filtersets.iterrows():
             filter_number = row[1]['filter_number']
             filter_name = row[1]['filter_name']
             gain = row[1]['gain']
             ref_value = row[1]['reference_value']
 
             if filter_name == 'Biomass':
-                raw_bs = self.measurements.xs(filter_number, level='filterset')['amp_1'].unstack()
-                bs_times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
-                cycle_ref_bs = self.references.xs(filter_number, level='filterset')
+                raw_bs = data.measurements.xs(filter_number, level='filterset')['amp_1'].unstack()
+                bs_times = data.measurements.xs(filter_number, level='filterset')['time'].unstack()
+                cycle_ref_bs = data.references.xs(filter_number, level='filterset')
                 bs_values = process_backscatter(raw_bs, cycle_ref_bs, ref_value)
-                self['BS' + f'{gain:.0f}'] = core.FilterTimeSeries(bs_times, bs_values)
+                data['BS' + f'{gain:.0f}'] = core.FilterTimeSeries(bs_times, bs_values)
 
             elif filter_name == 'pH-hc':
-                if set(('pH_0', 'dpH', 'phi_min', 'phi_max')) <= calibration_dict.keys():
-                    raw_ph = self.measurements.xs(filter_number, level='filterset')['phase'].unstack()
-                    ph_times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
-                    ph_values = process_pH(raw_ph, calibration_dict)
-                    self['pH'] = core.FilterTimeSeries(ph_times, ph_values)
+                if not None in [pH_0, dpH, phi_min, phi_max]:
+                    raw_ph = data.measurements.xs(filter_number, level='filterset')['phase'].unstack()
+                    ph_times = data.measurements.xs(filter_number, level='filterset')['time'].unstack()
+                    ph_values = process_pH(raw_ph, phi_min, phi_max, pH_0, dpH)
+                    data['pH'] = core.FilterTimeSeries(ph_times, ph_values)
                 else:
                     warnings.warn('Calibration values for pH signal are missing. Skipping calibration.')
 
             elif filter_name == 'pO2-hc':
-                if set(('cal_0', 'cal_100')) <= calibration_dict.keys():
-                    raw_do = self.measurements.xs(filter_number, level='filterset')['phase'].unstack()
-                    do_times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
-                    do_values = process_DO(raw_do, calibration_dict)
-                    self['DO'] = core.FilterTimeSeries(do_times, do_values)
+                if not None in [cal_0, cal_100]:
+                    raw_do = data.measurements.xs(filter_number, level='filterset')['phase'].unstack()
+                    do_times = data.measurements.xs(filter_number, level='filterset')['time'].unstack()
+                    do_values = process_DO(raw_do, cal_0, cal_100)
+                    data['DO'] = core.FilterTimeSeries(do_times, do_values)
                 else:
                     warnings.warn('Calibration values for DO signal are missing. Skipping calibration.')
 
             else:
-                raw_values = self.measurements.xs(filter_number, level='filterset')['amp_1'].unstack()
-                times = self.measurements.xs(filter_number, level='filterset')['time'].unstack()
-                self[filter_name + f'{gain:.0f}'] = core.FilterTimeSeries(times, raw_values)
-        return
+                raw_values = data.measurements.xs(filter_number, level='filterset')['amp_1'].unstack()
+                times = data.measurements.xs(filter_number, level='filterset')['time'].unstack()
+                data[filter_name + f'{gain:.0f}'] = core.FilterTimeSeries(times, raw_values)
+        return data
+
+    def parse(
+        self, filepath, lot_number:int=None, temp:int=None,
+        cal_0:float=None, cal_100:float=None, phi_min:float=None, phi_max:float=None, pH_0:float=None, dpH:float=None
+        ):
+        headerlines, data = split_header_data(filepath)
+
+        metadata = extract_metadata(headerlines)
+        process_parameters = extract_process_parameters(headerlines)
+        filtersets = extract_filtersets(headerlines)
+        comments = extract_comments(data)
+        references = extract_references(data)
+        measurements = extract_measurements(data)
+
+        data = core.BLData(
+            model=core.BioLectorModel.BL1,
+            environment = extract_environment(data, process_parameters, comments),
+            filtersets=filtersets,
+            references=references,
+            measurements=measurements,
+            comments=comments,
+        )
+
+        data.metadata = metadata
+
+        if (not (lot_number is None) and not (temp is None)) or all(p is None for p in [lot_number, temp, cal_0, cal_100, phi_min, phi_max, pH_0, dpH]):
+            data = self.calibrate_with_lot(data, lot_number, temp)
+        else:
+            data = self.calibrate_with_parameters(data, cal_0, cal_100, phi_min, phi_max, pH_0, dpH)
+        return data
 
 
 def read_header_loglines(dir_incremental):
@@ -356,3 +408,51 @@ def extract_environment(dfraw, process_parameters:dict, comments:pandas.DataFram
                 temp = float(comment.split('=')[1])
                 df.loc[(df['time'] >= t_comment), 'temp_setpoint'] = temp
     return df
+
+def fetch_calibration_data(lot_number:int, temp:int):
+    """Loads calibration data from calibration file. Also triggers file download.
+
+    Args:
+        lot_number (int): Lot number to be used for calibration data lookup
+        temp (int): Temperature to be used for calibration data lookup
+
+    Returns:
+        calibration_dict (dict): Dictionary containing calibration data.
+            Can be readily used in calibration function.
+        None (None): 
+    """
+    module_path = pathlib.Path(core.__spec__.origin).parents[0]
+    calibration_file = pathlib.Path(module_path, 'cache', 'CalibrationLot.ini')
+
+    if not calibration_file.is_file():
+        if not utils.download_calibration_data():
+            return None
+
+    with open(calibration_file, 'r') as file:
+        content = file.read()
+
+    parser = configparser.ConfigParser(strict=False)
+    parser.read_string(content)
+    calibration_info = f'{lot_number}-hc-Temp{temp}'
+
+    if not calibration_info in parser:
+        if not utils.download_calibration_data():
+            return None
+    
+    if calibration_info in parser:
+        calibration_dict = {
+            'cal_0': float(parser[calibration_info]['k0']),
+            'cal_100': float(parser[calibration_info]['k100']),
+            'phi_min': float(parser[calibration_info]['irmin']),
+            'phi_max': float(parser[calibration_info]['irmax']),
+            'pH_0': float(parser[calibration_info]['ph0']),
+            'dpH': float(parser[calibration_info]['dph']),
+        }
+        return calibration_dict
+    else:
+        raise core.InvalidLotNumberError(
+            "Latest calibration information was downloaded from m2p-labs, "
+            f"but the provided lot number/temperature combination (lot_number={lot_number}, temp={temp}) could not be found. "
+            "Please check the parameters."
+        )
+    

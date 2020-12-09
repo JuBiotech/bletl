@@ -196,11 +196,22 @@ class BLDParser(object):
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
-    def parse(self, filepath:pathlib.Path) -> BLData:
+    def parse(
+        self, filepath:pathlib.Path, lot_number:int=None, temp:int=None,
+        cal_0:float=None, cal_100:float=None, phi_min:float=None, phi_max:float=None, pH_0:float=None, dpH:float=None
+        ) -> BLData:
         """Parses the provided BioLector CSV file into a data object.
 
         Args:
             filepath (str or pathlib.Path): path pointing to the file of interest
+            lot_number (int or None): lot number of the microtiter plate used
+            temp (int or None): Temperature to be used for calibration
+            cal_0 (float or None): Calibration parameter cal_0 or k0 for oxygen saturation measurement
+            cal_100 (float or None): Calibration parameter cal_100 or k100 for oxygen saturation measurement
+            phi_min (float or None): Calibration parameter phi_min or irmin for pH measurement
+            phi_max (float or None): Calibration parameter phi_max or irmax for pH measurement
+            pH_0 (float or None): Calibration parameter ph0 for pH measurement
+            dpH (float or None): Calibration parameter dpH for pH measurement
         """
         raise NotImplementedError('Whoever implemented {} screwed up.'.format(self.__class__.__name__))
 

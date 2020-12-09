@@ -1,6 +1,7 @@
 """Contains unit tests for the `bletl` package"""
 import numpy
 import pathlib
+from numpy import random
 import pandas
 import unittest
 import datetime
@@ -9,6 +10,8 @@ import bletl
 from bletl import core
 from bletl import parsing
 from bletl import utils
+
+from bletl.parsing import bl1
 
 dir_testfiles = pathlib.Path(pathlib.Path(__file__).absolute().parent, 'data')
 
@@ -37,6 +40,8 @@ calibration_test_file = pathlib.Path(dir_testfiles, 'BLPro', '18-FZJ-Test2--2018
 incompatible_file = pathlib.Path(dir_testfiles, 'incompatible_files', 'BL2-file-saved-with-biolection.csv')
 
 calibration_test_file_pro = pathlib.Path(dir_testfiles, 'BLPro', '18-FZJ-Test2--2018-02-07-10-01-11.csv')
+calibration_test_file_pro2 = pathlib.Path(dir_testfiles, 'BLPro', '8-HM_CoryneBatch-HM-2018-04-11-14-52-54.csv')
+
 calibration_test_file = pathlib.Path(dir_testfiles, 'BL1', 'NT_1200rpm_30C_DO-GFP75-pH-BS10_12min_20171221_121339.csv')
 calibration_test_cal_data = {
     'cal_0': 65.91,
@@ -265,8 +270,8 @@ class TestBL1Parsing(unittest.TestCase):
         self.assertIsInstance(narrow_data, pandas.DataFrame)
         self.assertAlmostEqual(
             narrow_data.loc[52884, 'value'],
-            100.8726865,
-            places=4
+            102.835,
+            places=3
         )
 
     def test_get_unified_narrow_data(self):
@@ -276,9 +281,9 @@ class TestBL1Parsing(unittest.TestCase):
         unified_narrow_data_1 = data.get_unified_narrow_data()
         self.assertIsInstance(unified_narrow_data_1, pandas.DataFrame)
         self.assertAlmostEqual(
-            unified_narrow_data_1.loc[22272, 'pH'],
-            7.352193857,
-            places=4
+            unified_narrow_data_1.loc[21771, 'pH'],
+            7.405,
+            places=3
         )
 
         unified_narrow_data_2 = data.get_unified_narrow_data(source_filterset='DO', source_well='B04')
@@ -319,7 +324,7 @@ class TestBL1Calibration(unittest.TestCase):
         return
 
     def test_single_file_with_caldata(self):
-        data = bletl.parse_with_calibration_parameters(calibration_test_file, **calibration_test_cal_data)
+        data = bletl.parse(calibration_test_file, **calibration_test_cal_data)
         
         for key, (cycle, well, value) in calibration_test_times.items():
             self.assertAlmostEqual(data[key].time.loc[cycle, well], value, places=4)
@@ -340,7 +345,7 @@ class TestBL1Calibration(unittest.TestCase):
 
     def test_fragments_with_cal_data(self):
         filepaths = BL1_fragment_files
-        data = bletl.parse_with_calibration_parameters(
+        data = bletl.parse(
             filepaths=filepaths,
             cal_0=71.93,
             cal_100=38.64,
@@ -364,17 +369,17 @@ class TestBL1Calibration(unittest.TestCase):
 
 class TestOnlineMethods(unittest.TestCase):
     def test_get_calibration_dict(self):
-        cal_dict_fetched = bletl.fetch_calibration_data(1515, 30)
+        cal_dict_fetched = bl1.fetch_calibration_data(1515, 30)
         self.assertDictEqual(cal_dict_fetched, calibration_test_cal_data)
         return
 
     def test_invalid_lot_number(self):
         with self.assertRaises(core.InvalidLotNumberError):
-            bletl.fetch_calibration_data(99, 99)
+            bl1.fetch_calibration_data(99, 99)
         return
 
     def test_download_calibration_data(self):
-        bletl.download_calibration_data()        
+        utils.download_calibration_data()        
         return
 
 
@@ -475,6 +480,44 @@ class TestBLProCalibration(unittest.TestCase):
         self.assertTrue(numpy.allclose(y[:3], [92.09, 93.84, 94.65]))
         return
 
+    def test_calibration_with_lot_number(self):
+        org = bletl.parse(calibration_test_file_pro2)
+        with_lot = bletl.parse(calibration_test_file_pro2, lot_number=1724, temp=30)
+
+        random_cycle = numpy.random.random_integers(1, len(org['pH'].time.index))
+
+        self.assertTrue(numpy.allclose(
+                org['pH'].value.loc[random_cycle],
+                with_lot['pH'].value.loc[random_cycle],
+                rtol=0.01,
+        ))
+
+        self.assertTrue(numpy.allclose(
+                org['DO'].value.loc[random_cycle],
+                with_lot['DO'].value.loc[random_cycle],
+                rtol=0.01,
+        ))
+
+    def test_calibration_with_parameters(self):
+        org = bletl.parse(calibration_test_file_pro2)
+        with_p = bletl.parse(calibration_test_file_pro2, 
+            cal_0=71.8655, cal_100=42.9188, 
+            phi_min=64.248, phi_max=19.039, pH_0=6.667, dpH=0.4878
+        )
+
+        random_cycle = numpy.random.random_integers(1, len(org['pH'].time.index))
+
+        self.assertTrue(numpy.allclose(
+                org['pH'].value.loc[random_cycle],
+                with_p['pH'].value.loc[random_cycle],
+                rtol=0.01,
+        ))
+
+        self.assertTrue(numpy.allclose(
+                org['DO'].value.loc[random_cycle],
+                with_p['DO'].value.loc[random_cycle],
+                rtol=0.01,
+        ))
 
 class TestDataEquivalence(unittest.TestCase):
     def test_model(self):

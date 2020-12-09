@@ -33,6 +33,7 @@ setuptools.setup(name = __packagename__,
             'Intended Audience :: Developers'
         ],
         install_requires=[
+            'numpy',
             'pandas'
         ]
 )

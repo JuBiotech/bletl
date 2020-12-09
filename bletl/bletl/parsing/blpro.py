@@ -1,4 +1,6 @@
 """Parsing functions for the BioLector Pro"""
+from xml.etree.ElementTree import Element
+from bletl.parsing.bl1 import fetch_calibration_data
 import collections
 import datetime
 import io
@@ -6,6 +8,8 @@ import logging
 import numpy
 import pandas
 import re
+import pathlib
+import xml.etree.ElementTree
 
 from .. import core
 from .. import utils
@@ -15,7 +19,10 @@ logger = logging.getLogger('blpro')
 
 
 class BioLectorProParser(core.BLDParser):
-    def parse(self, filepath):
+    def parse(
+        self, filepath, lot_number:int=None, temp:int=None,
+        cal_0:float=None, cal_100:float=None, phi_min:float=None, phi_max:float=None, pH_0:float=None, dpH:float=None
+        ):
         metadata, data = parse_metadata_data(filepath)
 
         bld = core.BLData(
@@ -32,8 +39,30 @@ class BioLectorProParser(core.BLDParser):
         bld.valves, bld.module = extract_valves_module(data)
         bld.diagnostics = extract_diagnostics(data)
 
-        for key, fts in transform_into_filtertimeseries(bld.metadata, bld.measurements, bld.filtersets):
-            bld[key] = fts
+        if not None in [lot_number, temp]:
+            lot_cal_data = fetch_calibration_data(lot_number, temp)
+        else:
+            lot_cal_data = None
+
+        if lot_cal_data or (not None in [cal_0, cal_100, phi_min, phi_max, pH_0, dpH]):
+            for key, fts in transform_into_filtertimeseries(bld.metadata, bld.measurements, bld.filtersets, True):
+                if (key == 'pH') and (not None in [phi_min, phi_max, pH_0, dpH]):
+                    fts.value = calibrate_pH(fts.value, phi_min, phi_max, pH_0, dpH)
+                    bld[key] = fts
+                elif (key == 'pH') and lot_cal_data:
+                    fts.value = calibrate_pH(fts.value, lot_cal_data['phi_min'], lot_cal_data['phi_max'], lot_cal_data['pH_0'], lot_cal_data['dpH'])
+                    bld[key] = fts
+                elif (key == 'DO') and (not None in [phi_min, phi_max, pH_0, dpH]):
+                    fts.value = calibrate_DO(fts.value, cal_0, cal_100)
+                    bld[key] = fts
+                elif (key == 'DO') and lot_cal_data:
+                    fts.value = calibrate_DO(fts.value, lot_cal_data['cal_0'], lot_cal_data['cal_100'])
+                    bld[key] = fts
+                else:
+                    bld[key] = fts
+        else:
+            for key, fts in transform_into_filtertimeseries(bld.metadata, bld.measurements, bld.filtersets, False):
+                bld[key] = fts
 
         return bld
 
@@ -321,7 +350,7 @@ def extract_diagnostics(dfraw):
     return standardize(df)
 
 
-def transform_into_filtertimeseries(metadata:dict, measurements:pandas.DataFrame, filtersets:pandas.DataFrame):
+def transform_into_filtertimeseries(metadata:dict, measurements:pandas.DataFrame, filtersets:pandas.DataFrame, return_uncalibrated_optode_data:bool):
     no_to_id = {
         int(k.split('_')[0]) : v
         for k, v in metadata['fermentation'].items()
@@ -336,10 +365,14 @@ def transform_into_filtertimeseries(metadata:dict, measurements:pandas.DataFrame
             key = f'BS{int(fs.gain_1)}'
             times = measurements.xs(filter_number, level='filterset')['time'].unstack()
             values = measurements.xs(filter_number, level='filterset')['amp_ref_1'].unstack()       
-        elif fs.filter_type in {'pH', 'DO'}:
+        elif fs.filter_type in {'pH', 'DO'} and not return_uncalibrated_optode_data:
             key = fs.filter_type
             times = measurements.xs(filter_number, level='filterset')['time'].unstack()
             values = measurements.xs(filter_number, level='filterset')['cal'].unstack()
+        elif fs.filter_type in {'pH', 'DO'} and return_uncalibrated_optode_data:
+            key = fs.filter_type
+            times = measurements.xs(filter_number, level='filterset')['time'].unstack()
+            values = measurements.xs(filter_number, level='filterset')['phase'].unstack()
         elif fs.filter_type == 'Intensity':
             key = fs.filter_name
             times = measurements.xs(filter_number, level='filterset')['time'].unstack()
@@ -357,3 +390,93 @@ def transform_into_filtertimeseries(metadata:dict, measurements:pandas.DataFrame
         values.columns.name = 'well'
         fts = core.FilterTimeSeries(times, values)
         yield (key, fts)
+
+def fetch_calibration_data(lot_number:int, temp:int):
+    """Loads calibration data from calibration file. Also triggers file download.
+
+    Args:
+        lot_number (int): Lot number to be used for calibration data lookup
+        temp (int): Temperature to be used for calibration data lookup
+
+    Returns:
+        calibration_dict (dict): Dictionary containing calibration data.
+        None (None): 
+    """
+    module_path = pathlib.Path(core.__spec__.origin).parents[0]
+    calibration_file = pathlib.Path(module_path, 'cache', 'CalibrationLot_II.xml')
+
+    if not calibration_file.is_file():
+        if not utils.download_calibration_data():
+            return None
+    
+    def search_for_lot(calibration_file, lot_number):
+        tree = xml.etree.ElementTree.parse(calibration_file)
+        root = tree.getroot()
+
+        element = None
+        for i, e in enumerate(root[1].iter('Name')):
+            if e.text == str(lot_number):
+                element = root[1][i]
+                break
+        return element
+
+    element = search_for_lot(calibration_file, lot_number)
+    if not element:
+        if not utils.download_calibration_data():
+            return None
+        else:
+            element = search_for_lot(calibration_file, lot_number)
+    
+    if not element:
+        raise core.InvalidLotNumberError(
+            "Latest calibration information was downloaded from m2p-labs, "
+            f"but the provided lot number/temperature combination (lot_number={lot_number}, temp={temp}) could not be found. "
+            "Please check the parameters."
+        )
+
+    cp = dict()
+    for p in ['fCal0_m', 'fCal0_a', 'fCal100_m', 'fCal100_a']:
+        cp.update({
+            p: float(element.find('DOTempCompensation').find(p).text)
+        })
+
+    for p in ['fMin_m', 'fMin_a', 'fMax_m', 'fMax_a', 'dpH_m', 'dpH_a', 'pH0_m', 'pH0_a']:
+        cp.update({
+            p: float(element.find('PHTempCompensation').find(p).text)
+        })
+    
+    calibration_dict = {
+        'cal_0': cp['fCal0_m']*temp+cp['fCal0_a'],
+        'cal_100': cp['fCal100_m']*temp+cp['fCal100_a'],
+        'phi_min': cp['fMin_m']*temp+cp['fMin_a'],
+        'phi_max': cp['fMax_m']*temp+cp['fMax_a'],
+        'pH_0': cp['pH0_m']*temp+cp['pH0_a'],
+        'dpH': cp['dpH_m']*temp+cp['dpH_a'],
+    }
+
+    return calibration_dict    
+
+def calibrate_pH(raw, phi_min, phi_max, pH_0, dpH):
+    """
+    Calculation of pH:
+    pH_0 + dpH * log((phi_min - phase_shift) / (phase_shift - phi_max))
+    """
+    kappa = raw - phi_max
+    kappa[kappa <= 0] = numpy.nan
+
+    pH = pH_0 + dpH * numpy.log((phi_min - raw) / kappa)
+    return pH
+
+def calibrate_DO(raw, cal_0, cal_100):
+    """
+    Calculation of DO:
+    S_cal_0 = tan(cal_0 * pi / 180)
+    S_cal_100 = tan(cal_100 * pi / 180)
+    ksv = 0.01 * ((S_cal_0 / S_cal_100) - 1)
+    DO = (1 / ksv) * ((S_cal_0 / tan(phase_shift * pi / 180)) - 1)
+    """
+    S_cal_0 = numpy.tan(cal_0 * numpy.pi / 180)
+    S_cal_100 = numpy.tan(cal_100 * numpy.pi / 180)
+    ksv = 0.01 * ((S_cal_0 / S_cal_100) - 1)
+    DO = (1 / ksv) * ((S_cal_0 / numpy.tan(raw * numpy.pi / 180)) - 1)
+    return DO

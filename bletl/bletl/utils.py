@@ -1,7 +1,10 @@
 """Contains helper functions that do not depend on other modules within this package."""
 import pandas
 import re
+import urllib
+import pathlib
 
+from . import core 
 
 def __to_typed_cols__(dfin:pandas.DataFrame, ocol_ncol_type:list):
     """Can be used to filter & convert data frame columns.
@@ -141,3 +144,28 @@ def _parse_calibration_info(calibration_info:str):
     temp = int(result[0][1])
 
     return lot_number, temp
+
+def download_calibration_data():
+    """Loads calibration data from m2p-labs website
+
+    Returns:
+        success (bool): True if calibration data was downloaded successfully, False otherwise
+    """
+    try:
+        module_path = pathlib.Path(core.__spec__.origin).parents[0]
+        
+        url_bl1 = 'http://updates.m2p-labs.com/CalibrationLot.ini'
+        filepath_bl1 = pathlib.Path(module_path, 'cache', 'CalibrationLot.ini')
+        filepath_bl1.parents[0].mkdir(exist_ok=True)
+        urllib.request.urlretrieve(url_bl1, filepath_bl1)
+
+        url_blpro = 'http://updates.m2p-labs.com/CalibrationLot_II.xml'
+        filepath_blpro = pathlib.Path(module_path, 'cache', 'CalibrationLot_II.xml')
+        filepath_blpro.parents[0].mkdir(exist_ok=True)
+        urllib.request.urlretrieve(url_blpro, filepath_blpro)
+        
+        return True
+    
+    except urllib.error.HTTPError:
+        return False
+
