@@ -15,7 +15,7 @@ from . core import NoMeasurementData, IncompatibleFileError, LotInformationNotFo
 from . import parsing
 from . import utils
 
-__version__ = '0.14.0'
+__version__ = '0.15.0'
 
 parsers = {
     (BioLectorModel.BL1, '3.3') : parsing.bl1.BioLector1Parser,
