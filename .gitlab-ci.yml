@@ -3,61 +3,78 @@ stages:
   - test
   - release
 
-test-bletl-py37:
-  stage: test
-  image: python:3.7
-  script:
-    - cd bletl && python setup.py develop
-    - python -m unittest discover -s tests -v
 
-test-bletl-analysis-py37:
-  stage: test
-  image: python:3.7
+build-bletl:
+  stage: build
+  image: python:3.8
   script:
-    - cd bletl && python setup.py develop && cd ..
-    - cd bletl_pro && python setup.py develop && cd ..
-    - cd bletl_analysis && python setup.py develop
-    - python -m unittest discover -s tests -v
+    - pip install -U pip pep517 twine
+    - cd bletl
+    - python -m pep517.build .
+    - cp dist/*.whl ..
+  artifacts:
+    paths:
+      - ./*.whl
+    expire_in: 30 days
+
+build-bletl-analysis:
+  stage: build
+  image: python:3.8
+  script:
+    - pip install -U pip pep517 twine
+    - cd bletl_analysis
+    - python -m pep517.build .
+    - cp dist/*.whl ..
+  artifacts:
+    paths:
+      - ./*.whl
+    expire_in: 30 days
+ 
 
 test-bletl-py38:
   stage: test
   image: python:3.8
   script:
-    - cd bletl && python setup.py develop
+    - pip install bletl-*.whl
+    - cd bletl
     - python -m unittest discover -s tests -v
 
 test-bletl-analysis-py38:
   stage: test
   image: python:3.8
   script:
-    - cd bletl && python setup.py develop && cd ..
-    - cd bletl_pro && python setup.py develop && cd ..
-    - cd bletl_analysis && python setup.py develop
+    - pip install bletl-*.whl
+    - pip install bletl_analysis-*.whl
+    - cd bletl_analysis
     - python -m unittest discover -s tests -v
 
 coverage-bletl:
   stage: test
-  image: python:3.7
+  image: python:3.8
   script:
-    - cd bletl && python setup.py develop
+    - pip install bletl-*.whl
+    - cd bletl
     - pip install coverage
     - coverage run tests/tests.py && coverage report -m
 
 coverage-bletl-analysis:
   stage: test
-  image: python:3.7
+  image: python:3.8
   script:
-    - cd bletl && python setup.py develop && cd ..
-    - cd bletl_pro && python setup.py develop && cd ..
-    - cd bletl_analysis && python setup.py develop
+    - pip install bletl-*.whl
+    - pip install bletl_analysis-*.whl
+    - cd bletl_analysis
     - pip install coverage
     - coverage run tests/tests.py && coverage report -m
 
 release-bletl:
   stage: release
-  image: python:3.7
+  image: python:3.8
   script:
-    - cd bletl && python setup.py bdist_wheel && cp dist/*.whl ..
+    - pip install -U pip pep517 twine
+    - cd bletl
+    - python -m pep517.build .
+    - cp dist/*.whl ..
   artifacts:
     paths:
       - ./*.whl
@@ -70,11 +87,12 @@ release-bletl:
 
 release-bletl-analysis:
   stage: release
-  image: python:3.7
+  image: python:3.8
   script:
-    - cd bletl && python setup.py develop && cd ..
-    - cd bletl_pro && python setup.py develop && cd ..
-    - cd bletl_analysis && python setup.py bdist_wheel && cp dist/*.whl ..
+    - pip install -U pip pep517 twine
+    - cd bletl_analysis
+    - python -m pep517.build .
+    - cp dist/*.whl ..
   artifacts:
     paths:
       - ./*.whl
