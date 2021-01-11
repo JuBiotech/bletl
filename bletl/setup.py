@@ -15,26 +15,27 @@ def get_version():
 
 __version__ = get_version()
 
-
-setuptools.setup(name = __packagename__,
-        packages = setuptools.find_packages(), # this must be the same as the name above
+if __name__ == '__main__':
+    setuptools.setup(
+        name = __packagename__,
+        packages = setuptools.find_packages(),
+        zip_safe=False,
         version=__version__,
         description='Package for parsing and transforming BioLector raw data.',
         url='https://jugit.fz-juelich.de/IBG-1/biopro/bletl',
-        download_url = 'https://jugit.fz-juelich.de/IBG-1/biopro/bletl/tarball/%s' % __version__,
         author='Michael Osthege',
         author_email='m.osthege@fz-juelich.de',
-        copyright='(c) 2020 Forschungszentrum Jülich GmbH',
-        license='(c) 2020 Forschungszentrum Jülich GmbH',
+        license='GNU Affero General Public License v3.0',
         classifiers= [
             'Programming Language :: Python',
             'Operating System :: OS Independent',
-            'Programming Language :: Python :: 3.6',
-            'Intended Audience :: Developers'
+            'Programming Language :: Python :: 3.8',
+            'Intended Audience :: Science/Research',
+            'License :: OSI Approved :: GNU Affero General Public License v3',
         ],
         install_requires=[
             'numpy',
-            'pandas'
-        ]
-)
+            'pandas',
+        ],
+    )
 
