@@ -395,10 +395,10 @@ def from_bldata(
         for mname, method in extraction_methods.items():
             t, y = bldata[mname.split("__")[0]].get_timeseries(well, last_cycle=last_cycles.get(well))
             df_result.loc[well, mname] = method(t, y)
-    narrow = bldata.get_unified_narrow_data()
+    narrow = bldata.get_unified_narrow_data(last_cycles=last_cycles)
     for fs, nts_extractor in ts_extractors.items():
         data = pandas.DataFrame(columns=["id","time","x"])
-        data["id"] = wells
+        data["id"] = narrow["well"]
         data["time"] = narrow["time"]
         data["x"] = narrow[fs]
         df_fs = TSFreshExtractor()._extract(data)

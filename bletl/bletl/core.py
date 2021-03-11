@@ -70,9 +70,20 @@ class BLData(dict):
 
         return narrow.reset_index()
 
-    def get_unified_narrow_data(self, source_well='first', source_filterset='first') -> pandas.DataFrame:
+    def get_unified_narrow_data(
+        self,
+        source_well='first',
+        source_filterset='first',
+        *,
+        last_cycles: typing.Optional[typing.Dict[str, int]]=None
+    ) -> pandas.DataFrame:
         """Retrieves data with unified time in a narrow format. Each filterset forms a seperate column.
-        
+
+        Parameters:
+            source_well (str)
+            source_filterset (str)
+            last_cycles (dict, optional): Dictionary of well-wise maximum cycle numbers to retrieve.
+
         Returns:
             u_narrow (pandas.DataFrame): data with unified time in a narrow format.
 
@@ -118,6 +129,13 @@ class BLData(dict):
 
         u_narrow = u_narrow.astype(dict(zip(self.keys(), [float]*len(self.keys()))))
         u_narrow = u_narrow.reset_index()
+
+        if last_cycles:
+            for well, last_cycle in last_cycles.items():
+                u_narrow.drop(
+                    u_narrow[(u_narrow.well == well) & (u_narrow.cycle > last_cycle)].index,
+                    inplace=True
+                )
 
         return u_narrow
 

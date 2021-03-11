@@ -35,7 +35,7 @@ if __name__ == '__main__':
         ],
         install_requires=[
             'pandas',
-            'bletl>=0.9',
+            'bletl>=0.15.1',
             'numpy',
             'scipy',
             'joblib',
