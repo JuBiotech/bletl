@@ -27,6 +27,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="bletl\parsing\bl1.py" />
+    <Compile Include="bletl\parsing\blpro.py" />
     <Compile Include="bletl\parsing\__init__.py" />
     <Compile Include="bletl\utils.py">
       <SubType>Code</SubType>

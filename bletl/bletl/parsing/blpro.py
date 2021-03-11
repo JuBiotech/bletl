@@ -304,8 +304,8 @@ def extract_valves_module(dfraw):
     df_valves.columns = ['cycle', 'valve', 'well', 'acid', 'base']
     df_valves['valve'] = df_valves['valve'].str.replace('Valve ', '').astype(int)
     df_valves['well'] = df_valves['well'].str.replace('Well', '').astype(int)
-    df_valves['acid'] = df_valves['acid'].str.replace('Sollvolumen \(Acid\) ', '').astype(float)
-    df_valves['base'] = df_valves['base'].str.replace('Sollvolumen \(Base\) ', '').astype(float)
+    df_valves['acid'] = df_valves['acid'].str.replace('Sollvolumen (Acid) ', '', regex=False).astype(float)
+    df_valves['base'] = df_valves['base'].str.replace('Sollvolumen (Base) ', '', regex=False).astype(float)
     df_valves = standardize(df_valves).set_index(['well', 'valve', 'cycle'])
 
     # TODO: unknown column purpose
