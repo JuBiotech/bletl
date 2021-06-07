@@ -188,7 +188,7 @@ def fit_mu_t(
         prior expectation of initial biomass [g/L]
     student_t : optional, bool
         switches between a Gaussian or StudentT random walk
-        if not set, it defaults to the expression `len(t_switchpoints) == 0`
+        if not set, it defaults to the expression `len(switchpoints) == 0`
     replicate_id : str
         name of the replicate that the data belongs to (defaults to "unnamed")
 
@@ -205,7 +205,7 @@ def fit_mu_t(
             }
     t_switchpoints_known = numpy.sort(list(switchpoints.keys()))
     if student_t is None:
-        student_t = len(t_switchpoints) == 0
+        student_t = len(switchpoints) == 0
     # build a dict of known switchpoint begin cycle indices so they can be ignored in autodetection
     c_switchpoints_known = [0]
 
