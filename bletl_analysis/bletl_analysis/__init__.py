@@ -6,4 +6,4 @@ from . splines import (
 from . trigger import find_do_peak
 
 
-__version__ = '1.1.4'
+__version__ = '1.1.5'
