@@ -20,7 +20,7 @@ class GrowthRateResult:
         *,
         t:numpy.ndarray,
         y:numpy.ndarray,
-        error_model: calibr8.ErrorModel,
+        calibration_model: calibr8.CalibrationModel,
         switchpoints:typing.Dict[float, str],
         pmodel:pymc3.Model,
         theta_map:dict,
@@ -43,7 +43,7 @@ class GrowthRateResult:
         self._t = t
         self._y = y
         self._switchpoints = switchpoints
-        self.error_model = error_model
+        self.calibration_model = calibration_model
         self._pmodel = pmodel
         self._theta_map = theta_map
         self._idata = None
@@ -155,7 +155,7 @@ def _make_random_walk(name:str, *, sigma:float, length:int, student_t:bool):
 def fit_mu_t(
     t:typing.Sequence[float],
     y:typing.Sequence[float],
-    error_model:calibr8.ErrorModel,
+    calibration_model:calibr8.CalibrationModel,
     *,
     switchpoints:typing.Optional[typing.Union[typing.Sequence[float], typing.Dict[float, str]]]=None,
     mcmc_samples:int=0,
@@ -174,8 +174,8 @@ def fit_mu_t(
         time vector
     y : numpy.ndarray
         backscatter vector
-    error_model : calibr8.ErrorModel
-        an error model for the CDW/observation relationship
+    calibration_model : calibr8.CalibrationModel
+        A calibration model for the CDW/observation relationship.
     switchpoints : optional, array-like or dict
         switchpoint times in the model (treated as inclusive upper bounds if they match a timepoint)
         if specified as a dict, the keys must be the timepoints
@@ -243,11 +243,11 @@ def fit_mu_t(
     
         X0 = pymc3.Lognormal('X0', mu=numpy.log(x0_prior), sd=1)
         Xt = pymc3.Deterministic('X', X0 + X0 * pymc3.math.exp(tt.extra_ops.cumsum(mu_t * dt)))
-        error_model.loglikelihood(
+        calibration_model.loglikelihood(
             x=Xt,
             y=pymc3.Data('backscatter', y, dims=('time',)),
             replicate_id=replicate_id,
-            dependent_key=error_model.dependent_key
+            dependent_key=calibration_model.dependent_key
         )
 
     # MAP fit
@@ -283,7 +283,7 @@ def fit_mu_t(
     # bundle up all relevant variables into a result object
     result = GrowthRateResult(
         t=t, y=y,
-        error_model=error_model,
+        calibration_model=calibration_model,
         switchpoints=switchpoints,
         pmodel=pmodel,
         theta_map=theta_map,
