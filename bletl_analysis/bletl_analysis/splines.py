@@ -5,6 +5,7 @@ import multiprocessing
 import numbers
 import numpy
 import pandas
+import pickle
 import scipy.optimize
 import scipy.interpolate
 import scipy.stats
@@ -171,7 +172,12 @@ def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_fold
         timepoints, values = bsdata.get_timeseries(well)
         args = (copy.deepcopy(well), copy.deepcopy(timepoints[:last_cycle]), copy.deepcopy(values[:last_cycle]), copy.deepcopy(k_folds))
         args_get_spline.append(args)
-    return joblib.Parallel(n_jobs=multiprocessing.cpu_count(), verbose=11)(map(joblib.delayed(get_spline_parallel), args_get_spline))
+    if len(wells) > 1:
+        try:
+            return joblib.Parallel(n_jobs=multiprocessing.cpu_count(), verbose=11)(map(joblib.delayed(get_spline_parallel), args_get_spline))
+        except pickle.PicklingError:
+            logger.warning("Parallelization failed. Retrying without parallelization.")
+    return list(map(get_spline_parallel, args_get_spline))
 
 
 def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_folds:int=5, method:str='us', last_cycle:int=None):
