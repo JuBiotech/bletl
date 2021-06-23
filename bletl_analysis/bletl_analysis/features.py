@@ -363,6 +363,8 @@ def from_bldata(
     bldata: bletl.BLData,
     extractors: typing.Dict[str, typing.Sequence[Extractor]],
     last_cycles: typing.Optional[typing.Dict[str, int]]=None,
+    *,
+    take_wells: typing.Optional[typing.Iterable[str]]=None,
 ) -> pandas.DataFrame:
     """ Apply feature extractors to a dataset.
 
@@ -374,7 +376,11 @@ def from_bldata(
         map of { filterset : [extractor, ...] }
     last_cycles :  optional, dict
         maps well ids to the number of the last cycle to consider
-        
+    take_wells : iterable
+        List or set of wells that should be extracted from.
+        This should be used to remove wells that are sampled
+        too early to have meaningful time series features.
+
     Returns
     -------
     result : pandas.DataFrame
@@ -386,7 +392,11 @@ def from_bldata(
     filtersets = set(extractors.keys())
     for fs in filtersets.difference(set(bldata.keys())):
         _log.warning('No "%s" filterset in the data. Skipping extractors.', fs)
-    wells = tuple(sorted(bldata[list(filtersets)[0]].value.columns))
+
+    # Identify wells of interest
+    wells = take_wells or bldata[list(filtersets)[0]].value.columns
+    wells = tuple(sorted(wells))
+
     extraction_methods = {
         f'{fs}_{mname}': method
         for fs, fs_extractors in extractors.items()
@@ -409,6 +419,7 @@ def from_bldata(
             t, y = bldata[mname.split("__")[0]].get_timeseries(well, last_cycle=last_cycles.get(well))
             df_result.loc[well, mname] = method(t, y)
     narrow = bldata.get_unified_narrow_data(last_cycles=last_cycles)
+    narrow = narrow[narrow.well.isin(wells)]
     for fs, ts_extractor in ts_extractors.items():
         data = pandas.DataFrame(columns=["id","time","x"])
         data["id"] = narrow["well"]
