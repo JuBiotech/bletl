@@ -327,8 +327,19 @@ class pHFeatureExtractor(Extractor):
         return numpy.sum(changes[changes > 0])
     
     
-class TSFreshExtractor():
+class TSFreshExtractor:
     """ Class for feature extraction with tsfresh."""
+    def __init__(self, **kwargs):
+        """Creates a TSFreshExtractor object.
+
+        Parameters
+        ----------
+        **kwargs
+            Keyword arguments to forward to `tsfresh.extract_features`.
+            For example `TSFreshExtractor(n_jobs=0)` to disable multiprocessing.
+        """
+        self._kwargs = kwargs
+        super().__init__()
     
     def _extract(self, data):
         """ Extracts data with tsfresh.
@@ -343,13 +354,17 @@ class TSFreshExtractor():
         result : pandas.DataFrame
             DataFrame with extracted features
         """
-        return tsfresh.extract_features(data, column_id="id", column_sort="time")
+        kwargs = dict(column_id="id", column_sort="time")
+        kwargs.update(self._kwargs)
+        return tsfresh.extract_features(data, **kwargs)
     
     
 def from_bldata(
     bldata: bletl.BLData,
     extractors: typing.Dict[str, typing.Sequence[Extractor]],
     last_cycles: typing.Optional[typing.Dict[str, int]]=None,
+    *,
+    take_wells: typing.Optional[typing.Iterable[str]]=None,
 ) -> pandas.DataFrame:
     """ Apply feature extractors to a dataset.
 
@@ -361,7 +376,11 @@ def from_bldata(
         map of { filterset : [extractor, ...] }
     last_cycles :  optional, dict
         maps well ids to the number of the last cycle to consider
-        
+    take_wells : iterable
+        List or set of wells that should be extracted from.
+        This should be used to remove wells that are sampled
+        too early to have meaningful time series features.
+
     Returns
     -------
     result : pandas.DataFrame
@@ -373,7 +392,11 @@ def from_bldata(
     filtersets = set(extractors.keys())
     for fs in filtersets.difference(set(bldata.keys())):
         _log.warning('No "%s" filterset in the data. Skipping extractors.', fs)
-    wells = tuple(sorted(bldata[list(filtersets)[0]].value.columns))
+
+    # Identify wells of interest
+    wells = take_wells or bldata[list(filtersets)[0]].value.columns
+    wells = tuple(sorted(wells))
+
     extraction_methods = {
         f'{fs}_{mname}': method
         for fs, fs_extractors in extractors.items()
@@ -382,13 +405,13 @@ def from_bldata(
         for mname, method in extractor.get_methods().items() 
     }
     ts_extractors = { 
-        fs : TSFreshExtractor 
+        fs : extractor
         for fs, fs_extractors in extractors.items() 
         for extractor in fs_extractors
         if isinstance(extractor, TSFreshExtractor)
     }
 
-    _log.info("Extracting from %i wells.", len(wells))
+    _log.info("Applying custom extractors to %i wells.", len(wells))
     s_time = time.time()
     df_result = pandas.DataFrame(index=wells)
     for well in fastprogress.progress_bar(wells):
@@ -396,12 +419,14 @@ def from_bldata(
             t, y = bldata[mname.split("__")[0]].get_timeseries(well, last_cycle=last_cycles.get(well))
             df_result.loc[well, mname] = method(t, y)
     narrow = bldata.get_unified_narrow_data(last_cycles=last_cycles)
-    for fs, nts_extractor in ts_extractors.items():
+    narrow = narrow[narrow.well.isin(wells)]
+    for fs, ts_extractor in ts_extractors.items():
         data = pandas.DataFrame(columns=["id","time","x"])
         data["id"] = narrow["well"]
         data["time"] = narrow["time"]
         data["x"] = narrow[fs]
-        df_fs = TSFreshExtractor()._extract(data)
+        _log.info("Applying tsfresh extractor to %s\n", fs)
+        df_fs = ts_extractor._extract(data)
         for i, mname in enumerate(df_fs.columns):
             df_result[f'{fs}_{mname}'] = df_fs.to_numpy()[:,i]
     _log.info("Extraction finished in: %s minutes", round((time.time() - s_time) / 60, ndigits=1))

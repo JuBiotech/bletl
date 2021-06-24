@@ -28,23 +28,29 @@ class BLData(dict):
 
     @property
     def model(self) -> BioLectorModel:
-    	return self._model
-    
+        return self._model
+
     @property
     def environment(self) -> pandas.DataFrame:
-    	return self._environment
+        return self._environment
 
     @property
     def filtersets(self) -> pandas.DataFrame:
-    	return self._filtersets
+        return self._filtersets
+
+    @property
+    def wells(self) -> typing.Tuple[str]:
+        if len(self) == 0:
+            return tuple()
+        return tuple(self.values())[0].wells
 
     @property
     def references(self) -> pandas.DataFrame:
-    	return self._references
+        return self._references
 
     @property
     def measurements(self) -> pandas.DataFrame:
-    	return self._measurements
+        return self._measurements
 
     @property
     def comments(self) -> pandas.DataFrame:
@@ -66,7 +72,7 @@ class BLData(dict):
             to_add['value'] = pandas.melt(filtertimeseries.value, value_name='value').loc[:, 'value']
             to_add['filterset'] = filterset
             to_add.astype({'value': float})
-            narrow = narrow.append(to_add, sort=False)     
+            narrow = narrow.append(to_add, sort=False)
 
         return narrow.reset_index()
 
@@ -162,6 +168,9 @@ class BLData(dict):
 
 class FilterTimeSeries():
     """Generalizable data type for calibrated timeseries."""
+    @property
+    def wells(self) -> typing.Tuple[str]:
+        return tuple(self.time.columns)
 
     def __init__(self, time_df, value_df):
         self.time = time_df

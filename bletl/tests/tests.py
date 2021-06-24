@@ -157,6 +157,8 @@ class TestBL1Parsing(unittest.TestCase):
             self.assertIsInstance(data.comments, pandas.DataFrame)
             self.assertIsInstance(data.measurements, pandas.DataFrame)
             self.assertIsInstance(data.references, pandas.DataFrame)
+            assert isinstance(data.wells, tuple)
+            assert len(data.wells) == 48
         return
 
     def test_concat_parsing(self):
@@ -397,6 +399,8 @@ class TestBL2Parsing(unittest.TestCase):
             try:
                 data = bletl.parse(fp)
                 self.assertIsInstance(data, dict)
+                assert isinstance(data.wells, tuple)
+                assert len(data.wells) == 48
             except:
                 print('parsing failed for: {}'.format(fp))
                 raise
