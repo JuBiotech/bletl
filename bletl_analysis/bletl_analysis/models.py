@@ -136,7 +136,7 @@ class GrowthRateResult:
             tune=500,
             draws=500,
         )
-        sample_kwargs.update(sample_kwargs)
+        sample_kwargs.update(kwargs)
         with self.pmodel:
             self._idata = pymc3.sample(**sample_kwargs)
         return
