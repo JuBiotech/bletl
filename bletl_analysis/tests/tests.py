@@ -14,7 +14,7 @@ dir_testfiles = pathlib.Path(pathlib.Path(__file__).absolute().parent, 'data')
 FP_TESTFILE = pathlib.Path(dir_testfiles, '107-AR_Coryne-AR-2019-04-15-12-39-30.csv')
 
 
-class TestDOPeakDetection(unittest.TestCase):
+class TestDOPeakDetection:
     def test_find_peak(self):
         bldata = bletl.parse(FP_TESTFILE)
 
@@ -22,11 +22,11 @@ class TestDOPeakDetection(unittest.TestCase):
 
         c_peak = bletl_analysis.find_do_peak(x, y, delay_a=0.5, threshold_a=70, delay_b=0, threshold_b=80, initial_delay=1)
 
-        self.assertEqual(c_peak, 60)
+        assert c_peak == 60
         return
 
 
-class TestSplines(unittest.TestCase):
+class TestSplines:
     def test_checks_inputs(self):
         common = dict(
             timepoints=numpy.arange(50),
@@ -44,7 +44,7 @@ class TestSplines(unittest.TestCase):
         pass
 
 
-class TestSplineMueScipy(unittest.TestCase):
+class TestSplineMueScipy:
     def test_get_single_spline(self):
         """Tests the interpolation of backscatters works with an absolute tolerance of <0.1."""
         bldata = bletl.parse(FP_TESTFILE)
@@ -53,7 +53,7 @@ class TestSplineMueScipy(unittest.TestCase):
 
         spline = bletl_analysis.get_crossvalidated_spline(x, y, method='us')
         
-        self.assertIsInstance(spline, scipy.interpolate.UnivariateSpline)
+        assert isinstance(spline, scipy.interpolate.UnivariateSpline)
 
         # the last point should be very close
         numpy.testing.assert_allclose(spline(19.4275), 23.66, atol=0.1)
@@ -88,10 +88,10 @@ class TestSplineMueScipy(unittest.TestCase):
         numpy.testing.assert_allclose(mue_median, 0.38, atol=0.01)
 
         # check value error when the wells dictionary is incorrect
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             bletl_analysis.get_mue(bldata['BS3'], wells=wells, blank=dict(A01=3, C02=4), method='us')
         # check value error on invalid blank option
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             bletl_analysis.get_mue(bldata['BS3'], wells=wells, blank='last', method='us')
         return
 
@@ -123,7 +123,7 @@ class TestSplineMueScipy(unittest.TestCase):
         return
 
 
-class TestSplineMueCsaps(unittest.TestCase):
+class TestSplineMueCsaps:
     def test_get_single_spline(self):
         """Tests the interpolation of backscatters works with an absolute tolerance of <0.1."""
         bldata = bletl.parse(FP_TESTFILE)
@@ -132,7 +132,7 @@ class TestSplineMueCsaps(unittest.TestCase):
 
         spline = bletl_analysis.get_crossvalidated_spline(x, y, method='ucss')
         
-        self.assertIsInstance(spline, bletl_analysis.UnivariateCubicSmoothingSpline)
+        assert isinstance(spline, bletl_analysis.UnivariateCubicSmoothingSpline)
 
         # the last point should be very close
         numpy.testing.assert_allclose(spline(19.4275), 23.66, atol=0.1)
@@ -167,10 +167,10 @@ class TestSplineMueCsaps(unittest.TestCase):
         numpy.testing.assert_allclose(mue_median, 0.38, atol=0.02)
 
         # check value error when the wells dictionary is incorrect
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             bletl_analysis.get_mue(bldata['BS3'], wells=wells, blank=dict(A01=3, C02=4), method='ucss')
         # check value error on invalid blank option
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             bletl_analysis.get_mue(bldata['BS3'], wells=wells, blank='last', method='us')
         return
 
@@ -202,23 +202,23 @@ class TestSplineMueCsaps(unittest.TestCase):
         return
 
 
-class TestSplineMethodEquivalence(unittest.TestCase):
+class TestSplineMethodEquivalence:
     def test_API_comparable(self):
         x = numpy.linspace(0, 50, 20)
         y = numpy.random.normal(x)
         ucss = bletl_analysis.get_crossvalidated_spline(x, y, method='ucss')
-        self.assertIsInstance(ucss, bletl_analysis.UnivariateCubicSmoothingSpline)
+        assert isinstance(ucss, bletl_analysis.UnivariateCubicSmoothingSpline)
         der_1 = ucss.derivative(1)
         der_2 = ucss.derivative(2)
         der_3 = ucss.derivative(3)
-        self.assertIsInstance(der_1(x), numpy.ndarray)
-        self.assertIsInstance(der_1(5.3), float)
-        self.assertIsNotNone(der_1)
-        self.assertIsNotNone(der_2)
-        self.assertIsNotNone(der_3)
-        self.assertIsNotNone(der_1(x))
-        self.assertIsNotNone(der_2(x))
-        self.assertIsNotNone(der_3(x))
+        assert isinstance(der_1(x), numpy.ndarray)
+        assert isinstance(der_1(5.3), float)
+        assert der_1 is not None
+        assert der_2 is not None
+        assert der_3 is not None
+        assert der_1(x) is not None
+        assert der_2(x) is not None
+        assert der_3(x) is not None
         return
 
     def test_ideal_exponential_mue(self):
@@ -236,8 +236,8 @@ class TestSplineMethodEquivalence(unittest.TestCase):
         # test that both spline approximations have residuals of less than 3 % of the signal amplitude
         diff_us = numpy.abs(spline_us(t) - y)
         diff_ucss = numpy.abs(spline_ucss(t) - y)
-        self.assertTrue(numpy.all(numpy.max(diff_us) < numpy.ptp(y)*0.03))
-        self.assertTrue(numpy.all(numpy.max(diff_ucss) < numpy.ptp(y)*0.03))
+        assert numpy.all(numpy.max(diff_us) < numpy.ptp(y)*0.03)
+        assert numpy.all(numpy.max(diff_ucss) < numpy.ptp(y)*0.03)
 
         # test that the median specific growth rate is close to the true value
         mue_us = spline_us.derivative(1)(t[1:]) / spline_us(t[1:])
@@ -248,7 +248,7 @@ class TestSplineMethodEquivalence(unittest.TestCase):
         return
 
 
-class TestFeatureExtraction(unittest.TestCase):
+class TestFeatureExtraction:
     def test_feature_extraction(self):
         bldata = bletl.parse(FP_TESTFILE)
         # extraction with last_cycles
@@ -278,10 +278,6 @@ class TestFeatureExtraction(unittest.TestCase):
         extractors = {
             "xyz" : [features.BSFeatureExtractor()]
         }
-        with self.assertRaises(KeyError):
+        with pytest.raises(KeyError):
             features.from_bldata(bldata, extractors, None)
         return
-
-
-if __name__ == '__main__':
-    unittest.main()

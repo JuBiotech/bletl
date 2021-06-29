@@ -36,46 +36,30 @@ test-bletl-py38:
   image: python:3.8
   script:
     - pip install pytest pytest-cov
-    - pip install bletl-*.whl
+    - pip install -e bletl
     - cd bletl
-    - python -m unittest discover -s tests -v
+    - pytest --cov=./bletl --cov-report term-missing tests/tests.py
 
 test-bletl-analysis-py38:
   stage: test
   image: python:3.8
   script:
     - pip install pytest pytest-cov
-    - pip install bletl-*.whl
-    - pip install bletl_analysis-*.whl
+    - pip install -e bletl
+    - pip install -e bletl_analysis
     - cd bletl_analysis
-    - python -m unittest discover -s tests -v
+    - pytest --cov=./bletl_analysis --cov-report term-missing tests/tests.py
 
-coverage-bletl:
-  stage: test
-  image: python:3.8
-  script:
-    - pip install bletl-*.whl
-    - cd bletl
-    - pip install coverage pytest pytest-cov
-    - coverage run tests/tests.py && coverage report -m
-
-coverage-bletl-analysis:
-  stage: test
-  image: python:3.8
-  script:
-    - pip install bletl-*.whl
-    - pip install bletl_analysis-*.whl
-    - cd bletl_analysis
-    - pip install coverage pytest pytest-cov
-    - coverage run tests/tests.py && coverage report -m
 
 release-bletl:
   stage: release
   image: python:3.8
   script:
-    - pip install -U pip pep517 twine
+    - pip install -U pip pep517 twine pytest
     - cd bletl
     - python -m pep517.build .
+    - pip install dist/*.whl
+    - pytest tests/tests.py
     - cp dist/*.whl ..
   artifacts:
     paths:
@@ -91,9 +75,11 @@ release-bletl-analysis:
   stage: release
   image: python:3.8
   script:
-    - pip install -U pip pep517 twine
+    - pip install -U pip pep517 twine pytest
     - cd bletl_analysis
     - python -m pep517.build .
+    - pip install dist/*.whl
+    - pytest tests/tests.py
     - cp dist/*.whl ..
   artifacts:
     paths:
