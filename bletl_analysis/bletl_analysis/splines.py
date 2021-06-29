@@ -79,6 +79,14 @@ def _evaluate_smoothing_factor(smoothing_factor:float, timepoints, values, k:int
     Returns:
         mssr (float): mean sum of squared residuals
     """
+    smoothing_factor = numpy.atleast_1d(smoothing_factor)
+    if k < 2:
+        raise ValueError(f"Need k≥2 splits for crossvalidation. Setting was k={k}.")
+    if len(values) < 3 * k:
+        raise ValueError(
+            f"Time series of {len(values)} elements is too short. "
+            f"Need at least a length of 3*k ({3*k})."
+        )
     ssrs = []
     for kshift in range(k):
         train_mask = numpy.ones_like(timepoints, dtype=bool)

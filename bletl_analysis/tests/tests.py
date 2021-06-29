@@ -3,6 +3,7 @@ import numpy
 import unittest
 import pathlib
 import pandas
+import pytest
 
 import bletl
 import bletl_analysis
@@ -23,6 +24,24 @@ class TestDOPeakDetection(unittest.TestCase):
 
         self.assertEqual(c_peak, 60)
         return
+
+
+class TestSplines(unittest.TestCase):
+    def test_checks_inputs(self):
+        common = dict(
+            timepoints=numpy.arange(50),
+            values=numpy.random.uniform(size=50),
+            smoothing_factor=0.5,
+            method="us"
+        )
+        bletl_analysis.splines._evaluate_smoothing_factor(**common, k=10)
+
+        with pytest.raises(ValueError, match="Need k≥2 splits"):
+            bletl_analysis.splines._evaluate_smoothing_factor(**common, k=1)
+
+        with pytest.raises(ValueError, match="too short"):
+            bletl_analysis.splines._evaluate_smoothing_factor(**common, k=20)
+        pass
 
 
 class TestSplineMueScipy(unittest.TestCase):
