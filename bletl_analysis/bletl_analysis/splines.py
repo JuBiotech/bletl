@@ -130,7 +130,8 @@ def get_crossvalidated_spline(x, y, k_folds:int=5, method:str='us', bounds=(0.00
         x (array): time vector
         y (array): value vector
         k_folds (int): "k"s for cross-validation
-        method (str): Kind of spline, Choices: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline  
+        method (str): Kind of spline, Choices: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline
+        bounds (tuple): Lower and upper bound for the smoothing factor. Must not exceed the [0, 1] interval.
     Returns:
         spline (scipy.interpolate.UnivariateSpline): Spline with k-fold crossvalidated smoothing factor
     """
