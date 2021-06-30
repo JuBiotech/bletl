@@ -34,8 +34,11 @@ if __name__ == '__main__':
             'License :: OSI Approved :: GNU Affero General Public License v3',
         ],
         install_requires=[
+            'csaps>=0.11',
+            'joblib',
             'numpy',
             'pandas',
+            'scipy',
         ],
     )
 
