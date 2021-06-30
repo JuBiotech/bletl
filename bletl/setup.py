@@ -35,10 +35,12 @@ if __name__ == '__main__':
         ],
         install_requires=[
             'csaps>=0.11',
+            'fastprogress',
             'joblib',
             'numpy',
             'pandas',
             'scipy',
+            'tsfresh',
         ],
     )
 
