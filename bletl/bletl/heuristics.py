@@ -1,3 +1,6 @@
+"""
+Signal analysis based on simple, deterministic heuristics.
+"""
 import logging
 import numpy
 import typing

@@ -9,5 +9,7 @@ from . types import (
 )
 from . core import parse, get_parser, parsers
 from . import utils
+from . heuristics import find_do_peak
+
 
 __version__ = '1.0.0'
