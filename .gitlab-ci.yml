@@ -9,9 +9,8 @@ build-bletl:
   image: python:3.8
   script:
     - pip install -U pip pep517 twine
-    - cd bletl
     - python -m pep517.build .
-    - cp dist/*.whl ..
+    - cp dist/*.whl .
   artifacts:
     paths:
       - ./*.whl
@@ -23,8 +22,7 @@ test-bletl-py38:
   image: python:3.8
   script:
     - pip install pytest pytest-cov
-    - pip install -e bletl
-    - cd bletl
+    - pip install -e .
     - pytest --cov=./bletl --cov-report term-missing tests/
 
 
@@ -33,11 +31,10 @@ release-bletl:
   image: python:3.8
   script:
     - pip install -U pip pep517 twine pytest
-    - cd bletl
     - python -m pep517.build .
     - pip install dist/*.whl
-    - pytest tests/tests.py
-    - cp dist/*.whl ..
+    - pytest tests/
+    - cp dist/*.whl .
   artifacts:
     paths:
       - ./*.whl
