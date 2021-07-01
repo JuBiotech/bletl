@@ -290,19 +290,19 @@ def get_mue(
     Parameters
     ----------
     bsdata : FilterTimeSeries
-        FilterTimeSeries containing timepoints and backscatter data
+        FilterTimeSeries containing timepoints and backscatter data.
     wells : 'all' or list
         List of wells to calculate specific growth rate for. 'all' calculates for all wells.
     blanks : 'first', float or dict
         Blanks to use for specific growth rate calculation.
         Options:
-        - 'first': Use first data point 
-        - float: Apply this blank value to all wells
-        - dict: Containing well id as key and scalar or vector as blank value(s) for the respective well
+        - 'first': Use first data point.
+        - float: Apply this blank value to all wells.
+        - dict: Containing well id as key and scalar or vector as blank value(s) for the respective well.
     k_folds : int
-        "k"s for cross-validation
+        "k"s for cross-validation.
     method : str
-        Kind of Spline
+        Kind of Spline.
         Choices: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline
     last_cycle : int, optional
         Ignores data after last_cycle

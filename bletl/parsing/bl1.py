@@ -34,7 +34,7 @@ class BioLector1Parser(BLDParser):
         Returns
         -------
         bldata : BLData
-            Calibrated data object
+            Calibrated data object.
 
         Raises
         ------
@@ -221,7 +221,7 @@ def split_header_data(fp):
     headerlines : list
         Lines of the header section.
     dfraw : pandas.DataFrame
-        Data table
+        Data table.
     """
     with open(fp, 'r', encoding='latin-1') as f:
         lines = f.readlines()

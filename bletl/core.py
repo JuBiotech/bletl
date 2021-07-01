@@ -34,7 +34,7 @@ def get_parser(filepath: Union[str, pathlib.Path]) -> BLDParser:
     Returns
     -------
     parser : BLDParser
-        Aparser that can be used for the provided file type.
+        A parser that can be used for the provided file type.
 
     Raises
     ------
@@ -94,10 +94,10 @@ def _parse(
     Parameters
     ----------
     filepath : str or pathlib.Path
-            Path pointing to the file of interest.
+        Path pointing to the file of interest.
     drop_incomplete_cycles : bool
-        If `True`, incomplete cycles at the end are discarded
-        IMPORTANT: if the file contains only one cycle, it will always be considered "completed"
+        If `True`, incomplete cycles at the end are discarded.
+        IMPORTANT: if the file contains only one cycle, it will always be considered "completed".
     lot_number : int or None
         Lot number of the microtiter plate used.
     temp :int, optional
@@ -118,7 +118,7 @@ def _parse(
     Returns
     -------
     bldata : BLData
-        Parsed data object
+        Parsed data object.
 
     Raises
     ------
@@ -159,7 +159,7 @@ def parse(
         If an iterable is provided, files are concatenated.
     drop_incomplete_cycles : bool
         If `True`, incomplete cycles at the end are discarded
-        IMPORTANT: if the file contains only one cycle, it will always be considered "completed"
+        IMPORTANT: if the file contains only one cycle, it will always be considered "completed".
     lot_number : int or None
         Lot number of the microtiter plate used.
     temp :int, optional
@@ -180,7 +180,7 @@ def parse(
     Returns
     -------
     bldata : BLData
-        Parsed data object
+        Parsed data object.
 
     Raises
     ------

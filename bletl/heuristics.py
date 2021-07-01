@@ -23,19 +23,19 @@ def find_do_peak(
     Parameters
     ----------
     x : numpy.ndarray
-        Time vector
+        Time vector.
     y : numpy.ndarray
-        DO vector
+        DO vector.
     initial_delay : float
-        Hours in the beginning that are not considered
+        Hours in the beginning that are not considered.
     delay_a : float
-        Hours for which condition A must be fulfilled
+        Hours for which condition A must be fulfilled.
     threshold_a : float
-        DO threshold that must be UNDERshot for at least <delay_a> hours
+        DO threshold that must be UNDERshot for at least <delay_a> hours.
     delay_b : float
-        Hours for which condition B must be fulfilled
+        Hours for which condition B must be fulfilled.
     threshold_b : float
-        DO threshold that must be OVERshot for at least <delay_b> hours
+        DO threshold that must be OVERshot for at least <delay_b> hours.
 
     Returns
     -------
