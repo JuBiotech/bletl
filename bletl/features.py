@@ -8,10 +8,8 @@ import typing
 import tsfresh
 import fastprogress
 
-import bletl
-
+from . types import BLData, FilterTimeSeries
 from . import splines
-from . import trigger
 
 _log = logging.getLogger(__file__)
 
@@ -265,7 +263,7 @@ class BSFeatureExtractor(Extractor):
         #get index of a value, which lies in exponential phase
         mid_i = int(numpy.where(y > mid_y)[0][0]/2)
         #get mue
-        bsdata = bletl.core.FilterTimeSeries(pandas.DataFrame(x),pandas.DataFrame(y))
+        bsdata = FilterTimeSeries(pandas.DataFrame(x),pandas.DataFrame(y))
         mue = splines.get_mue(bsdata, method='us')
         var = 0.1 #allowed variance
         mue_val = numpy.array(mue.value) 
@@ -360,7 +358,7 @@ class TSFreshExtractor:
     
     
 def from_bldata(
-    bldata: bletl.BLData,
+    bldata: BLData,
     extractors: typing.Dict[str, typing.Sequence[Extractor]],
     last_cycles: typing.Optional[typing.Dict[str, int]]=None,
     *,
@@ -370,7 +368,7 @@ def from_bldata(
 
     Parameters
     ----------
-    data : bletl.BLData
+    data : BLData
         a dataset to extract from
     extractors : dict
         map of { filterset : [extractor, ...] }

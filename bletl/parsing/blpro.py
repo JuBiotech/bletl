@@ -11,22 +11,25 @@ import re
 import pathlib
 import xml.etree.ElementTree
 
-from .. import core
+from ..types import (
+    BioLectorModel, BLData, BLDParser, FilterTimeSeries,
+    InvalidLotNumberError,
+)
 from .. import utils
 
 
 logger = logging.getLogger('blpro')
 
 
-class BioLectorProParser(core.BLDParser):
+class BioLectorProParser(BLDParser):
     def parse(
         self, filepath, lot_number:int=None, temp:int=None,
         cal_0:float=None, cal_100:float=None, phi_min:float=None, phi_max:float=None, pH_0:float=None, dpH:float=None
         ):
         metadata, data = parse_metadata_data(filepath)
 
-        bld = core.BLData(
-            model=core.BioLectorModel.BLPro,
+        bld = BLData(
+            model=BioLectorModel.BLPro,
             environment=extract_environment(data),
             filtersets=extract_filtersets(metadata),
             references=extract_references(data),
@@ -388,7 +391,7 @@ def transform_into_filtertimeseries(metadata:dict, measurements:pandas.DataFrame
         values.columns = [no_to_id[c] for c in values.columns]
         values = values.reindex(sorted(values.columns), axis=1)
         values.columns.name = 'well'
-        fts = core.FilterTimeSeries(times, values)
+        fts = FilterTimeSeries(times, values)
         yield (key, fts)
 
 def fetch_calibration_data(lot_number:int, temp:int):
@@ -402,7 +405,7 @@ def fetch_calibration_data(lot_number:int, temp:int):
         calibration_dict (dict): Dictionary containing calibration data.
         None (None): 
     """
-    module_path = pathlib.Path(core.__spec__.origin).parents[0]
+    module_path = pathlib.Path(utils.__spec__.origin).parents[0]
     calibration_file = pathlib.Path(module_path, 'cache', 'CalibrationLot_II.xml')
 
     if not calibration_file.is_file():
@@ -428,7 +431,7 @@ def fetch_calibration_data(lot_number:int, temp:int):
             element = search_for_lot(calibration_file, lot_number)
     
     if not element:
-        raise core.InvalidLotNumberError(
+        raise InvalidLotNumberError(
             "Latest calibration information was downloaded from m2p-labs, "
             f"but the provided lot number/temperature combination (lot_number={lot_number}, temp={temp}) could not be found. "
             "Please check the parameters."

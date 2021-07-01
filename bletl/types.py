@@ -5,6 +5,7 @@ import numpy
 import pandas
 import pathlib
 import typing
+import warnings
 
 
 class BioLectorModel(enum.Enum):

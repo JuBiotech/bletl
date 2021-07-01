@@ -1,18 +1,24 @@
 """Parsing functions for the BioLector 1"""
+import configparser
 import datetime
 import io
-import numpy
 import pathlib
-import pandas
 import warnings
-import configparser
 
-from .. import core
+import numpy
+import pandas
+
 from .. import utils
+from ..types import (
+    BioLectorModel, BLData, BLDParser, FilterTimeSeries,
+    InvalidLotNumberError, LotInformationError,
+    LotInformationMismatch, LotInformationNotFound,
+    NoMeasurementData
+)
 
 
-class BioLector1Parser(core.BLDParser):
-    def calibrate_with_lot(self, data:core.BLData, lot_number:int=None, temp:int=None):
+class BioLector1Parser(BLDParser):
+    def calibrate_with_lot(self, data:BLData, lot_number:int=None, temp:int=None):
         """Applies calibration.
 
         Args:
@@ -40,7 +46,7 @@ class BioLector1Parser(core.BLDParser):
                 if cal_data is None:
                     warnings.warn(
                         "Lot information was found in the CSV file, but the calibration data was not found in the cache and the cache could not be updated. "
-                        "No calibration for pH and DO is applied.", core.LotInformationNotFound
+                        "No calibration for pH and DO is applied.", LotInformationNotFound
                     )
                 data = self.calibrate_with_parameters(data, **cal_data)
 
@@ -51,11 +57,11 @@ class BioLector1Parser(core.BLDParser):
                     warnings.warn(
                         f'The lot information (lot_number={lot_number}, temp={temp}) provided mismatches with '
                         f'lot information found in the data file (lot_number={lot_from_csv}, temp={temp_from_csv}). ',
-                        core.LotInformationMismatch
+                        LotInformationMismatch
                     )
             cal_data = fetch_calibration_data(lot_number, temp)
             if cal_data is None:
-                raise core.LotInformationError(
+                raise LotInformationError(
                     'Data for the lot information provided was not found in the cached file and we were unable to update it. '
                     'If you want to proceed without calibration, pass no lot number and temperature'
                 )
@@ -63,7 +69,7 @@ class BioLector1Parser(core.BLDParser):
 
         return data
 
-    def calibrate_with_parameters(self, data:core.BLData, cal_0:float=None, cal_100:float=None, phi_min:float=None, phi_max:float=None, pH_0:float=None, dpH:float=None):
+    def calibrate_with_parameters(self, data:BLData, cal_0:float=None, cal_100:float=None, phi_min:float=None, phi_max:float=None, pH_0:float=None, dpH:float=None):
         def process_backscatter(raw_data_df, cycle_ref_df, global_ref):
             """
             Calculation of referenced BS signal:
@@ -104,7 +110,7 @@ class BioLector1Parser(core.BLDParser):
             return DO
 
         if data.measurements.empty:
-            warnings.warn('The data yor are parsing contains no measurement data', core.NoMeasurementData)
+            warnings.warn('The data yor are parsing contains no measurement data', NoMeasurementData)
             return data
 
         for row in data.filtersets.iterrows():
@@ -118,14 +124,14 @@ class BioLector1Parser(core.BLDParser):
                 bs_times = data.measurements.xs(filter_number, level='filterset')['time'].unstack()
                 cycle_ref_bs = data.references.xs(filter_number, level='filterset')
                 bs_values = process_backscatter(raw_bs, cycle_ref_bs, ref_value)
-                data['BS' + f'{gain:.0f}'] = core.FilterTimeSeries(bs_times, bs_values)
+                data['BS' + f'{gain:.0f}'] = FilterTimeSeries(bs_times, bs_values)
 
             elif filter_name == 'pH-hc':
                 if not None in [pH_0, dpH, phi_min, phi_max]:
                     raw_ph = data.measurements.xs(filter_number, level='filterset')['phase'].unstack()
                     ph_times = data.measurements.xs(filter_number, level='filterset')['time'].unstack()
                     ph_values = process_pH(raw_ph, phi_min, phi_max, pH_0, dpH)
-                    data['pH'] = core.FilterTimeSeries(ph_times, ph_values)
+                    data['pH'] = FilterTimeSeries(ph_times, ph_values)
                 else:
                     warnings.warn('Calibration values for pH signal are missing. Skipping calibration.')
 
@@ -134,14 +140,14 @@ class BioLector1Parser(core.BLDParser):
                     raw_do = data.measurements.xs(filter_number, level='filterset')['phase'].unstack()
                     do_times = data.measurements.xs(filter_number, level='filterset')['time'].unstack()
                     do_values = process_DO(raw_do, cal_0, cal_100)
-                    data['DO'] = core.FilterTimeSeries(do_times, do_values)
+                    data['DO'] = FilterTimeSeries(do_times, do_values)
                 else:
                     warnings.warn('Calibration values for DO signal are missing. Skipping calibration.')
 
             else:
                 raw_values = data.measurements.xs(filter_number, level='filterset')['amp_1'].unstack()
                 times = data.measurements.xs(filter_number, level='filterset')['time'].unstack()
-                data[filter_name + f'{gain:.0f}'] = core.FilterTimeSeries(times, raw_values)
+                data[filter_name + f'{gain:.0f}'] = FilterTimeSeries(times, raw_values)
         return data
 
     def parse(
@@ -157,8 +163,8 @@ class BioLector1Parser(core.BLDParser):
         references = extract_references(data)
         measurements = extract_measurements(data)
 
-        data = core.BLData(
-            model=core.BioLectorModel.BL1,
+        data = BLData(
+            model=BioLectorModel.BL1,
             environment = extract_environment(data, process_parameters, comments),
             filtersets=filtersets,
             references=references,
@@ -421,7 +427,7 @@ def fetch_calibration_data(lot_number:int, temp:int):
             Can be readily used in calibration function.
         None (None): 
     """
-    module_path = pathlib.Path(core.__spec__.origin).parents[0]
+    module_path = pathlib.Path(utils.__spec__.origin).parents[0]
     calibration_file = pathlib.Path(module_path, 'cache', 'CalibrationLot.ini')
 
     if not calibration_file.is_file():
@@ -450,7 +456,7 @@ def fetch_calibration_data(lot_number:int, temp:int):
         }
         return calibration_dict
     else:
-        raise core.InvalidLotNumberError(
+        raise InvalidLotNumberError(
             "Latest calibration information was downloaded from m2p-labs, "
             f"but the provided lot number/temperature combination (lot_number={lot_number}, temp={temp}) could not be found. "
             "Please check the parameters."

@@ -1,6 +1,6 @@
 import setuptools
 
-__packagename__ = 'bletl_analysis'
+__packagename__ = 'bletl'
 
 def get_version():
     import os, re
@@ -34,14 +34,13 @@ if __name__ == '__main__':
             'License :: OSI Approved :: GNU Affero General Public License v3',
         ],
         install_requires=[
-            'pandas',
-            'bletl>=0.15.1',
-            'numpy',
-            'scipy',
-            'joblib',
             'csaps>=0.11',
+            'fastprogress',
+            'joblib',
+            'numpy',
+            'pandas',
+            'scipy',
             'tsfresh',
-            'fastprogress'
-        ]
+        ],
     )
 

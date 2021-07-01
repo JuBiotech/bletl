@@ -10,7 +10,9 @@ import scipy.optimize
 import scipy.interpolate
 import scipy.stats
 import csaps
-import bletl
+
+
+from . types import FilterTimeSeries
 
 
 logger = logging.getLogger(__file__)
@@ -156,11 +158,11 @@ def get_crossvalidated_spline(x, y, k_folds:int=5, method:str='us', bounds=(0.00
         raise NotImplementedError(f'Unknown method "{method}"')
 
 
-def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_folds:int=5, method:str='us', last_cycle:int=None):
+def _get_multiple_splines(bsdata:FilterTimeSeries, wells:list, k_folds:int=5, method:str='us', last_cycle:int=None):
     """Returns multiple splines with k-fold crossvalidated smoothing factor
     
     Args:
-        bsdata (bletl.core.FilterTimeSeries): FilterTimeSeries containing timepoints and backscatter data
+        bsdata (FilterTimeSeries): FilterTimeSeries containing timepoints and backscatter data
         wells (list): List of wells to calculate specific growth rate for.
         k_folds (int): "k"s for cross-validation
         method (str): Kind of spline, Choices: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline 
@@ -189,11 +191,11 @@ def _get_multiple_splines(bsdata:bletl.core.FilterTimeSeries, wells:list, k_fold
     return list(map(get_spline_parallel, args_get_spline))
 
 
-def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_folds:int=5, method:str='us', last_cycle:int=None):
+def get_mue(bsdata:FilterTimeSeries, wells='all', blank='first', k_folds:int=5, method:str='us', last_cycle:int=None):
     """Approximation of specific growth rate over time via spline approximation using splines with k-fold cross validated smoothing factor
     
     Args:
-        bsdata (bletl.core.FilterTimeSeries): FilterTimeSeries containing timepoints and backscatter data
+        bsdata (FilterTimeSeries): FilterTimeSeries containing timepoints and backscatter data
         wells ('all' or list): List of wells to calculate specific growth rate for. 'all' calculates for all wells.
         blanks ('first', float or dict): Blanks to use for specific growth rate calculation. Options:
             - 'first' (str): Use first data point 
@@ -203,7 +205,7 @@ def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_fo
         method (str): Kind of Spline, Choices: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline
         last_cycle (int): ignores data after last_cycle
     Returns:
-        filtertimeseries (bletl.core.FilterTimeSeries): FilterTimeSeries with specific growth rate over time
+        filtertimeseries (FilterTimeSeries): FilterTimeSeries with specific growth rate over time
 
     Raises:
         ValueError: if blanks are not provided for every well
@@ -237,7 +239,7 @@ def get_mue(bsdata:bletl.core.FilterTimeSeries, wells='all', blank='first', k_fo
             time[well] = bsdata.time[well][:last_cycle]
         mues[well] = der(time[well])/(spline(time[well]) - blank_dict[well])      
     # summarize into FilterTimeSeries
-    filtertimeseries = bletl.core.FilterTimeSeries(
+    filtertimeseries = FilterTimeSeries(
         pandas.DataFrame(time),
         pandas.DataFrame(mues),
     )

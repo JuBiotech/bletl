@@ -526,3 +526,5 @@ MigrationBackup/
 # ignore Sandbox stuff
 **/Sandbox*
 Sandbox*.ipynb
+# Include fragment files for testing
+!**/incremental/*.tmp

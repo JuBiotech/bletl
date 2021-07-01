@@ -1,21 +1,19 @@
-"""BioLector Extraction Transformation and Loading (bletl) is a package for parsing raw
-BioLector files, applying calibration transformations and representing them in a standardized
-format.
-"""
+"""Specifies the base types for parsing and representing BioLector CSV files."""
+import abc
+from collections.abc import Iterable
+import enum
+import numpy
 import pandas
+import pathlib
+import typing
 import urllib.request
 import urllib.error
-import pathlib
-from collections.abc import Iterable
 import warnings
 
-from . core import BioLectorModel, BLData, BLDParser, FilterTimeSeries
-from . core import LotInformationError, LotInformationMismatch, InvalidLotNumberError
-from . core import NoMeasurementData, IncompatibleFileError, LotInformationNotFound
 from . import parsing
+from . types import BLData, BLDParser, FilterTimeSeries, BioLectorModel, LotInformationError, InvalidLotNumberError, LotInformationMismatch, LotInformationNotFound, IncompatibleFileError, NoMeasurementData
 from . import utils
 
-__version__ = '0.15.2'
 
 parsers = {
     (BioLectorModel.BL1, '3.3') : parsing.bl1.BioLector1Parser,
@@ -70,9 +68,10 @@ def get_parser(filepath) -> BLDParser:
     parser_cls = parsers[(model, version)]
     return parser_cls()
 
+
 def _parse(filepath:str, lot_number:int, temp:int, drop_incomplete_cycles:bool, 
     cal_0:float=None, cal_100:float=None, phi_min:float=None, phi_max:float=None, pH_0:float=None, dpH:float=None
-    ) -> BLData:
+) -> BLData:
     """Parses a raw BioLector CSV file into a BLData object.
 
     Args:
@@ -97,10 +96,11 @@ def _parse(filepath:str, lot_number:int, temp:int, drop_incomplete_cycles:bool,
 
     return data
 
+
 def parse(
     filepaths, lot_number:int=None, temp:int=None, drop_incomplete_cycles:bool=True, 
     cal_0:float=None, cal_100:float=None, phi_min:float=None, phi_max:float=None, pH_0:float=None, dpH:float=None
-    ) -> BLData:
+) -> BLData:
     """Parses a raw BioLector CSV file into a BLData object and applies calibration.
 
     Args:
@@ -166,4 +166,4 @@ def parse(
     else:
         data = _parse(filepaths, lot_number, temp, drop_incomplete_cycles, cal_0, cal_100, phi_min, phi_max, pH_0, dpH)
 
-    return data    
+    return data
