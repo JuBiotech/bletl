@@ -136,7 +136,7 @@ class GrowthRateResult:
             tune=500,
             draws=500,
         )
-        sample_kwargs.update(sample_kwargs)
+        sample_kwargs.update(kwargs)
         with self.pmodel:
             self._idata = pymc3.sample(**sample_kwargs)
         return
@@ -198,11 +198,10 @@ def fit_mu_t(
         wraps around the data, model and fitting results
     """
     if not isinstance(switchpoints, dict):
-        if switchpoints is not None:
-            switchpoints = {
-                t_switch : 'known'
-                for t_switch in switchpoints
-            }
+        switchpoints = {
+            t_switch : 'known'
+            for t_switch in switchpoints or []
+        }
     t_switchpoints_known = numpy.sort(list(switchpoints.keys()))
     if student_t is None:
         student_t = len(switchpoints) == 0

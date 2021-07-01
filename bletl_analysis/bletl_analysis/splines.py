@@ -79,6 +79,14 @@ def _evaluate_smoothing_factor(smoothing_factor:float, timepoints, values, k:int
     Returns:
         mssr (float): mean sum of squared residuals
     """
+    smoothing_factor = numpy.atleast_1d(smoothing_factor)
+    if k < 2:
+        raise ValueError(f"Need k≥2 splits for crossvalidation. Setting was k={k}.")
+    if len(values) < 3 * k:
+        raise ValueError(
+            f"Time series of {len(values)} elements is too short. "
+            f"Need at least a length of 3*k ({3*k})."
+        )
     ssrs = []
     for kshift in range(k):
         train_mask = numpy.ones_like(timepoints, dtype=bool)
@@ -130,7 +138,8 @@ def get_crossvalidated_spline(x, y, k_folds:int=5, method:str='us', bounds=(0.00
         x (array): time vector
         y (array): value vector
         k_folds (int): "k"s for cross-validation
-        method (str): Kind of spline, Choices: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline  
+        method (str): Kind of spline, Choices: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline
+        bounds (tuple): Lower and upper bound for the smoothing factor. Must not exceed the [0, 1] interval.
     Returns:
         spline (scipy.interpolate.UnivariateSpline): Spline with k-fold crossvalidated smoothing factor
     """
