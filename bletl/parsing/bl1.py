@@ -4,6 +4,7 @@ import datetime
 import io
 import pathlib
 import warnings
+from typing import Optional
 
 import numpy
 import pandas
@@ -18,22 +19,33 @@ from ..types import (
 
 
 class BioLector1Parser(BLDParser):
-    def calibrate_with_lot(self, data:BLData, lot_number:int=None, temp:int=None):
+    def calibrate_with_lot(self, data:BLData, lot_number:Optional[int]=None, temp:Optional[int]=None):
         """Applies calibration.
 
-        Args:
-            data (BLdata): BLdata object to calibrate
-            lot_number (int or None): lot number of the microtiter plate used
-            temp (int or None): Temperature to be used for calibration
+        Parameters
+        ----------
+        data : BLdata
+            BLdata object to calibrate.
+        lot_number : int, optional
+            Lot number of the microtiter plate used.
+        temp : int, optional
+            Temperature to be used for calibration.
 
-        Returns:
-            BLData: calibrated data object
+        Returns
+        -------
+        bldata : BLData
+            Calibrated data object
 
-        Raises:
-            TypeError: when either lot number or temperature, but not both, are None
-            NotImplementedError: when the file contents do not match with a known BioLector CSV style
-            LotInformationError: when no information about the lot can be found
-            LotInformationMismatch: when lot information given as parameters is not equal to lot information found in data file
+        Raises
+        ------
+        TypeError
+            When either lot number or temperature, but not both, are None.
+        NotImplementedError
+            When the file contents do not match with a known BioLector result file format.
+        LotInformationError
+            When no information about the lot can be found.
+        LotInformationMismatch
+            When lot information given as parameters is not equal to lot information found in data file.
         """
         if (lot_number is None) ^ (temp is None):
             raise TypeError('Lot number and temperature should be either left None or be set to an appropriate value.')
@@ -151,9 +163,10 @@ class BioLector1Parser(BLDParser):
         return data
 
     def parse(
-        self, filepath, lot_number:int=None, temp:int=None,
+        self, filepath,
+        lot_number:int=None, temp:int=None,
         cal_0:float=None, cal_100:float=None, phi_min:float=None, phi_max:float=None, pH_0:float=None, dpH:float=None
-        ):
+    ):
         headerlines, data = split_header_data(filepath)
 
         metadata = extract_metadata(headerlines)
@@ -198,12 +211,17 @@ def read_header_loglines(dir_incremental):
 def split_header_data(fp):
     """Splits the raw data into the header and data sections.
 
-    Arguments:
-        fp (str): filepath to the raw CSV file
+    Parameters
+    ----------
+    fp : str
+        Filepath to the raw CSV file.
 
-    Returns:
-        headerlines (list): lines of the header section
-        dfraw (pandas.DataFrame): data table
+    Returns
+    -------
+    headerlines : list
+        Lines of the header section.
+    dfraw : pandas.DataFrame
+        Data table
     """
     with open(fp, 'r', encoding='latin-1') as f:
         lines = f.readlines()
@@ -415,17 +433,22 @@ def extract_environment(dfraw, process_parameters:dict, comments:pandas.DataFram
                 df.loc[(df['time'] >= t_comment), 'temp_setpoint'] = temp
     return df
 
+
 def fetch_calibration_data(lot_number:int, temp:int):
     """Loads calibration data from calibration file. Also triggers file download.
 
-    Args:
-        lot_number (int): Lot number to be used for calibration data lookup
-        temp (int): Temperature to be used for calibration data lookup
+    Parameters
+    ----------
+    lot_number : int
+        Lot number to be used for calibration data lookup.
+    temp : int
+        Temperature to be used for calibration data lookup.
 
-    Returns:
-        calibration_dict (dict): Dictionary containing calibration data.
-            Can be readily used in calibration function.
-        None (None): 
+    Returns
+    -------
+    calibration_dict : dict
+        Dictionary containing calibration data.
+        Can be readily used in calibration function.
     """
     module_path = pathlib.Path(utils.__spec__.origin).parents[0]
     calibration_file = pathlib.Path(module_path, 'cache', 'CalibrationLot.ini')

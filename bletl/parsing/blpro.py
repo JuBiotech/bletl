@@ -23,9 +23,10 @@ logger = logging.getLogger('blpro')
 
 class BioLectorProParser(BLDParser):
     def parse(
-        self, filepath, lot_number:int=None, temp:int=None,
+        self, filepath,
+        lot_number:int=None, temp:int=None,
         cal_0:float=None, cal_100:float=None, phi_min:float=None, phi_max:float=None, pH_0:float=None, dpH:float=None
-        ):
+    ) -> BLData:
         metadata, data = parse_metadata_data(filepath)
 
         bld = BLData(
@@ -394,16 +395,22 @@ def transform_into_filtertimeseries(metadata:dict, measurements:pandas.DataFrame
         fts = FilterTimeSeries(times, values)
         yield (key, fts)
 
+
 def fetch_calibration_data(lot_number:int, temp:int):
     """Loads calibration data from calibration file. Also triggers file download.
 
-    Args:
-        lot_number (int): Lot number to be used for calibration data lookup
-        temp (int): Temperature to be used for calibration data lookup
+    Parameters
+    ----------
+    lot_number : int
+        Lot number to be used for calibration data lookup.
+    temp : int
+        Temperature to be used for calibration data lookup.
 
-    Returns:
-        calibration_dict (dict): Dictionary containing calibration data.
-        None (None): 
+    Returns
+    -------
+    calibration_dict : dict
+        Dictionary containing calibration data.
+        Can be readily used in calibration function.
     """
     module_path = pathlib.Path(utils.__spec__.origin).parents[0]
     calibration_file = pathlib.Path(module_path, 'cache', 'CalibrationLot_II.xml')
@@ -459,6 +466,7 @@ def fetch_calibration_data(lot_number:int, temp:int):
 
     return calibration_dict    
 
+
 def calibrate_pH(raw, phi_min, phi_max, pH_0, dpH):
     """
     Calculation of pH:
@@ -469,6 +477,7 @@ def calibrate_pH(raw, phi_min, phi_max, pH_0, dpH):
 
     pH = pH_0 + dpH * numpy.log((phi_min - raw) / kappa)
     return pH
+
 
 def calibrate_DO(raw, cal_0, cal_100):
     """

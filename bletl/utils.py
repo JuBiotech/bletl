@@ -1,20 +1,28 @@
 """Contains helper functions that do not depend on other modules within this package."""
+import datetime
 import pandas
 import re
 import urllib
 import pathlib
+from typing import Sequence, Tuple, Union
 
 from . import core 
 
-def __to_typed_cols__(dfin:pandas.DataFrame, ocol_ncol_type:list):
+def __to_typed_cols__(dfin:pandas.DataFrame, ocol_ncol_type:Tuple[str, str, type]) -> pandas.DataFrame:
     """Can be used to filter & convert data frame columns.
 
-    Args:
-        dfin: raw data frame to start from
-        ocol_ncol_type: list of tuples ('original column', 'new column', datatype)
+    Parameters
+    ----------
+    dfin : pandas.DataFrame
+        Raw data frame to start from.
+    ocol_ncol_type : list of tuples
+        Maps original to new column names and desired data types.
+        Entries should be in the form `('original column', 'new column', datatype)`.
 
-    Returns:
-        DataFrame
+    Returns
+    -------
+    dfout : DataFrame
+        A new data frame with converted & renamed columns as specified by `ocol_ncol_type`.
     """
     dfout = pandas.DataFrame()
     for ocol, ncol, typ in ocol_ncol_type:
@@ -25,28 +33,38 @@ def __to_typed_cols__(dfin:pandas.DataFrame, ocol_ncol_type:list):
     return dfout
 
 
-def _unindex(dataframe):
+def _unindex(dataframe: pandas.DataFrame) -> Tuple[Sequence[Union[str, None]], pandas.DataFrame]:
     """Resets the index of the DataFrame.
 
-    Args:
-        dataframe (pandas.DataFrame): guess what
+    Parameters
+    ----------
+    dataframe : pandas.DataFrame
+        Guess what.
 
-    Returns:
-        index_names (FrozenList): all the index names. May be (None,)
-        dataframe (pandas.DataFrame): frame without indices
+    Returns
+    -------
+    index_names : FrozenList
+        All the index names. May be (None,).
+    dataframe : pandas.DataFrame
+        Frame without indices
     """
     return dataframe.index.names, dataframe.reset_index()
 
 
-def _reindex(dataframe:pandas.DataFrame, index_names) -> pandas.DataFrame:
-    """Applies an indexing scheme to a DataFrame
+def _reindex(dataframe:pandas.DataFrame, index_names: Sequence[str]) -> pandas.DataFrame:
+    """Applies an indexing scheme to a DataFrame.
 
-    Args:
-        dataframe (pandas.DataFrame): guess what
-        index_names (tuple): all the index names. May be (None,)
+    Parameters
+    ----------
+    dataframe : pandas.DataFrame
+        Guess what.
+    index_names : tuple of str
+        All the index names. May be (None,).
 
-    Returns:
-        dataframe (pandas.DataFrame): frame with the indexing scheme
+    Returns
+    -------
+    dataframe : pandas.DataFrame
+        Frame with the indexing scheme.
     """
     if index_names[0] is not None:
         return dataframe.set_index(index_names)
@@ -54,15 +72,20 @@ def _reindex(dataframe:pandas.DataFrame, index_names) -> pandas.DataFrame:
         return dataframe
 
 
-def _concatenate_fragments(fragments:list, start_times:list) -> pandas.DataFrame:
+def _concatenate_fragments(fragments:Sequence[pandas.DataFrame], start_times:Sequence[datetime.datetime]) -> pandas.DataFrame:
     """Concatenate multiple dataframes while shifting time and cycles.
 
-    Args:
-        fragments (list): list of DataFrames to concatenate
-        start_times (list): list of the experiment start times for each data fragment
+    Parameters
+    ----------
+    fragments : list of dataframes
+        DataFrames to concatenate.
+    start_times : list of datetimes
+        Experiment start times for each data fragment.
 
-    Returns:
-        dataframe (pandas.DataFrame): time/cycle-aware concatenation of fragments
+    Returns
+    -------
+    concatenation : pandas.DataFrame
+        Time/cycle-aware concatenation of fragments.
     """
     index_names, stack = _unindex(fragments[0])
     columns = set(stack.columns)
@@ -89,12 +112,16 @@ def _concatenate_fragments(fragments:list, start_times:list) -> pandas.DataFrame
 def _last_well_in_cycle(measurements:pandas.DataFrame) -> str:
     """Finds the name of the last well measured in a cycle.
 
-    Args:
-        measurements (pandas.DataFrame): measurements data
+    Parameters
+    ----------
+    measurements : pandas.DataFrame
+        Measurements data.
 
-    Returns:
-        well (str): name of the last well measured in the first cycle
-            if the cycle was incomplete, the last measured well is returned!
+    Returns
+    -------
+    well : str
+        Name of the last well measured in the first cycle.
+        If the cycle was incomplete, the last measured well is returned!
     """
     previous_well = None
     previous_cycle = None
@@ -109,12 +136,16 @@ def _last_well_in_cycle(measurements:pandas.DataFrame) -> str:
 def _last_full_cycle(measurements:pandas.DataFrame) -> int:
     """Find the number of the last cycle that was measured for all wells and filters.
 
-    Args:
-        measurements (pandas.DataFrame): measurements data
+    Parameters
+    ----------
+    measurements : pandas.DataFrame
+        Measurements data
 
-    Returns:
-        last_cycle (int): number of the last complete cycle
-            NOTE: if the data contains only one cycle, it will always be considered "completed"
+    Returns
+    -------
+    last_cycle : int
+        Number of the last complete cycle.
+        NOTE: if the data contains only one cycle, it will always be considered "completed".
     """
     max_filter = max(measurements.filterset)
     max_well = _last_well_in_cycle(measurements)
@@ -132,12 +163,17 @@ def _last_full_cycle(measurements:pandas.DataFrame) -> int:
 def _parse_calibration_info(calibration_info:str):
     """Extracts lot number and temperature for a line of calibration info.
 
-    Args:
-        calibration_info (str): Calibration info e. g. from CSV file such as '1818-hc-Temp30'
+    Parameters
+    ----------
+    calibration_info : str
+        Calibration info e. g. from CSV file such as '1818-hc-Temp30'.
 
-    Returns:
-        lot_number (int): Lot number
-        temp (int): Temperature
+    Returns
+    -------
+    lot_number : int
+        Lot number
+    temp : int
+        Process temperature
     """
     result = re.findall(r'(\d*)-hc-Temp(\d{2})', calibration_info)
     lot_number = int(result[0][0])
@@ -145,11 +181,14 @@ def _parse_calibration_info(calibration_info:str):
 
     return lot_number, temp
 
-def download_calibration_data():
+
+def download_calibration_data() -> bool:
     """Loads calibration data from m2p-labs website
 
-    Returns:
-        success (bool): True if calibration data was downloaded successfully, False otherwise
+    Returns
+    -------
+    success : bool
+        `True` if calibration data was downloaded successfully, `False` otherwise.
     """
     try:
         module_path = pathlib.Path(core.__spec__.origin).parents[0]
@@ -168,4 +207,3 @@ def download_calibration_data():
     
     except urllib.error.HTTPError:
         return False
-

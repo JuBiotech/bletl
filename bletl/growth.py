@@ -15,6 +15,7 @@ _log = logging.getLogger(__file__)
 
 
 class GrowthRateResult:
+    """ Represents the result of applying the µ(t) model to one dataset. """
     def __init__(
         self,
         *,
@@ -94,6 +95,7 @@ class GrowthRateResult:
 
     @property
     def idata(self) -> typing.Optional[arviz.InferenceData]:
+        """ ArviZ InferenceData object of the MCMC trace. """
         return self._idata
 
     @property
@@ -142,7 +144,28 @@ class GrowthRateResult:
         return
 
 
-def _make_random_walk(name:str, *, sigma:float, length:int, student_t:bool):
+def _make_random_walk(name:str, *, sigma:float, nu: float=1, length:int, student_t:bool):
+    """ Create a random walk with either a Normal or Student-t distribution.
+
+    Parameteres
+    -----------
+    name : str
+        Name of the random walk variable.
+    sigma : float
+        Standard deviation (Normal) or scale (StudentT) parameter.
+    nu : float
+        Degree of freedom for the StudentT distribution - only used when `student_t == True`.
+    length : int
+        Number of steps in the random walk.
+    student_t : bool
+        If `True` a `pymc3.Deterministic` of a StudentT-random walk is created.
+        Otherwise a `GaussianRandomWalk` is created.
+
+    Returns
+    -------
+    random_walk : TensorVariable
+        The tensor variable of the random walk.
+    """
     if student_t:
         # a random walk of length N is just the cumulative sum over a N-dimensional random variable:
         return pymc3.Deterministic(name, tt.cumsum(
@@ -150,7 +173,7 @@ def _make_random_walk(name:str, *, sigma:float, length:int, student_t:bool):
         ))
     else:
         return pymc3.GaussianRandomWalk(name, mu=0, sigma=sigma, shape=(length,))
-    
+
 
 def fit_mu_t(
     t:typing.Sequence[float],

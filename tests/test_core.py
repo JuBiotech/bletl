@@ -309,7 +309,7 @@ class TestBL1Parsing:
 
 class TestBL1Calibration:
     def test_calibration_data_type(self):
-        data = bletl.parse(calibration_test_file, calibration_test_lot_number, calibration_test_temp)
+        data = bletl.parse(calibration_test_file, lot_number=calibration_test_lot_number, temp=calibration_test_temp)
         
         for _, item in data.items():
             assert isinstance(item, core.FilterTimeSeries)
@@ -317,7 +317,7 @@ class TestBL1Calibration:
         return
 
     def test_single_file_with_lot(self):
-        data = bletl.parse(calibration_test_file, calibration_test_lot_number, calibration_test_temp)
+        data = bletl.parse(calibration_test_file, lot_number=calibration_test_lot_number, temp=calibration_test_temp)
        
         for key, (cycle, well, value) in calibration_test_times.items():
             numpy.testing.assert_approx_equal(data[key].time.loc[cycle, well], value, significant=4)
@@ -340,7 +340,7 @@ class TestBL1Calibration:
 
     def test_fragments_with_lot(self):
         filepaths = BL1_fragment_files
-        data = bletl.parse(filepaths, 1846, 37)
+        data = bletl.parse(filepaths, lot_number=1846, temp=37)
         
         numpy.testing.assert_approx_equal(data['DO'].value.loc[666, 'F07'], 12.1887, significant=6)
         numpy.testing.assert_approx_equal(data['pH'].value.loc[507, 'E06'], 6.6435, significant=5)
@@ -367,7 +367,7 @@ class TestBL1Calibration:
 
     def test_mismatch_warning(self):
         with pytest.warns(core.LotInformationMismatch):
-            bletl.parse(file_with_lot_info, 1818, 37)
+            bletl.parse(file_with_lot_info, lot_number=1818, temp=37)
         return
 
 
@@ -534,35 +534,35 @@ class TestDataEquivalence:
         return
 
     def test_environment(self):
-        d_1 = bletl.parse(BL1_files[0], 1818, 30)
+        d_1 = bletl.parse(BL1_files[0], lot_number=1818, temp=30)
         d_p = bletl.parse(BLPro_files[0])
 
         assert list(d_1.environment.columns) == list(d_p.environment.columns)
         return
 
     def test_filtersets(self):
-        d_1 = bletl.parse(BL1_files[0], 1818, 30)
+        d_1 = bletl.parse(BL1_files[0], lot_number=1818, temp=30)
         d_p = bletl.parse(BLPro_files[0])
 
         assert list(d_1.filtersets.columns) == list(d_p.filtersets.columns)
         return
 
     def test_references(self):
-        d_1 = bletl.parse(BL1_files[0], 1818, 30)
+        d_1 = bletl.parse(BL1_files[0], lot_number=1818, temp=30)
         d_p = bletl.parse(BLPro_files[0])
 
         assert list(d_1.references.columns) == list(d_p.references.columns)
         return
 
     def test_measurements(self):
-        d_1 = bletl.parse(BL1_files[0], 1818, 30)
+        d_1 = bletl.parse(BL1_files[0], lot_number=1818, temp=30)
         d_p = bletl.parse(BLPro_files[0])
 
         assert list(d_1.measurements.columns) == list(d_p.measurements.columns)
         return
 
     def test_comments(self):
-        d_1 = bletl.parse(BL1_files[0], 1818, 30)
+        d_1 = bletl.parse(BL1_files[0], lot_number=1818, temp=30)
         d_p = bletl.parse(BLPro_files[0])
 
         assert list(d_1.comments.columns) == list(d_p.comments.columns)
