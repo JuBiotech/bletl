@@ -144,7 +144,7 @@ class GrowthRateResult:
         return
 
 
-def _make_random_walk(name:str, *, sigma:float, nu: float=1, length:int, student_t:bool):
+def _make_random_walk(name:str, *, sigma:float, nu: float=1, length:int, student_t:bool, initval: numpy.ndarray=None):
     """ Create a random walk with either a Normal or Student-t distribution.
 
     Parameteres
@@ -160,6 +160,9 @@ def _make_random_walk(name:str, *, sigma:float, nu: float=1, length:int, student
     student_t : bool
         If `True` a `pymc3.Deterministic` of a StudentT-random walk is created.
         Otherwise a `GaussianRandomWalk` is created.
+    initval : numpy.ndarray
+        Initial values for the RandomWalk variable.
+        If set, PyMC3 uses these values as start points for MAP optimization and MCMC sampling.
 
     Returns
     -------
@@ -169,10 +172,48 @@ def _make_random_walk(name:str, *, sigma:float, nu: float=1, length:int, student
     if student_t:
         # a random walk of length N is just the cumulative sum over a N-dimensional random variable:
         return pymc3.Deterministic(name, tt.cumsum(
-            pymc3.StudentT(f'{name}__diff_', mu=0, sd=sigma, nu=5, shape=(length,))
+            pymc3.StudentT(f'{name}__diff_', mu=0, sd=sigma, nu=5, shape=(length,), testval=numpy.diff(initval, prepend=0))
         ))
     else:
-        return pymc3.GaussianRandomWalk(name, mu=0, sigma=sigma, shape=(length,))
+        return pymc3.GaussianRandomWalk(name, mu=0, sigma=sigma, shape=(length,), testval=initval)
+
+
+def _get_smoothed_mu(t: numpy.ndarray, y: numpy.ndarray, cm_cdw: calibr8.CalibrationModel, *, clip=0.8) -> numpy.ndarray:
+    """Calculate a rough estimate of the specific growth rate from smoothed observations.
+
+    Parameters
+    ----------
+    t : numpy.ndarray
+        Timepoints
+    y : numpy.ndarray
+        Observations in measurement units
+    cm_cdw : calibr8.CalibrationModel
+        Calibration model that predicts measurement units from biomass concentration in g/L.
+    clip : float
+        Maximum/minimum growth rate for clipping.
+
+    Returns
+    -------
+    mu : numpy.ndarray
+        A vector of specific growth rates.
+    """
+    # apply moving average to reduce backscatter noise
+    y = numpy.convolve(y, numpy.ones(5)/5, "same")
+    
+    # convert to biomass
+    X = cm_cdw.predict_independent(y)
+    
+    # calculate growth rate
+    dX = numpy.diff(X, prepend=numpy.median(X[0:5]))
+    dt = numpy.diff(t, prepend=0)
+    mu = (dX / dt) / X
+    
+    # clip growth rate into a realistic interval
+    mu = numpy.clip(mu, -clip, clip)
+    
+    # smooth again to reduce peaking
+    mu = numpy.convolve(mu, numpy.ones(5)/5, "same")
+    return mu
 
 
 def fit_mu_t(
@@ -231,6 +272,11 @@ def fit_mu_t(
     # build a dict of known switchpoint begin cycle indices so they can be ignored in autodetection
     c_switchpoints_known = [0]
 
+    # Use a smoothed, diff-based growth rate on the backscatter to initialize the optimization.
+    # These values are still everything but high-quality estimates of the growth rate,
+    # but this intialization makes the optimization much more reliable.
+    mu_guess = _get_smoothed_mu(t, y, calibration_model)
+
     # build PyMC3 model
     coords = {
         'time': t
@@ -246,17 +292,19 @@ def fit_mu_t(
             i_from = 0
             for i, t_switch in enumerate(t_switchpoints_known):
                 i_to = numpy.argmax(t > t_switch)
-                i_len = len(t[i_from:i_to])                
+                i_len = len(t[i_from:i_to])
+                name = f'mu_phase_{i}'
                 mu_segments.append(
-                    _make_random_walk(f'mu_phase_{i}', sigma=σ, length=i_len, student_t=student_t)
+                    _make_random_walk(name, sigma=σ, length=i_len, student_t=student_t, initval=mu_guess[i_from:i_to])
                 )
                 i_from += i_len
                 # remember the index to ignore it in potential autodetection
                 c_switchpoints_known.append(i_from)
             # the last segment until the end
             i_len = len(t[i_from:])
+            name = f'mu_phase_{len(mu_segments)}'
             mu_segments.append(
-                _make_random_walk(f'mu_phase_{len(mu_segments)}', sigma=σ, length=i_len, student_t=student_t)
+                _make_random_walk(name, sigma=σ, length=i_len, student_t=student_t, initval=mu_guess[i_from:])
             )
             mu_t = pymc3.Deterministic('mu_t', tt.concatenate(mu_segments))
         else:
