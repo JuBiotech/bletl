@@ -3,12 +3,14 @@ import abc
 from collections.abc import Iterable
 import enum
 import numpy
+import os
 import pandas
 import pathlib
 import typing
 import urllib.request
 import urllib.error
 import warnings
+from typing import Optional, Union
 
 from . import parsing
 from . types import BLData, BLDParser, FilterTimeSeries, BioLectorModel, LotInformationError, InvalidLotNumberError, LotInformationMismatch, LotInformationNotFound, IncompatibleFileError, NoMeasurementData
@@ -21,17 +23,23 @@ parsers = {
 }
 
 
-def get_parser(filepath) -> BLDParser:
+def get_parser(filepath: Union[str, pathlib.Path]) -> BLDParser:
     """Analyzes a raw BioLector file and selects an appropiate parser.
 
-    Args:
-        filepath (str or pathlib.Path): path pointing to the file of interest
+    Parameters
+    ----------
+    filepath : str or pathlib.Path
+        Path pointing to the file of interest.
 
-    Returns:
-        BLDParser: a parser that can be used for the provided file type
+    Returns
+    -------
+    parser : BLDParser
+        A parser that can be used for the provided file type.
 
-    Raises:
-        NotImlementedError: when the file contents do not match with a known BioLector CSV style
+    Raises
+    ------
+    NotImlementedError
+        When the file contents do not match with a known BioLector refult file format.
     """
     try:
         # Note:
@@ -69,22 +77,54 @@ def get_parser(filepath) -> BLDParser:
     return parser_cls()
 
 
-def _parse(filepath:str, lot_number:int, temp:int, drop_incomplete_cycles:bool, 
-    cal_0:float=None, cal_100:float=None, phi_min:float=None, phi_max:float=None, pH_0:float=None, dpH:float=None
+def _parse(
+    filepath:str,
+    drop_incomplete_cycles:bool,
+    lot_number:int,
+    temp:int,
+    cal_0:float=None,
+    cal_100:float=None,
+    phi_min:float=None,
+    phi_max:float=None,
+    pH_0:float=None,
+    dpH:float=None,
 ) -> BLData:
     """Parses a raw BioLector CSV file into a BLData object.
 
-    Args:
-        filepath (str or pathlib.Path): path pointing to the file of interest
-        drop_incomplete_cycles (bool): if True, incomplete cycles at the end are discarded
-            IMPORTANT: if the file contains only one cycle, it will always be considered "completed"
+    Parameters
+    ----------
+    filepath : str or pathlib.Path
+        Path pointing to the file of interest.
+    drop_incomplete_cycles : bool
+        If `True`, incomplete cycles at the end are discarded.
+        IMPORTANT: if the file contains only one cycle, it will always be considered "completed".
+    lot_number : int or None
+        Lot number of the microtiter plate used.
+    temp :int, optional
+        Temperature to be used for calibration.
+    cal_0 : float, optional
+        Calibration parameter cal_0 or k0 for oxygen saturation measurement.
+    cal_100 : float, optional
+        Calibration parameter cal_100 or k100 for oxygen saturation measurement.
+    phi_min : float, optional
+        Calibration parameter phi_min or irmin for pH measurement.
+    phi_max : float, optional
+        Calibration parameter phi_max or irmax for pH measurement.
+    pH_0 : float, optional
+        Calibration parameter ph0 for pH measurement.
+    dpH : float, optional
+        Calibration parameter dpH for pH measurement.
 
-    Returns:
-        BLData: parsed data object
+    Returns
+    -------
+    bldata : BLData
+        Parsed data object.
 
-    Raises:
-        NotImlementedError: when the file contents do not match with a known BioLector CSV style
-    """ 
+    Raises
+    ------
+    NotImlementedError
+        When the file contents do not match with a known BioLector result file format.
+    """
     parser = get_parser(filepath)
     data = parser.parse(filepath, lot_number, temp, cal_0, cal_100, phi_min, phi_max, pH_0, dpH)
 
@@ -98,36 +138,65 @@ def _parse(filepath:str, lot_number:int, temp:int, drop_incomplete_cycles:bool,
 
 
 def parse(
-    filepaths, lot_number:int=None, temp:int=None, drop_incomplete_cycles:bool=True, 
-    cal_0:float=None, cal_100:float=None, phi_min:float=None, phi_max:float=None, pH_0:float=None, dpH:float=None
+    filepaths,
+    *,
+    drop_incomplete_cycles:bool=True,
+    lot_number:int=None,
+    temp:int=None,
+    cal_0:float=None,
+    cal_100:float=None,
+    phi_min:float=None,
+    phi_max:float=None,
+    pH_0:float=None,
+    dpH:float=None,
 ) -> BLData:
     """Parses a raw BioLector CSV file into a BLData object and applies calibration.
 
-    Args:
-        filepaths (str or pathlib.Path or iterable): path pointing to the file(s) of interest. If an iterable is provided, files are concatenated
-        lot_number (int or None): lot number of the microtiter plate used
-        temp (int or None): Temperature to be used for calibration
-        drop_incomplete_cycles (bool): if True, incomplete cycles at the end are discarded
-            IMPORTANT: if the file contains only one cycle, it will always be considered "completed"
-        cal_0 (float or None): Calibration parameter cal_0 or k0 for oxygen saturation measurement
-        cal_100 (float or None): Calibration parameter cal_100 or k100 for oxygen saturation measurement
-        phi_min (float or None): Calibration parameter phi_min or irmin for pH measurement
-        phi_max (float or None): Calibration parameter phi_max or irmax for pH measurement
-        pH_0 (float or None): Calibration parameter ph0 for pH measurement
-        dpH (float or None): Calibration parameter dpH for pH measurement
-    Returns:
-        BLData: parsed data object
+    Parameters
+    ----------
+    filepaths : str or pathlib.Path or iterable
+        Path pointing to the file(s) of interest.
+        If an iterable is provided, files are concatenated.
+    drop_incomplete_cycles : bool
+        If `True`, incomplete cycles at the end are discarded
+        IMPORTANT: if the file contains only one cycle, it will always be considered "completed".
+    lot_number : int or None
+        Lot number of the microtiter plate used.
+    temp :int, optional
+        Temperature to be used for calibration.
+    cal_0 : float, optional
+        Calibration parameter cal_0 or k0 for oxygen saturation measurement.
+    cal_100 : float, optional
+        Calibration parameter cal_100 or k100 for oxygen saturation measurement.
+    phi_min : float, optional
+        Calibration parameter phi_min or irmin for pH measurement.
+    phi_max : float, optional
+        Calibration parameter phi_max or irmax for pH measurement.
+    pH_0 : float, optional
+        Calibration parameter ph0 for pH measurement.
+    dpH : float, optional
+        Calibration parameter dpH for pH measurement.
 
-    Raises:
-        TypeError: when either lot number or temperature, but not both, are None
-        NotImplementedError: when the file contents do not match with a known BioLector CSV style
-        LotInformationError: when no information about the lot can be found
-        LotInformationMismatch: when lot information given as parameters is not equal to lot information found in data file
+    Returns
+    -------
+    bldata : BLData
+        Parsed data object.
+
+    Raises
+    ------
+    TypeError
+        When either lot number or temperature, but not both, are None.
+    NotImplementedError
+        When the file contents do not match with a known BioLector result file format.
+    LotInformationError
+        When no information about the lot can be found.
+    LotInformationMismatch
+        When lot information given as parameters is not equal to lot information found in data file.
     """
     if isinstance(filepaths, Iterable) and not isinstance(filepaths, str):
         fragments = []
         for filepath in filepaths:
-            fragment = _parse(filepath, lot_number, temp, drop_incomplete_cycles, cal_0, cal_100, phi_min, phi_max, pH_0, dpH)
+            fragment = _parse(filepath, drop_incomplete_cycles, lot_number, temp, cal_0, cal_100, phi_min, phi_max, pH_0, dpH)
             fragments.append(fragment)
         start_times = [
             fragment.metadata['date_start']
@@ -164,6 +233,6 @@ def parse(
 
         data.metadata['date_end'] = fragments[-1].metadata['date_end']
     else:
-        data = _parse(filepaths, lot_number, temp, drop_incomplete_cycles, cal_0, cal_100, phi_min, phi_max, pH_0, dpH)
+        data = _parse(filepaths, drop_incomplete_cycles, lot_number, temp, cal_0, cal_100, phi_min, phi_max, pH_0, dpH)
 
     return data

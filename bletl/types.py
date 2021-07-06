@@ -7,16 +7,19 @@ import pathlib
 import typing
 import warnings
 
+from typing import Dict, Optional, Tuple
+
 
 class BioLectorModel(enum.Enum):
-    BL1 = 'bl1'
-    BL2 = 'bl2'
-    BLPro = 'blpro'
+    """ Enumeration of BioLector Models. """
+    BL1 = "bl1"
+    BL2 = "bl2"
+    BLPro = "blpro"
+    XT = "blXT"
 
 
 class BLData(dict):
-    """Standardized data type for BioLector data.
-    """
+    """Standardized data type for BioLector data."""
     def __init__(self, model, environment, filtersets, references, measurements, comments):
         self._model = model
         self._environment = environment
@@ -25,46 +28,51 @@ class BLData(dict):
         self._measurements = measurements
         self._comments = comments
         super().__init__()
-        return 
 
     @property
     def model(self) -> BioLectorModel:
+        """ BioLector model that the dataset was acquired with. """
         return self._model
 
     @property
     def environment(self) -> pandas.DataFrame:
+        """ Temperature, humidity etc. measurements. """
         return self._environment
 
     @property
     def filtersets(self) -> pandas.DataFrame:
+        """ Filtersets that were used in this process. """
         return self._filtersets
 
     @property
     def wells(self) -> typing.Tuple[str]:
+        """ Wells that were measured. """
         if len(self) == 0:
             return tuple()
         return tuple(self.values())[0].wells
 
     @property
     def references(self) -> pandas.DataFrame:
+        """ Reference measurements that are used for calibration. """
         return self._references
 
     @property
     def measurements(self) -> pandas.DataFrame:
+        """ Well-wise filterset measurements. """
         return self._measurements
 
     @property
     def comments(self) -> pandas.DataFrame:
+        """ User and system comments. """
         return self._comments
 
-    def calibrate(self, calibration_dict):
-        raise NotImplementedError()
-
     def get_narrow_data(self) -> pandas.DataFrame:
-        """Retrieves data in a narrow format. 
+        """Retrieves data in a narrow format.
         
-        Returns:
-            narrow (pandas.DataFrame): data in a narrow format.
+        Returns
+        -------
+        narrow : pandas.DataFrame
+            Data in a narrow format.
         """
         narrow = pandas.DataFrame(columns=['well', 'filterset', 'time', 'value'])
 
@@ -79,23 +87,32 @@ class BLData(dict):
 
     def get_unified_narrow_data(
         self,
-        source_well='first',
-        source_filterset='first',
+        source_well: str='first',
+        source_filterset: str='first',
         *,
-        last_cycles: typing.Optional[typing.Dict[str, int]]=None
+        last_cycles: Optional[Dict[str, int]]=None
     ) -> pandas.DataFrame:
         """Retrieves data with unified time in a narrow format. Each filterset forms a seperate column.
 
-        Parameters:
-            source_well (str)
-            source_filterset (str)
-            last_cycles (dict, optional): Dictionary of well-wise maximum cycle numbers to retrieve.
+        Parameters
+        ----------
+        source_well : str
+            Either "first", or the ID of the well from which timestamps are taken.
+        source_filterset : str
+            Either "first", or the ID of the filterset from which timestamps are taken.
+        last_cycles : dict, optional
+            Dictionary of well-wise maximum cycle numbers to retrieve.
+            The cycle numbers in this dictionary will be included.
 
-        Returns:
-            u_narrow (pandas.DataFrame): data with unified time in a narrow format.
+        Returns
+        -------
+        u_narrow : pandas.DataFrame
+            Data with unified time in a narrow format.
 
-        Raises:
-            KeyError: If specified source filterset or well cannot be found.
+        Raises
+        ------
+        KeyError
+            If specified source filterset or well cannot be found.
         """        
         if source_filterset == 'first':
             _source_filterset = list(self.keys())[0]
@@ -146,17 +163,24 @@ class BLData(dict):
 
         return u_narrow
 
-    def get_timeseries(self, filterset:str, well:str, *, last_cycle:int=None) -> typing.Tuple[numpy.ndarray, numpy.ndarray]:
+    def get_timeseries(self, filterset:str, well:str, *, last_cycle: Optional[int]=None) -> Tuple[numpy.ndarray, numpy.ndarray]:
         """Retrieves (time, value) for a specific well in a specified filterset.
         
-        Args:
-            filterset (str): name of the filterset to read from
-            well (str): well id to retrieve
-            last_cycle (int): cycle number of the last cycle to be included (defaults to all cycles)
+        Parameters
+        ----------
+        filterset : str
+            Name of the filterset to read from.
+        well : str
+            Well id to retrieve.
+        last_cycle : int
+            Cycle number of the last cycle to be included (defaults to all cycles).
 
-        Returns:
-            x (numpy.ndarray): timepoints of measurements
-            y (numpy.ndarray): measured values
+        Returns
+        -------
+        x : numpy.ndarray
+            Timepoints of measurements.
+        y : numpy.ndarray
+            Measured values.
         """
         return self[filterset].get_timeseries(well, last_cycle=last_cycle)
 
@@ -167,26 +191,33 @@ class BLData(dict):
         ]) + '\n}'
 
 
-class FilterTimeSeries():
+class FilterTimeSeries:
     """Generalizable data type for calibrated timeseries."""
     @property
     def wells(self) -> typing.Tuple[str]:
+        """ Well IDs that were measured. """
         return tuple(self.time.columns)
 
-    def __init__(self, time_df, value_df):
+    def __init__(self, time_df: pandas.DataFrame, value_df: pandas.DataFrame):
         self.time = time_df
         self.value = value_df
 
-    def get_timeseries(self, well:str, *, last_cycle:int=None) -> typing.Tuple[numpy.ndarray, numpy.ndarray]:
+    def get_timeseries(self, well:str, *, last_cycle:int=None) -> Tuple[numpy.ndarray, numpy.ndarray]:
         """Retrieves (time, value) for a specific well.
         
-        Args:
-            well (str): well id to retrieve
-            last_cycle (int): cycle number of the last cycle to be included (defaults to all cycles)
+        Parameters
+        ----------
+        well : str
+            Well id to retrieve.
+        last_cycle : int, optional
+            Cycle number of the last cycle to be included (defaults to all cycles).
 
-        Returns:
-            x (numpy.ndarray): timepoints of measurements
-            y (numpy.ndarray): measured values
+        Returns
+        -------
+        x : numpy.ndarray
+            Timepoints of measurements.
+        y : numpy.ndarray
+            Measured values.
         """
         if last_cycle is not None and last_cycle <= 0:
             raise ValueError(f'last_cycle must be > 0')
@@ -194,14 +225,19 @@ class FilterTimeSeries():
         y = numpy.array(self.value[well])[:last_cycle]
         return x, y
 
-    def get_unified_dataframe(self, well:str=None) -> pandas.DataFrame:
+    def get_unified_dataframe(self, well: Optional[str]=None) -> pandas.DataFrame:
         """Retrieves a DataFrame with unified time on index.
 
-        Args:
-            well (str, optional): Well id from which time is taken. If None, the first well is used.
+        Parameters
+        ----------
+        well : str, optional
+            Well id from which time is taken.
+            If `None`, the first well is used.
 
-        Returns:
-            unified_df (pd.DataFrame): Dataframe with unified time on index.
+        Returns
+        -------
+        unified_df : pandas.DataFrame
+            Dataframe with unified time on index.
         """
         if not well is None:
             if not well in self.time.columns:
@@ -218,30 +254,50 @@ class FilterTimeSeries():
         return f'FilterTimeSeries({len(self.time)} cycles, {len(self.time.columns)} wells)'
 
 
-class BLDParser(object):
+class BLDParser:
     """Abstract type for parsers that read BioLector CSV files."""
 
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
     def parse(
-        self, filepath:pathlib.Path, lot_number:int=None, temp:int=None,
-        cal_0:float=None, cal_100:float=None, phi_min:float=None, phi_max:float=None, pH_0:float=None, dpH:float=None
-        ) -> BLData:
+        self, filepath:pathlib.Path,
+        *,
+        lot_number:Optional[int]=None,
+        temp:Optional[int]=None,
+        cal_0:Optional[float]=None,
+        cal_100:Optional[float]=None,
+        phi_min:Optional[float]=None,
+        phi_max:Optional[float]=None,
+        pH_0:Optional[float]=None,
+        dpH:Optional[float]=None,
+    ) -> BLData:
         """Parses the provided BioLector CSV file into a data object.
 
-        Args:
-            filepath (str or pathlib.Path): path pointing to the file of interest
-            lot_number (int or None): lot number of the microtiter plate used
-            temp (int or None): Temperature to be used for calibration
-            cal_0 (float or None): Calibration parameter cal_0 or k0 for oxygen saturation measurement
-            cal_100 (float or None): Calibration parameter cal_100 or k100 for oxygen saturation measurement
-            phi_min (float or None): Calibration parameter phi_min or irmin for pH measurement
-            phi_max (float or None): Calibration parameter phi_max or irmax for pH measurement
-            pH_0 (float or None): Calibration parameter ph0 for pH measurement
-            dpH (float or None): Calibration parameter dpH for pH measurement
+        If any calibration parameters are passed, all of them must be passed.
+
+        Parameters
+        ----------
+        filepath : str or pathlib.Path
+            Path pointing to the file of interest.
+        lot_number : int or None
+            Lot number of the microtiter plate used.
+        temp :int, optional
+            Temperature to be used for calibration.
+        cal_0 : float, optional
+            Calibration parameter cal_0 or k0 for oxygen saturation measurement.
+        cal_100 : float, optional
+            Calibration parameter cal_100 or k100 for oxygen saturation measurement.
+        phi_min : float, optional
+            Calibration parameter phi_min or irmin for pH measurement.
+        phi_max : float, optional
+            Calibration parameter phi_max or irmax for pH measurement.
+        pH_0 : float, optional
+            Calibration parameter ph0 for pH measurement.
+        dpH : float, optional
+            Calibration parameter dpH for pH measurement.
         """
-        raise NotImplementedError('Whoever implemented {} screwed up.'.format(self.__class__.__name__))
+        raise NotImplementedError(f"Whoever implemented {self.__class__.__name__} screwed up.")
 
 
 class LotInformationError(Exception):

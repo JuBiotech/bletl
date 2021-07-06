@@ -8,21 +8,40 @@ import typing
 _log = logging.getLogger(__file__)
 
 
-def find_do_peak(x, y, *, delay_a:float, threshold_a:float, delay_b:float, threshold_b:float, initial_delay:float=1) -> typing.Optional[int]:
+def find_do_peak(
+    x: numpy.ndarray,
+    y: numpy.ndarray,
+    *,
+    delay_a:float,
+    threshold_a:float,
+    delay_b:float,
+    threshold_b:float,
+    initial_delay:float=1
+) -> typing.Optional[int]:
     """Finds the index of a DO peak in the inputs [x] and [y].
     
-    Args:
-        x (array): time vector
-        y (array): DO vector
-        initial_delay (float): hours in the beginning that are not considered
-        delay_a (float): hours for which condition A must be fulfilled
-        threshold_a (float): DO threshold that must be UNDERshot for at least <delay_a> hours
-        delay_b (float): hours for which condition B must be fulfilled
-        threshold_b (float): DO threshold that must be OVERshot for at least <delay_b> hours
-        
-    Returns:
-        i_overshoot (int): index (w.r.t. inputs [x] and [y]) at which the DO peak was detected
-            None is returned if no peak was detected according to the given conditions.
+    Parameters
+    ----------
+    x : numpy.ndarray
+        Time vector.
+    y : numpy.ndarray
+        DO vector.
+    initial_delay : float
+        Hours in the beginning that are not considered.
+    delay_a : float
+        Hours for which condition A must be fulfilled.
+    threshold_a : float
+        DO threshold that must be UNDERshot for at least <delay_a> hours.
+    delay_b : float
+        Hours for which condition B must be fulfilled.
+    threshold_b : float
+        DO threshold that must be OVERshot for at least <delay_b> hours.
+
+    Returns
+    -------
+    i_overshoot : int
+        Index (w.r.t. inputs [x] and [y]) at which the DO peak was detected.
+        `None` is returned if no peak was detected according to the given conditions.
     """
     i_total = len(x)
     i_silencing = numpy.argmax(x > initial_delay)

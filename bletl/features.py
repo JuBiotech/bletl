@@ -16,7 +16,7 @@ _log = logging.getLogger(__file__)
 
 class Extractor(abc.ABC):
     """ Common base class for all feature extractors. """  
-    
+
     def get_methods(self) -> typing.Dict[str, typing.Callable[[numpy.ndarray, numpy.ndarray], float]]:
         """ Returns the extration methods by name.
 
@@ -37,15 +37,15 @@ class Extractor(abc.ABC):
 
 class StatisticalFeatureExtractor(Extractor):
     """ Class for statistical feature extraction."""
-    
+
     def extract_mean(self, x, y):
         """ Extracts the mean of y.
 
         Parameters
         ----------
-        x : []
+        x : numpy.ndarray
             list of time values
-        y : []
+        y : numpy.ndarray
             list of values
         
         Returns
@@ -60,9 +60,9 @@ class StatisticalFeatureExtractor(Extractor):
 
         Parameters
         ----------
-        x : []
+        x : numpy.ndarray
             list of time values
-        y : []
+        y : numpy.ndarray
             list of values
         
         Returns
@@ -77,9 +77,9 @@ class StatisticalFeatureExtractor(Extractor):
 
         Parameters
         ----------
-        x : []
+        x : numpy.ndarray
             list of time values
-        y : []
+        y : numpy.ndarray
             list of values
         
         Returns
@@ -94,9 +94,9 @@ class StatisticalFeatureExtractor(Extractor):
 
         Parameters
         ----------
-        x : []
+        x : numpy.ndarray
             list of time values
-        y : []
+        y : numpy.ndarray
             list of values
         
         Returns
@@ -111,9 +111,9 @@ class StatisticalFeatureExtractor(Extractor):
 
         Parameters
         ----------
-        x : []
+        x : numpy.ndarray
             list of time values
-        y : []
+        y : numpy.ndarray
             list of values
         
         Returns
@@ -128,9 +128,9 @@ class StatisticalFeatureExtractor(Extractor):
 
         Parameters
         ----------
-        x : []
+        x : numpy.ndarray
             list of time values
-        y : []
+        y : numpy.ndarray
             list of values
         
         Returns
@@ -145,9 +145,9 @@ class StatisticalFeatureExtractor(Extractor):
 
         Parameters
         ----------
-        x : []
+        x : numpy.ndarray
             list of time values
-        y : []
+        y : numpy.ndarray
             list of values
         
         Returns
@@ -162,9 +162,9 @@ class StatisticalFeatureExtractor(Extractor):
 
         Parameters
         ----------
-        x : []
+        x : numpy.ndarray
             list of time values
-        y : []
+        y : numpy.ndarray
             list of values
         
         Returns
@@ -210,9 +210,9 @@ class BSFeatureExtractor(Extractor):
         
         Parameters
         ----------
-        x : []
+        x : numpy.ndarray
             list of time values
-        y : []
+        y : numpy.ndarray
             list of values
         
         Returns
@@ -229,9 +229,9 @@ class BSFeatureExtractor(Extractor):
         
         Parameters
         ----------
-        x : []
+        x : numpy.ndarray
             list of time values
-        y : []
+        y : numpy.ndarray
             list of values
         
         Returns
@@ -248,9 +248,9 @@ class BSFeatureExtractor(Extractor):
         
         Parameters
         ----------
-        x : []
+        x : numpy.ndarray
             list of time values
-        y : []
+        y : numpy.ndarray
             list of values
         
         Returns
@@ -289,9 +289,9 @@ class pHFeatureExtractor(Extractor):
         
         Parameters
         ----------
-        x : []
+        x : numpy.ndarray
             list of time values
-        y : []
+        y : numpy.ndarray
             list of values
         
         Returns
@@ -309,9 +309,9 @@ class pHFeatureExtractor(Extractor):
         
         Parameters
         ----------
-        x : []
+        x : numpy.ndarray
             list of time values
-        y : []
+        y : numpy.ndarray
             list of values
         
         Returns
