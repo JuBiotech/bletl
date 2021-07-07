@@ -8,11 +8,7 @@
    list of releases & their release notes.
 2. To download the Python wheel, click the _download_ button on the right and select `python-release`:
 
-![Release Download](docs/ReleaseDownload.png)
-
 Unpack to `*.whl` file to somewhere and install it via pip.
-1. install `bletl` first
-2. install `bletl_analysis` or `bletl_pro` second, because they depend on `bletl`
 
 After that you can delete the `*.whl`.
 

@@ -429,14 +429,14 @@ class TestBLProParsing:
         return
 
     def test_parse_metadata_data_new_format(self):
-        fp = pathlib.Path(dir_testfiles, 'BLPro', 'Ms000367.LG.csv')
+        fp = pathlib.Path(dir_testfiles, 'BLPro', 'new_metadata_format.csv')
         metadata, data = parsing.blpro.parse_metadata_data(fp)
         assert isinstance(metadata, dict)
         assert isinstance(data, pandas.DataFrame)
         pass
 
     def test_parse_new_format(self):
-        fp = pathlib.Path(dir_testfiles, 'BLPro', 'Ms000367.LG.csv')
+        fp = pathlib.Path(dir_testfiles, 'BLPro', 'new_metadata_format.csv')
         bldata = bletl.parse(fp)
         assert 'BS3' in bldata
         t, y = bldata['BS3'].get_timeseries('A01')
@@ -458,7 +458,7 @@ class TestBLProParsing:
 
     def test_parse_file_with_defects(self):
         # this file has some broken & duplicate data line lines 25857-25877
-        bletl.parse(pathlib.Path(dir_testfiles, 'BLPro', '247-AH_Bacillus_Batch-AH-2020-01-22-12-48-45.csv'))
+        bletl.parse(pathlib.Path(dir_testfiles, 'BLPro', 'line_duplication.csv'))
         pass
 
 
