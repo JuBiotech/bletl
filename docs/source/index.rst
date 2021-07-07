@@ -5,7 +5,7 @@ Welcome to the ``bletl`` documentation!
     :target: https://github.com/JuBiotech/bletl
 
 
-``bletl`` is a Python package for parsing and analyzing microbioreactor datasets, parimarily from the BioLector system.
+``bletl`` is a Python package for parsing and analyzing microbioreactor datasets, primarily from the BioLector system.
 
 You can download the latest version from `GitHub <https://github.com/JuBiotech/bletl>`_ or install it via ``pip install bletl``.
 
