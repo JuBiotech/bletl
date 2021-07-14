@@ -1,0 +1,7 @@
+csaps>=0.11
+fastprogress
+joblib
+numpy
+pandas
+scipy
+tsfresh
