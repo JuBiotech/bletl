@@ -4,6 +4,9 @@ Welcome to the ``bletl`` documentation!
 .. image:: https://img.shields.io/badge/code%20on-Github-lightgrey
     :target: https://github.com/JuBiotech/bletl
 
+.. image:: https://zenodo.org/badge/383775211.svg
+   :target: https://zenodo.org/badge/latestdoi/383775211
+
 
 ``bletl`` is a Python package for parsing and analyzing microbioreactor datasets, primarily from the BioLector system.
 

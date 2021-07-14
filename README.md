@@ -1,6 +1,8 @@
+[![PyPI version](https://img.shields.io/pypi/v/bletl)](https://pypi.org/project/bletl)
 [![pipeline](https://github.com/jubiotech/bletl/workflows/pipeline/badge.svg)](https://github.com/jubiotech/bletl/actions)
 [![coverage](https://codecov.io/gh/jubiotech/bletl/branch/main/graph/badge.svg)](https://codecov.io/gh/jubiotech/bletl)
 [![documentation](https://readthedocs.org/projects/bletl/badge/?version=latest)](https://bletl.readthedocs.io/en/latest/?badge=latest)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5101434.svg)](https://doi.org/10.5281/zenodo.5101434)
 
 # Installation
 `bletl` is available through [PyPI](https://pypi.org/project/bletl/):
@@ -19,12 +21,13 @@ You can use `bletl` by installing it in your Python environment.
 The easiest way to contribute is to report bugs by opening [Issues](https://github.com/JuBiotech/bletl/issues).
 
 If you want to contribute, you should...
-1. clone `bletl`
-2. create a new branch
-3. make changes on your feature-branch
-4. open a Merge Request
+1. Clone `bletl`
+2. Create a new branch
+3. Make changes on your feature-branch
+4. Open a [Pull Request](https://github.com/JuBiotech/bletl/pulls)
 
 
 # Usage and Citing
-`bletl` is licensed under the [GNU Affero General Public License v3.0](https://github.com/JuBiotech/bletl/blob/main/LICENSE).
+`bletl` is licensed under the [GNU Affero General Public License v3.0](https://github.com/JuBiotech/bletl/blob/main/LICENSE.md).
 
+Head over to Zenodo to [generate a BibTeX citation](https://doi.org/10.5281/zenodo.5101434) for the latest release.
