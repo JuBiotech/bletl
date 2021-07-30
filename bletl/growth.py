@@ -172,7 +172,12 @@ def _make_random_walk(name:str, *, sigma:float, nu: float=1, length:int, student
     if student_t:
         # a random walk of length N is just the cumulative sum over a N-dimensional random variable:
         return pymc3.Deterministic(name, tt.cumsum(
-            pymc3.StudentT(f'{name}__diff_', mu=0, sd=sigma, nu=5, shape=(length,), testval=numpy.diff(initval, prepend=0))
+            pymc3.StudentT(
+                f'{name}__diff_',
+                mu=0, sd=sigma, nu=5,
+                shape=(length,),
+                testval=numpy.diff(initval, prepend=0) if initval is not None else initval
+            )
         ))
     else:
         return pymc3.GaussianRandomWalk(name, mu=0, sigma=sigma, shape=(length,), testval=initval)
@@ -213,6 +218,9 @@ def _get_smoothed_mu(t: numpy.ndarray, y: numpy.ndarray, cm_cdw: calibr8.Calibra
     
     # smooth again to reduce peaking
     mu = numpy.convolve(mu, numpy.ones(5)/5, "same")
+
+    # Replace NaNs that can show up with non-linear calibration models
+    mu[numpy.isnan(mu)] = 0
     return mu
 
 
