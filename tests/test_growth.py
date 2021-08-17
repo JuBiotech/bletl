@@ -17,23 +17,12 @@ except ImportError:
 @pytest.fixture
 def biomass_calibration():
     """Creates a realistic biomass calibration for testing"""
-    # Taken from https://github.com/JuBiotech/calibr8-paper/blob/main/data_and_analysis/processed/biomass.json
+    class LinearModel(calibr8.BasePolynomialModelT):
+        def __init__(self) -> None:
+            super().__init__(independent_key="X", dependent_key="Pahpshmir_1400_BS3_CgWT", mu_degree=1, scale_degree=0)
 
-    class NonlinearBiomassCalibration(calibr8.BaseLogIndependentAsymmetricLogisticT):
-        def __init__(self, *, independent_key:str='X', dependent_key:str='Pahpshmir_1400_BS3_CgWT'):
-            super().__init__(independent_key=independent_key, dependent_key=dependent_key, scale_degree=1)
-
-    cmodel = NonlinearBiomassCalibration()
-    cmodel.theta_fitted = [
-        1.4913711809145784,
-        399.9135646512631,
-        1.915740229171353,
-        500.0691564179732,
-        0.743088789680052,
-        0.1589557302836782,
-        0.007209373982975859,
-        30.0
-    ]
+    cmodel = LinearModel()
+    cmodel.theta_fitted = [0, 1, 0.1, 5]
     yield cmodel
 
 
@@ -120,6 +109,7 @@ class TestRandomWalkModel:
             t=t, y=bs,
             calibration_model=biomass_calibration,
             student_t=True,
+            mu_prior=0.4
         )
         assert isinstance(result, bletl.growth.GrowthRateResult)
         assert result.mu_map.shape == t.shape
@@ -131,4 +121,20 @@ class TestRandomWalkModel:
         assert len(result.switchpoints) == 2
         assert len(result.detected_switchpoints) == 2
         assert len(result.known_switchpoints) == 0
+        pass
+
+    @pytest.mark.parametrize("student_t", [False, True])
+    def test_custom_mu_zero(self, biomass_calibration, student_t):
+        t = numpy.arange(0, 10, 0.1)
+        X = 0.25 * numpy.exp(t * 0.42)
+        loc, scale, df = biomass_calibration.predict_dependent(X)
+        bs = scipy.stats.t.rvs(loc=loc, scale=scale, df=df)
+
+        result = bletl.growth.fit_mu_t(
+            t=t, y=bs,
+            calibration_model=biomass_calibration,
+            student_t=student_t,
+            mu_prior=0.42,
+        )
+        assert numpy.mean(result.mu_map - 0.42) < 0.1
         pass
