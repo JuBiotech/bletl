@@ -144,16 +144,21 @@ class GrowthRateResult:
         return
 
 
-def _make_random_walk(name:str, *, sigma:float, nu: float=1, length:int, student_t:bool, initval: numpy.ndarray=None):
+def _make_random_walk(name:str, *, mu: float=0, sigma:float, nu: float=1, length:int, student_t:bool, initval: numpy.ndarray=None):
     """ Create a random walk with either a Normal or Student-t distribution.
 
     Parameteres
     -----------
     name : str
         Name of the random walk variable.
-    sigma : float
+    mu : float, array-like
+        Mean of the random walk.
+        If a vector is passed, only the first element should be nonzero,
+        otherwise the random walk will drift systematically.
+    sigma : float, array-like
         Standard deviation (Normal) or scale (StudentT) parameter.
-    nu : float
+        A vector may be passed to customize, for example the prior at the start.
+    nu : float, array-like
         Degree of freedom for the StudentT distribution - only used when `student_t == True`.
     length : int
         Number of steps in the random walk.
@@ -174,13 +179,13 @@ def _make_random_walk(name:str, *, sigma:float, nu: float=1, length:int, student
         return pymc3.Deterministic(name, tt.cumsum(
             pymc3.StudentT(
                 f'{name}__diff_',
-                mu=0, sd=sigma, nu=nu,
+                mu=mu, sd=sigma, nu=nu,
                 shape=(length,),
                 testval=numpy.diff(initval, prepend=0) if initval is not None else initval
             )
         ))
     else:
-        return pymc3.GaussianRandomWalk(name, mu=0, sigma=sigma, shape=(length,), testval=initval)
+        return pymc3.GaussianRandomWalk(name, mu=mu, sigma=sigma, shape=(length,), testval=initval)
 
 
 def _get_smoothed_mu(t: numpy.ndarray, y: numpy.ndarray, cm_cdw: calibr8.CalibrationModel, *, clip=0.8) -> numpy.ndarray:
@@ -231,6 +236,7 @@ def fit_mu_t(
     *,
     switchpoints:typing.Optional[typing.Union[typing.Sequence[float], typing.Dict[float, str]]]=None,
     mcmc_samples:int=0,
+    mu_prior:float=0,
     σ:float=0.01,
     nu:float=5,
     x0_prior:float=0.25,
@@ -256,6 +262,9 @@ def fit_mu_t(
     mcmc_samples : int
         number of posterior draws (default to 0)
         This kwarg is a shortcut to run `result.sample(draw=mcmc_samples)`.
+    mu_prior : float
+        Prior belief in the growth rate at the beginning.
+        Defaults to 0 which works well if there was a lag phase.
     σ : float
         standard deviation of the random walk - this controls how fast the growth rate may drift
     nu : float
@@ -294,6 +303,15 @@ def fit_mu_t(
     # but this intialization makes the optimization much more reliable.
     mu_guess = _get_smoothed_mu(t, y, calibration_model)
 
+    T = len(t)
+
+    # The mu_prior parameter is used to initialize the random walk at a more realistic growth rate.
+    # This can become necessary when there was no lag phase.
+    if mu_prior != 0:
+        mu_prior = numpy.array([mu_prior] + [0] * (T - 1))
+        # Override guess with user-provided mu_prior for nonzero starting points.
+        mu_guess[mu_prior != 0] = mu_prior[mu_prior != 0]
+
     # build PyMC3 model
     coords = {
         'time': t
@@ -311,8 +329,9 @@ def fit_mu_t(
                 i_to = numpy.argmax(t > t_switch)
                 i_len = len(t[i_from:i_to])
                 name = f'mu_phase_{i}'
+                slc = slice(i_from, i_to)
                 mu_segments.append(
-                    _make_random_walk(name, sigma=σ, nu=nu, length=i_len, student_t=student_t, initval=mu_guess[i_from:i_to])
+                    _make_random_walk(name, mu=mu_prior[slc], sigma=σ, nu=nu, length=i_len, student_t=student_t, initval=mu_guess[slc])
                 )
                 i_from += i_len
                 # remember the index to ignore it in potential autodetection
@@ -320,13 +339,14 @@ def fit_mu_t(
             # the last segment until the end
             i_len = len(t[i_from:])
             name = f'mu_phase_{len(mu_segments)}'
+            slc = slice(i_from, None)
             mu_segments.append(
-                _make_random_walk(name, sigma=σ, nu=nu, length=i_len, student_t=student_t, initval=mu_guess[i_from:])
+                _make_random_walk(name, mu_prior[slc], sigma=σ, nu=nu, length=i_len, student_t=student_t, initval=mu_guess[slc])
             )
             mu_t = pymc3.Deterministic('mu_t', tt.concatenate(mu_segments))
         else:
             _log.info('Creating model without switchpoints. StudentT=%b', len(t_switchpoints_known), student_t)
-            mu_t = _make_random_walk('mu_t', sigma=σ, nu=nu, length=len(t), student_t=student_t)
+            mu_t = _make_random_walk('mu_t', mu=mu_prior, sigma=σ, nu=nu, length=T, student_t=student_t)
     
         X0 = pymc3.Lognormal('X0', mu=numpy.log(x0_prior), sd=1)
         Xt = pymc3.Deterministic('X', X0 + X0 * pymc3.math.exp(tt.extra_ops.cumsum(mu_t * dt)))
