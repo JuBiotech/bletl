@@ -19,7 +19,8 @@ class GrowthRateResult:
     def __init__(
         self,
         *,
-        t:numpy.ndarray,
+        t_data:numpy.ndarray,
+        t_segments:numpy.ndarray,
         y:numpy.ndarray,
         calibration_model: calibr8.CalibrationModel,
         switchpoints:typing.Dict[float, str],
@@ -30,8 +31,10 @@ class GrowthRateResult:
 
         Parameters
         ----------
-        t : numpy.ndarray
-            time vector
+        t_data : numpy.ndarray
+            time vector of data timepoints
+        t_segments : numpy.ndarray
+            time vector of growth rate segment midpoints
         y : numpy.ndarray
             backscatter vector
         switchpoints : dict
@@ -41,7 +44,8 @@ class GrowthRateResult:
         theta_map : dict
             the PyMC3 MAP estimate
         """
-        self._t = t
+        self._t_data = t_data
+        self._t_segments = t_segments
         self._y = y
         self._switchpoints = switchpoints
         self.calibration_model = calibration_model
@@ -51,10 +55,15 @@ class GrowthRateResult:
         super().__init__()
 
     @property
-    def t(self) -> numpy.ndarray:
+    def t_data(self) -> numpy.ndarray:
         """ Vector of data timepoints. """
-        return self._t
-    
+        return self._t_data
+
+    @property
+    def t_segments(self) -> numpy.ndarray:
+        """ Vector of growth rate segment time mid-points. """
+        return self._t_segments
+
     @property
     def y(self) -> numpy.ndarray:
         """ Vector of backscatter observations. """
@@ -100,7 +109,7 @@ class GrowthRateResult:
 
     @property
     def mu_map(self) -> numpy.ndarray:
-        """ MAP estimate of the growth rates. """
+        """ MAP estimate of the growth rates in segments between data points. """
         return self.theta_map['mu_t']
 
     @property
@@ -110,7 +119,7 @@ class GrowthRateResult:
 
     @property
     def mu_mcmc(self) -> typing.Optional[numpy.ndarray]:
-        """ Posterior samples of growth rates. """
+        """ Posterior samples of growth rates in segments between data points. """
         if not self.idata:
             return None
         return self.idata.posterior.mu_t.stack(sample=('chain', 'draw')).values.T
@@ -214,9 +223,10 @@ def _get_smoothed_mu(t: numpy.ndarray, y: numpy.ndarray, cm_cdw: calibr8.Calibra
     X = cm_cdw.predict_independent(y)
     
     # calculate growth rate
-    dX = numpy.diff(X, prepend=numpy.median(X[0:5]))
-    dt = numpy.diff(t, prepend=0)
-    mu = (dX / dt) / X
+    dX = numpy.diff(X)
+    dt = numpy.diff(t)
+    Xsegment = numpy.mean([X[1:], X[:-1]], axis=0)
+    mu = (dX / dt) / Xsegment
     
     # clip growth rate into a realistic interval
     mu = numpy.clip(mu, -clip, clip)
@@ -251,7 +261,7 @@ def fit_mu_t(
     Parameters
     ----------
     t : numpy.ndarray
-        time vector
+        Vector of data timepoints
     y : numpy.ndarray
         backscatter vector
     calibration_model : calibr8.CalibrationModel
@@ -303,23 +313,29 @@ def fit_mu_t(
     # but this intialization makes the optimization much more reliable.
     mu_guess = _get_smoothed_mu(t, y, calibration_model)
 
-    T = len(t)
+    t_data = t
+    t_segments = numpy.mean([t_data[1:], t_data[:-1]], axis=0)
+    TD = len(t_data)
+    TS = len(t_segments)
 
     # The mu_prior parameter is used to initialize the random walk at a more realistic growth rate.
     # This can become necessary when there was no lag phase.
     if mu_prior != 0:
-        mu_prior = numpy.array([mu_prior] + [0] * (T - 1))
+        mu_prior = numpy.array([mu_prior] + [0] * (TS - 1))
         # Override guess with user-provided mu_prior for nonzero starting points.
         mu_guess[mu_prior != 0] = mu_prior[mu_prior != 0]
 
     # build PyMC3 model
     coords = {
-        'time': t
+        "timepoint": numpy.arange(TD),
+        "segment": numpy.arange(TS),
     }
     with pymc3.Model(coords=coords) as pmodel:
         pymc3.Data('known_switchpoints', t_switchpoints_known)
-        dt = pymc3.Data('dt', numpy.diff(t, prepend=0), dims='time')
-    
+        pymc3.Data('t_data', t_data, dims="timepoint")
+        pymc3.Data('t_segments', t_segments, dims="segment")
+        dt = pymc3.Data('dt', numpy.diff(t_data), dims="segment")
+
         if len(t_switchpoints_known) > 0:
             _log.info('Creating model with %d switchpoints. StudentT=%b', len(t_switchpoints_known), student_t)
             # the growth rate vector is fragmented according to t_switchpoints_known
@@ -337,22 +353,29 @@ def fit_mu_t(
                 # remember the index to ignore it in potential autodetection
                 c_switchpoints_known.append(i_from)
             # the last segment until the end
-            i_len = len(t[i_from:])
+            i_len = len(t[i_from:]) - 1
             name = f'mu_phase_{len(mu_segments)}'
             slc = slice(i_from, None)
             mu_segments.append(
                 _make_random_walk(name, mu_prior[slc], sigma=σ, nu=nu, length=i_len, student_t=student_t, initval=mu_guess[slc])
             )
-            mu_t = pymc3.Deterministic('mu_t', tt.concatenate(mu_segments))
+            mu_t = pymc3.Deterministic('mu_t', tt.concatenate(mu_segments), dims="segment")
         else:
             _log.info('Creating model without switchpoints. StudentT=%b', len(t_switchpoints_known), student_t)
-            mu_t = _make_random_walk('mu_t', mu=mu_prior, sigma=σ, nu=nu, length=T, student_t=student_t)
-    
+            mu_t = _make_random_walk('mu_t', mu=mu_prior, sigma=σ, nu=nu, length=TS, student_t=student_t, initval=mu_guess)
+
         X0 = pymc3.Lognormal('X0', mu=numpy.log(x0_prior), sd=1)
-        Xt = pymc3.Deterministic('X', X0 + X0 * pymc3.math.exp(tt.extra_ops.cumsum(mu_t * dt)))
+        Xt = pymc3.Deterministic(
+            'X',
+            tt.concatenate([
+                X0[None],
+                X0 * pymc3.math.exp(tt.extra_ops.cumsum(mu_t * dt))
+            ]),
+            dims="timepoint",
+        )
         calibration_model.loglikelihood(
             x=Xt,
-            y=pymc3.Data('backscatter', y, dims=('time',)),
+            y=pymc3.Data('backscatter', y, dims=('timepoint',)),
             replicate_id=replicate_id,
             dependent_key=calibration_model.dependent_key
         )
@@ -383,13 +406,15 @@ def fit_mu_t(
         )
         # add these autodetected timepoints to the switchpoints-dict
         # (ignore the first timepoint)
-        for c_switch, (t_switch, is_switchpoint) in enumerate(zip(t, significance_mask[1:])):
+        for c_switch, (t_switch, is_switchpoint) in enumerate(zip(t_data, significance_mask[1:])):
             if is_switchpoint and c_switch not in c_switchpoints_known:
                 switchpoints[t_switch] = 'detected'
     
     # bundle up all relevant variables into a result object
     result = GrowthRateResult(
-        t=t, y=y,
+        t_data=t_data,
+        t_segments=t_segments,
+        y=y,
         calibration_model=calibration_model,
         switchpoints=switchpoints,
         pmodel=pmodel,
