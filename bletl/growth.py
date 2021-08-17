@@ -71,7 +71,7 @@ class GrowthRateResult:
         return tuple(
             t
             for t, label in self.switchpoints.items()
-            if label != 'autodetected'
+            if label != 'detected'
         )
 
     @property
@@ -80,7 +80,7 @@ class GrowthRateResult:
         return tuple(
             t
             for t, label in self.switchpoints.items()
-            if label == 'automatic'
+            if label == 'detected'
         )
 
     @property
@@ -358,7 +358,7 @@ def fit_mu_t(
         )
         # add these autodetected timepoints to the switchpoints-dict
         # (ignore the first timepoint)
-        for c_switch, (t_switch, is_switchpoint) in enumerate(zip(numpy.insert(t, 0, 0), significance_mask)):
+        for c_switch, (t_switch, is_switchpoint) in enumerate(zip(t, significance_mask[1:])):
             if is_switchpoint and c_switch not in c_switchpoints_known:
                 switchpoints[t_switch] = 'detected'
     
@@ -373,6 +373,6 @@ def fit_mu_t(
     if len(result.detected_switchpoints):
         _log.info('Detected %d previously unknown switchpoints: %s', len(result.detected_switchpoints), result.detected_switchpoints)
     if mcmc_samples > 0:
-        result.sample(draws=mcmc_samples)           
+        result.sample(draws=mcmc_samples)
 
     return result

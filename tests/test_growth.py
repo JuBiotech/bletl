@@ -102,8 +102,10 @@ class TestRandomWalkModel:
         )
         assert isinstance(result, bletl.growth.GrowthRateResult)
         assert result.mu_map.shape == t.shape
+
         # Verify based on the mean error w.r.t. the ground truth
         assert numpy.abs(result.mu_map - mu_true).mean() < 0.1
+
         # No switchpoint detection with Gaussian random walks!
         assert len(result.detected_switchpoints) == 0
         pass
@@ -121,6 +123,12 @@ class TestRandomWalkModel:
         )
         assert isinstance(result, bletl.growth.GrowthRateResult)
         assert result.mu_map.shape == t.shape
+
         # Verify based on the mean error w.r.t. the ground truth
         assert numpy.abs(result.mu_map - mu_true).mean() < 0.1
+
+        # There were two switchpoints in the data
+        assert len(result.switchpoints) == 2
+        assert len(result.detected_switchpoints) == 2
+        assert len(result.known_switchpoints) == 0
         pass
