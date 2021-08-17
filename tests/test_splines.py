@@ -55,7 +55,7 @@ class TestSplineMueScipy:
         # automatic blank
         mue_blank_first = bletl.splines.get_mue(bldata['BS3'], wells=wells, method='us')
         mue_median = numpy.median(mue_blank_first.value.loc[60:75, 'B03'])
-        numpy.testing.assert_allclose(mue_median, 0.38, atol=0.01)
+        numpy.testing.assert_allclose(mue_median, 0.38, atol=0.02)
 
         # scalar blank for all
         mue_blank_scalar = bletl.splines.get_mue(bldata['BS3'], blank=2, wells=wells, method='us')
@@ -70,7 +70,7 @@ class TestSplineMueScipy:
         }
         mue_blank_dict = bletl.splines.get_mue(bldata['BS3'], wells=wells, blank=blank_dict, method='us')
         mue_median = numpy.median(mue_blank_dict.value.loc[60:75, 'B03'])
-        numpy.testing.assert_allclose(mue_median, 0.38, atol=0.01)
+        numpy.testing.assert_allclose(mue_median, 0.38, atol=0.02)
 
         # check value error when the wells dictionary is incorrect
         with pytest.raises(ValueError):
@@ -90,7 +90,7 @@ class TestSplineMueScipy:
         # automatic
         mue_blank_first = bletl.splines.get_mue(bldata['BS3'], method='us')
         mue_median = numpy.median(mue_blank_first.value.loc[60:75, 'B03'])
-        numpy.testing.assert_allclose(mue_median, 0.38, atol=0.01)
+        numpy.testing.assert_allclose(mue_median, 0.38, atol=0.02)
 
         # scalar blank for all
         mue_blank_scalar = bletl.splines.get_mue(bldata['BS3'], blank=2, method='us')
@@ -104,7 +104,7 @@ class TestSplineMueScipy:
         }
         mue_blank_dict = bletl.splines.get_mue(bldata['BS3'], blank=blank_dict, method='us')
         mue_median = numpy.median(mue_blank_dict.value.loc[60:75, 'B03'])
-        numpy.testing.assert_allclose(mue_median, 0.38, atol=0.01)
+        numpy.testing.assert_allclose(mue_median, 0.38, atol=0.02)
         return
 
 

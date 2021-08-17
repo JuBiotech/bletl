@@ -492,17 +492,17 @@ class TestBLProCalibration:
 
         random_cycle = numpy.random.randint(len(org['pH'].time.index)) + 1
 
-        assert (numpy.allclose(
+        numpy.testing.assert_allclose(
                 org['pH'].value.loc[random_cycle],
                 with_lot['pH'].value.loc[random_cycle],
-                rtol=0.01,
-        ))
+                rtol=0.02,
+        )
 
-        assert (numpy.allclose(
+        numpy.testing.assert_allclose(
                 org['DO'].value.loc[random_cycle],
                 with_lot['DO'].value.loc[random_cycle],
-                rtol=0.01,
-        ))
+                rtol=0.02,
+        )
 
     def test_calibration_with_parameters(self):
         org = bletl.parse(calibration_test_file_pro2)
@@ -513,17 +513,17 @@ class TestBLProCalibration:
 
         random_cycle = numpy.random.randint(len(org['pH'].time.index)) + 1
 
-        assert (numpy.allclose(
+        numpy.testing.assert_allclose(
                 org['pH'].value.loc[random_cycle],
                 with_p['pH'].value.loc[random_cycle],
-                rtol=0.01,
-        ))
+                rtol=0.02,
+        )
 
-        assert (numpy.allclose(
+        numpy.testing.assert_allclose(
                 org['DO'].value.loc[random_cycle],
                 with_p['DO'].value.loc[random_cycle],
-                rtol=0.01,
-        ))
+                rtol=0.02,
+        )
 
 class TestDataEquivalence:
     def test_model(self):
