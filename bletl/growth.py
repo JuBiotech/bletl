@@ -235,6 +235,7 @@ def fit_mu_t(
     nu:float=5,
     x0_prior:float=0.25,
     student_t:typing.Optional[bool]=None,
+    switchpoint_prob:float=0.01,
     replicate_id:str='unnamed'
 ):
     """ Models a vector of growth rates to describe the observations.
@@ -265,6 +266,10 @@ def fit_mu_t(
     student_t : optional, bool
         switches between a Gaussian or StudentT random walk
         if not set, it defaults to the expression `len(switchpoints) == 0`
+    switchpoint_prob : float
+        Probability level for automatic switchpoint detection (when `student_t=True`).
+        Growth rate segments that lie outside of the (1 - switchpoint_prob) * 100 %
+        equal tailed prior probability interval are classified as switchpoints.
     replicate_id : str
         name of the replicate that the data belongs to (defaults to "unnamed")
 
@@ -353,8 +358,8 @@ def fit_mu_t(
         cdf_evals = numpy.array(cdf_evals)
         # filter for the elements that lie outside of the [0.005, 0.995] interval
         significance_mask = numpy.logical_or(
-            cdf_evals < 0.005,
-            cdf_evals > 0.995,
+            cdf_evals < (switchpoint_prob / 2),
+            cdf_evals > (1 - switchpoint_prob / 2),
         )
         # add these autodetected timepoints to the switchpoints-dict
         # (ignore the first timepoint)
