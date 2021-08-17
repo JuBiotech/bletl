@@ -490,7 +490,7 @@ class TestBLProCalibration:
         org = bletl.parse(calibration_test_file_pro2)
         with_lot = bletl.parse(calibration_test_file_pro2, lot_number=1724, temp=30)
 
-        random_cycle = numpy.random.random_integers(1, len(org['pH'].time.index))
+        random_cycle = numpy.random.randint(len(org['pH'].time.index)) + 1
 
         assert (numpy.allclose(
                 org['pH'].value.loc[random_cycle],
@@ -511,7 +511,7 @@ class TestBLProCalibration:
             phi_min=64.248, phi_max=19.039, pH_0=6.667, dpH=0.4878
         )
 
-        random_cycle = numpy.random.random_integers(1, len(org['pH'].time.index))
+        random_cycle = numpy.random.randint(len(org['pH'].time.index)) + 1
 
         assert (numpy.allclose(
                 org['pH'].value.loc[random_cycle],
