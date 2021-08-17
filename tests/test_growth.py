@@ -29,16 +29,24 @@ def biomass_calibration():
 @pytest.fixture
 def biomass_curve():
     """Simulates a biomass curve with three different growth rate segments"""
-    t = numpy.arange(0, 12, step=10/60)
-    mu_true = numpy.ones_like(t) * 0.05
-    mu_true[t < 10] = 0.2
-    mu_true[t < 8] = 0.4
+    t_data = numpy.arange(0, 12, step=10/60)
+    t_segments = t_data[:-1]
+
+    mu_true = numpy.ones_like(t_segments) * 0.05
+    mu_true[t_segments < 10] = 0.2
+    mu_true[t_segments < 8] = 0.4
 
     # Simulate the biomass concentrations
     X0_true = 0.25
-    X = X0_true * numpy.exp(numpy.cumsum(mu_true * numpy.diff(t, prepend=0)))
+    X = numpy.concatenate([
+        [X0_true],
+        X0_true * numpy.exp(numpy.cumsum(mu_true * numpy.diff(t_data))),
+    ])
 
-    yield t, X, mu_true
+    assert X.shape == t_data.shape
+    assert mu_true.shape == t_segments.shape
+
+    yield t_data, X, mu_true
 
 
 @pytest.mark.skipif(not HAS_DEPENDENCIES, reason="Needs optional dependencies.")
@@ -72,7 +80,7 @@ class TestGrowthHelpers:
         bs = scipy.stats.t.rvs(loc=loc, scale=scale / 10, df=df)
 
         mu = bletl.growth._get_smoothed_mu(t, bs, biomass_calibration)
-        assert mu.shape == t.shape
+        assert len(mu) == len(t) - 1
         # Verify based on the mean error w.r.t. the ground truth
         assert numpy.abs(mu - mu_true).mean() < 0.1
         pass
@@ -90,7 +98,9 @@ class TestRandomWalkModel:
             student_t=False,
         )
         assert isinstance(result, bletl.growth.GrowthRateResult)
-        assert result.mu_map.shape == t.shape
+        assert len(result.mu_map) == len(t) - 1
+        assert len(result.t_data) == len(t)
+        assert len(result.t_segments) == len(t) - 1
 
         # Verify based on the mean error w.r.t. the ground truth
         assert numpy.abs(result.mu_map - mu_true).mean() < 0.1
@@ -112,7 +122,7 @@ class TestRandomWalkModel:
             mu_prior=0.4
         )
         assert isinstance(result, bletl.growth.GrowthRateResult)
-        assert result.mu_map.shape == t.shape
+        assert len(result.mu_map) == len(t) - 1
 
         # Verify based on the mean error w.r.t. the ground truth
         assert numpy.abs(result.mu_map - mu_true).mean() < 0.1
