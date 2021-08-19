@@ -9,8 +9,6 @@ import theano.tensor as tt
 
 import calibr8
 
-from . import splines
-
 _log = logging.getLogger(__file__)
 
 
