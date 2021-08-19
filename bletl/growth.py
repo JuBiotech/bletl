@@ -2,6 +2,7 @@ import logging
 import numpy
 import scipy.stats
 import typing
+import warnings
 
 import arviz
 import pymc3
@@ -245,7 +246,8 @@ def fit_mu_t(
     switchpoints:typing.Optional[typing.Union[typing.Sequence[float], typing.Dict[float, str]]]=None,
     mcmc_samples:int=0,
     mu_prior:float=0,
-    σ:float=0.01,
+    σ:float=None,
+    drift_scale:float=0.01,
     nu:float=5,
     x0_prior:float=0.25,
     student_t:typing.Optional[bool]=None,
@@ -273,8 +275,8 @@ def fit_mu_t(
     mu_prior : float
         Prior belief in the growth rate at the beginning.
         Defaults to 0 which works well if there was a lag phase.
-    σ : float
-        standard deviation of the random walk - this controls how fast the growth rate may drift
+    drift_scale : float
+        Standard deviation or scale of the random walk (how much µ_t drifts per timestep).
     nu : float
         Degree of freedom for StudentT random walks.
         This controls the prior probability of switchpoints.
@@ -323,6 +325,10 @@ def fit_mu_t(
         # Override guess with user-provided mu_prior for nonzero starting points.
         mu_guess[mu_prior != 0] = mu_prior[mu_prior != 0]
 
+    if σ is not None:
+        warnings.warn("The `σ` parameter was renamed to `drift_scale`.", DeprecationWarning)
+        drift_scale = σ
+
     # build PyMC3 model
     coords = {
         "timepoint": numpy.arange(TD),
@@ -345,7 +351,7 @@ def fit_mu_t(
                 name = f'mu_phase_{i}'
                 slc = slice(i_from, i_to)
                 mu_segments.append(
-                    _make_random_walk(name, mu=mu_prior[slc], sigma=σ, nu=nu, length=i_len, student_t=student_t, initval=mu_guess[slc])
+                    _make_random_walk(name, mu=mu_prior[slc], sigma=drift_scale, nu=nu, length=i_len, student_t=student_t, initval=mu_guess[slc])
                 )
                 i_from += i_len
                 # remember the index to ignore it in potential autodetection
@@ -355,12 +361,12 @@ def fit_mu_t(
             name = f'mu_phase_{len(mu_segments)}'
             slc = slice(i_from, None)
             mu_segments.append(
-                _make_random_walk(name, mu_prior[slc], sigma=σ, nu=nu, length=i_len, student_t=student_t, initval=mu_guess[slc])
+                _make_random_walk(name, mu_prior[slc], sigma=drift_scale, nu=nu, length=i_len, student_t=student_t, initval=mu_guess[slc])
             )
             mu_t = pymc3.Deterministic('mu_t', tt.concatenate(mu_segments), dims="segment")
         else:
             _log.info('Creating model without switchpoints. StudentT=%b', len(t_switchpoints_known), student_t)
-            mu_t = _make_random_walk('mu_t', mu=mu_prior, sigma=σ, nu=nu, length=TS, student_t=student_t, initval=mu_guess)
+            mu_t = _make_random_walk('mu_t', mu=mu_prior, sigma=drift_scale, nu=nu, length=TS, student_t=student_t, initval=mu_guess)
 
         X0 = pymc3.Lognormal('X0', mu=numpy.log(x0_prior), sd=1)
         Xt = pymc3.Deterministic(

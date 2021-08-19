@@ -148,3 +148,17 @@ class TestRandomWalkModel:
         )
         assert numpy.mean(result.mu_map - 0.42) < 0.1
         pass
+
+    def test_σ_deprecation_warning(self, biomass_curve, biomass_calibration):
+        t = numpy.arange(0, 1, 0.1)
+        X = 0.25 * numpy.exp(t * 0.42)
+        loc, scale, df = biomass_calibration.predict_dependent(X)
+        bs = scipy.stats.t.rvs(loc=loc, scale=scale, df=df)
+
+        with pytest.warns(DeprecationWarning, match="`σ` parameter was renamed"):
+            bletl.growth.fit_mu_t(
+                t=t, y=bs,
+                calibration_model=biomass_calibration,
+                σ=0.1,
+            )
+        pass
