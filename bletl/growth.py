@@ -195,7 +195,7 @@ def _make_random_walk(name:str, *, mu: float=0, sigma:float, nu: float=1, length
         return pymc3.GaussianRandomWalk(name, mu=mu, sigma=sigma, shape=(length,), testval=initval)
 
 
-def _get_smoothed_mu(t: numpy.ndarray, y: numpy.ndarray, cm_cdw: calibr8.CalibrationModel, *, clip=0.8) -> numpy.ndarray:
+def _get_smoothed_mu(t: numpy.ndarray, y: numpy.ndarray, cm_cdw: calibr8.CalibrationModel, *, clip=0.5) -> numpy.ndarray:
     """Calculate a rough estimate of the specific growth rate from smoothed observations.
 
     Parameters
