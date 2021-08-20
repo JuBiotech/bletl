@@ -96,6 +96,7 @@ class TestRandomWalkModel:
             t=t, y=bs,
             calibration_model=biomass_calibration,
             student_t=False,
+            drift_scale=0.01,
         )
         assert isinstance(result, bletl.growth.GrowthRateResult)
         assert len(result.mu_map) == len(t) - 1
@@ -119,7 +120,8 @@ class TestRandomWalkModel:
             t=t, y=bs,
             calibration_model=biomass_calibration,
             student_t=True,
-            mu_prior=0.4
+            mu_prior=0.4,
+            drift_scale=0.01,
         )
         assert isinstance(result, bletl.growth.GrowthRateResult)
         assert len(result.mu_map) == len(t) - 1
@@ -145,20 +147,7 @@ class TestRandomWalkModel:
             calibration_model=biomass_calibration,
             student_t=student_t,
             mu_prior=0.42,
+            drift_scale=0.01,
         )
         assert numpy.mean(result.mu_map - 0.42) < 0.1
-        pass
-
-    def test_σ_deprecation_warning(self, biomass_curve, biomass_calibration):
-        t = numpy.arange(0, 1, 0.1)
-        X = 0.25 * numpy.exp(t * 0.42)
-        loc, scale, df = biomass_calibration.predict_dependent(X)
-        bs = scipy.stats.t.rvs(loc=loc, scale=scale, df=df)
-
-        with pytest.warns(DeprecationWarning, match="`σ` parameter was renamed"):
-            bletl.growth.fit_mu_t(
-                t=t, y=bs,
-                calibration_model=biomass_calibration,
-                σ=0.1,
-            )
         pass
