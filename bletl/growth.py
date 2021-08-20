@@ -2,7 +2,6 @@ import logging
 import numpy
 import scipy.stats
 import typing
-import warnings
 
 import arviz
 import pymc3
@@ -247,7 +246,7 @@ def fit_mu_t(
     mcmc_samples:int=0,
     mu_prior:float=0,
     σ:float=None,
-    drift_scale:float=0.01,
+    drift_scale:float,
     nu:float=5,
     x0_prior:float=0.25,
     student_t:typing.Optional[bool]=None,
@@ -277,6 +276,7 @@ def fit_mu_t(
         Defaults to 0 which works well if there was a lag phase.
     drift_scale : float
         Standard deviation or scale of the random walk (how much µ_t drifts per timestep).
+        This controls the bias-variance tradeoff of the method.
     nu : float
         Degree of freedom for StudentT random walks.
         This controls the prior probability of switchpoints.
@@ -324,10 +324,6 @@ def fit_mu_t(
         mu_prior = numpy.array([mu_prior] + [0] * (TS - 1))
         # Override guess with user-provided mu_prior for nonzero starting points.
         mu_guess[mu_prior != 0] = mu_prior[mu_prior != 0]
-
-    if σ is not None:
-        warnings.warn("The `σ` parameter was renamed to `drift_scale`.", DeprecationWarning)
-        drift_scale = σ
 
     # build PyMC3 model
     coords = {
