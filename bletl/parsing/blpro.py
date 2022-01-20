@@ -177,9 +177,15 @@ def extract_filtersets(metadata):
         filtersets[num][key] = v
 
     # grab data from metadata['process']
+    fname_lookup = {
+        "201": "Biomass",
+        "202": "pH(HP8)",
+        "203": "DO(PSt3)",
+    }
     for fnum, fset in filtersets.items():
         for k in ['reference_value', 'reference_gain', 'gain']:
-            pk = '{:02d}_{}_{}'.format(fnum, k, fset['name'])
+            fn = fname_lookup.get(fset['filter_id'], fset['name'])
+            pk = f'{fnum:02d}_{k}_{fn}'
             if pk in process:
                 filtersets[fnum][k] = process.pop(pk)
 
