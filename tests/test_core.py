@@ -416,6 +416,10 @@ class TestBLProParsing:
             
             assert isinstance(metadata, dict)
             assert isinstance(data, pandas.DataFrame)
+
+            # 👇 Regression check against https://github.com/JuBiotech/bletl/issues/8
+            filtersets = bletl.parsing.blpro.extract_filtersets(metadata)
+            assert "01_reference_gain_Biomass" not in metadata["process"]
         return
 
     def test_parsing(self):
