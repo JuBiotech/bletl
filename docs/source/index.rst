@@ -14,6 +14,8 @@ You can download the latest version from `GitHub <https://github.com/JuBiotech/b
 
 In the following chapters, we introduce the data structures and analysis features.
 
+Go and take a look to accelerate your BioLector data analysis!
+
 .. toctree::
    :maxdepth: 2
    :caption: Examples
