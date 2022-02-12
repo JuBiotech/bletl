@@ -140,8 +140,11 @@ class TestRandomWalkModel:
         t = numpy.arange(0, 10, 0.1)
         X = 0.25 * numpy.exp(t * 0.42)
         loc, scale, df = biomass_calibration.predict_dependent(X)
-        bs = scipy.stats.t.rvs(loc=loc, scale=scale, df=df)
 
+        rng = numpy.random.RandomState(2022)
+        bs = scipy.stats.t.rvs(loc=loc, scale=scale, df=df, random_state=rng)
+
+        numpy.random.seed(2022)
         result = bletl.growth.fit_mu_t(
             t=t, y=bs,
             calibration_model=biomass_calibration,
