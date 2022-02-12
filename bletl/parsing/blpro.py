@@ -10,6 +10,7 @@ import pandas
 import re
 import pathlib
 import xml.etree.ElementTree
+import warnings
 
 from ..types import (
     BioLectorModel, BLData, BLDParser, FilterTimeSeries,
@@ -259,7 +260,21 @@ def extract_measurements(dfraw):
         ('Phase', 'phase', float),
         ('Cal', 'cal', float),
     ]
-    df = utils.__to_typed_cols__(dfraw[dfraw['Type'] == 'M'], ocol_ncol_type)
+    df_M = dfraw[dfraw['Type'] == 'M']
+
+    # Drop lines with invalid readings
+    mask = (df_M["AmpRef_1"] == "REFOVERLD") | (df_M["AmpRef_2"] == "REFOVERLD")
+    ndrop = sum(mask)
+    if ndrop:
+        cdrop = df_M[mask]["Cycle"].to_list()
+        warnings.warn(
+            f"Dropped {ndrop} measurement rows from cycles {cdrop} because they have REFOVERLD.",
+            UserWarning
+        )
+    df_M = df_M[~mask]
+
+    # Convert to the expected data types
+    df = utils.__to_typed_cols__(df_M, ocol_ncol_type)
     df = df.set_index(['filterset', 'cycle', 'well'])
     return standardize(df)
 

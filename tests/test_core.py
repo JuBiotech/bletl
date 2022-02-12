@@ -465,6 +465,14 @@ class TestBLProParsing:
         bletl.parse(pathlib.Path(dir_testfiles, 'BLPro', 'line_duplication.csv'))
         pass
 
+    def test_refoverld_issue12(self):
+        with pytest.warns(UserWarning, match="cycles \[269, 636\].*REFOVERLD"):
+            bldata = bletl.parse(dir_testfiles / "BLPro" / "issue12.csv")
+        for fs, n in zip(["BS3", "DO", "pH"], [682, 684, 684]):
+            t, y = bldata.get_timeseries(fs, "A01")
+            assert len(t) == n
+            assert len(y) == n
+        pass
 
 class TestBLProCalibration:
     def test_filtertimeseries_presence(self):
