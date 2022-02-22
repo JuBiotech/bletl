@@ -1,0 +1,8 @@
+calibr8
+codecov
+flake8
+pymc3
+pytest
+pytest-cov
+twine
+wheel

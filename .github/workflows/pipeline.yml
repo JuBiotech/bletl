@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -e .
-        pip install flake8 pytest pytest-cov codecov wheel calibr8 pymc3
+        pip install -r requirements-dev.txt
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
