@@ -29,7 +29,6 @@ jobs:
         pytest --cov=./bletl --cov-report xml --cov-report term-missing tests/
     - name: Upload coverage
       uses: codecov/codecov-action@v1
-      if: matrix.python-version == 3.8
       with:
         file: ./coverage.xml
     - name: Test Wheel install and import
