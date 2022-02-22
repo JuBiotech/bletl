@@ -245,7 +245,6 @@ def fit_mu_t(
     switchpoints:typing.Optional[typing.Union[typing.Sequence[float], typing.Dict[float, str]]]=None,
     mcmc_samples:int=0,
     mu_prior:float=0,
-    σ:float=None,
     drift_scale:float,
     nu:float=5,
     x0_prior:float=0.25,
