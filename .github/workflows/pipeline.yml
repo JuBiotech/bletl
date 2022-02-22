@@ -8,6 +8,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.7, 3.8, 3.9]
+        pymc-version: ["without", "pymc==4.0.0b2", "pymc3"]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -24,8 +25,14 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings
         flake8 . --count --exit-zero --statistics
-    - name: Test with pytest
+    - name: Test without PyMC
+      if: matrix.pymc-version == 'without'
       run: |
+        pytest --cov=./bletl --cov-report xml --cov-report term-missing tests/
+    - name: Install and test with PyMC
+      if: matrix.pymc-version != 'without'
+      run: |
+        pip install ${{ matrix.pymc-version }}
         pytest --cov=./bletl --cov-report xml --cov-report term-missing tests/
     - name: Upload coverage
       uses: codecov/codecov-action@v1

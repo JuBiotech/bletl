@@ -1,13 +1,21 @@
 import logging
 import numpy
+from packaging import version
 import scipy.stats
 import typing
 
 import arviz
-import pymc3
-import theano.tensor as tt
 
 import calibr8
+from calibr8.utils import at, pm
+
+# Use the new ConstantData container if available,
+# because it gives superior computational performance.
+if hasattr(pm, "ConstantData"):
+    pmData = pm.ConstantData
+else:
+    pmData = pm.Data
+
 
 _log = logging.getLogger(__file__)
 
@@ -22,7 +30,7 @@ class GrowthRateResult:
         y:numpy.ndarray,
         calibration_model: calibr8.CalibrationModel,
         switchpoints:typing.Dict[float, str],
-        pmodel:pymc3.Model,
+        pmodel:pm.Model,
         theta_map:dict,
     ):
         """ Creates a result object of a growth rate analysis.
@@ -37,10 +45,10 @@ class GrowthRateResult:
             backscatter vector
         switchpoints : dict
             maps switchpoint times to labels
-        pmodel : pymc3.Model
-            the PyMC3 model underlying the analysis
+        pmodel : pymc.Model
+            the PyMC model underlying the analysis
         theta_map : dict
-            the PyMC3 MAP estimate
+            the PyMC MAP estimate
         """
         self._t_data = t_data
         self._t_segments = t_segments
@@ -91,8 +99,8 @@ class GrowthRateResult:
         )
 
     @property
-    def pmodel(self) -> pymc3.Model:
-        """ The PyMC3 model underlying this analysis. """
+    def pmodel(self) -> pm.Model:
+        """ The PyMC model underlying this analysis. """
         return self._pmodel
 
     @property
@@ -135,7 +143,7 @@ class GrowthRateResult:
         Parameters
         ----------
         **sample_kwargs
-            optional keyword-arguments to pymc3.sample(...) to override defaults
+            optional keyword-arguments to pymc.sample(...) to override defaults
         """
         sample_kwargs = dict(
             return_inferencedata=True,
@@ -147,12 +155,15 @@ class GrowthRateResult:
         )
         sample_kwargs.update(kwargs)
         with self.pmodel:
-            self._idata = pymc3.sample(**sample_kwargs)
+            self._idata = pm.sample(**sample_kwargs)
         return
 
 
 def _make_random_walk(name:str, *, mu: float=0, sigma:float, nu: float=1, length:int, student_t:bool, initval: numpy.ndarray=None):
     """ Create a random walk with either a Normal or Student-t distribution.
+
+    For some PyMC versions and for Student-t distributed random walks,
+    the distribution is created from a cumsum of a N-dimensional random variable.
 
     Parameteres
     -----------
@@ -170,29 +181,51 @@ def _make_random_walk(name:str, *, mu: float=0, sigma:float, nu: float=1, length
     length : int
         Number of steps in the random walk.
     student_t : bool
-        If `True` a `pymc3.Deterministic` of a StudentT-random walk is created.
+        If `True` a `pymc.Deterministic` of a StudentT-random walk is created.
         Otherwise a `GaussianRandomWalk` is created.
     initval : numpy.ndarray
         Initial values for the RandomWalk variable.
-        If set, PyMC3 uses these values as start points for MAP optimization and MCMC sampling.
+        If set, PyMC uses these values as start points for MAP optimization and MCMC sampling.
 
     Returns
     -------
     random_walk : TensorVariable
         The tensor variable of the random walk.
     """
-    if student_t:
-        # a random walk of length N is just the cumulative sum over a N-dimensional random variable:
-        return pymc3.Deterministic(name, tt.cumsum(
-            pymc3.StudentT(
-                f'{name}__diff_',
-                mu=mu, sd=sigma, nu=nu,
-                shape=(length,),
-                testval=numpy.diff(initval, prepend=0) if initval is not None else initval
-            )
-        ))
+    pmversion = version.parse(pm.__version__)
+
+    # Adapt to rename of the testval→initval kwarg
+    if pmversion <= version.parse("3.11.4"):
+        initval_kwarg = "testval"
     else:
-        return pymc3.GaussianRandomWalk(name, mu=mu, sigma=sigma, shape=(length,), testval=initval)
+        initval_kwarg = "initval"
+
+    if pmversion < version.parse("4.0.0b1") and not student_t:
+        # Use the gaussian random walk distribution directly.
+        return pm.GaussianRandomWalk(**{
+            "name": name,
+            "mu": mu,
+            "sigma": sigma,
+            "shape": (length,),
+            initval_kwarg: initval,
+        })
+    else:
+        # Create the random walk manually.
+        rv_kwargs = {
+            "name": f"{name}__diff_",
+            "mu": mu,
+            "sigma": sigma,
+            "shape": (length,),
+            initval_kwarg: numpy.diff(initval, prepend=0) if initval is not None else None,
+        }
+
+        if student_t:
+            rv_cls = pm.StudentT
+            rv_kwargs["nu"] = nu
+        else:
+            rv_cls = pm.Normal
+
+        return pm.Deterministic(name, at.cumsum(rv_cls(**rv_kwargs)))
 
 
 def _get_smoothed_mu(t: numpy.ndarray, y: numpy.ndarray, cm_cdw: calibr8.CalibrationModel, *, clip=0.5) -> numpy.ndarray:
@@ -324,16 +357,16 @@ def fit_mu_t(
         # Override guess with user-provided mu_prior for nonzero starting points.
         mu_guess[mu_prior != 0] = mu_prior[mu_prior != 0]
 
-    # build PyMC3 model
+    # build PyMC model
     coords = {
         "timepoint": numpy.arange(TD),
         "segment": numpy.arange(TS),
     }
-    with pymc3.Model(coords=coords) as pmodel:
-        pymc3.Data('known_switchpoints', t_switchpoints_known)
-        pymc3.Data('t_data', t_data, dims="timepoint")
-        pymc3.Data('t_segments', t_segments, dims="segment")
-        dt = pymc3.Data('dt', numpy.diff(t_data), dims="segment")
+    with pm.Model(coords=coords) as pmodel:
+        pmData('known_switchpoints', t_switchpoints_known)
+        pmData('t_data', t_data, dims="timepoint")
+        pmData('t_segments', t_segments, dims="segment")
+        dt = pmData('dt', numpy.diff(t_data), dims="segment")
 
         if len(t_switchpoints_known) > 0:
             _log.info('Creating model with %d switchpoints. StudentT=%b', len(t_switchpoints_known), student_t)
@@ -358,30 +391,30 @@ def fit_mu_t(
             mu_segments.append(
                 _make_random_walk(name, mu_prior[slc], sigma=drift_scale, nu=nu, length=i_len, student_t=student_t, initval=mu_guess[slc])
             )
-            mu_t = pymc3.Deterministic('mu_t', tt.concatenate(mu_segments), dims="segment")
+            mu_t = pm.Deterministic('mu_t', at.concatenate(mu_segments), dims="segment")
         else:
             _log.info('Creating model without switchpoints. StudentT=%b', len(t_switchpoints_known), student_t)
             mu_t = _make_random_walk('mu_t', mu=mu_prior, sigma=drift_scale, nu=nu, length=TS, student_t=student_t, initval=mu_guess)
 
-        X0 = pymc3.Lognormal('X0', mu=numpy.log(x0_prior), sd=1)
-        Xt = pymc3.Deterministic(
+        X0 = pm.Lognormal('X0', mu=numpy.log(x0_prior), sd=1)
+        Xt = pm.Deterministic(
             'X',
-            tt.concatenate([
+            at.concatenate([
                 X0[None],
-                X0 * pymc3.math.exp(tt.extra_ops.cumsum(mu_t * dt))
+                X0 * pm.math.exp(at.extra_ops.cumsum(mu_t * dt))
             ]),
             dims="timepoint",
         )
         calibration_model.loglikelihood(
             x=Xt,
-            y=pymc3.Data('backscatter', y, dims=('timepoint',)),
+            y=pmData('backscatter', y, dims=('timepoint',)),
             replicate_id=replicate_id,
             dependent_key=calibration_model.dependent_key
         )
 
     # MAP fit
     with pmodel:
-        theta_map = pymc3.find_MAP(maxeval=15_000)
+        theta_map = pm.find_MAP(maxeval=15_000)
 
     # with StudentT random walks, switchpoints can be autodetected
     if student_t:
