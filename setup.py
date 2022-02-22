@@ -25,7 +25,7 @@ if __name__ == '__main__':
         zip_safe=False,
         version=__version__,
         description='Package for parsing and transforming BioLector raw data.',
-        url='https://jugit.fz-juelich.de/IBG-1/biopro/bletl',
+        url='https://github.com/jubiotech/bletl',
         author='Michael Osthege',
         author_email='m.osthege@fz-juelich.de',
         license='GNU Affero General Public License v3.0',
