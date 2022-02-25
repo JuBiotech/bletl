@@ -165,8 +165,8 @@ def _make_random_walk(name:str, *, mu: float=0, sigma:float, nu: float=1, length
     For some PyMC versions and for Student-t distributed random walks,
     the distribution is created from a cumsum of a N-dimensional random variable.
 
-    Parameteres
-    -----------
+    Parameters
+    ----------
     name : str
         Name of the random walk variable.
     mu : float, array-like
@@ -216,6 +216,9 @@ def _make_random_walk(name:str, *, mu: float=0, sigma:float, nu: float=1, length
             "mu": mu,
             "sigma": sigma,
             "shape": (length,),
+            # Since the initval refers to the random walk, but we're creating it
+            # using the cumsum of an RV, we need to do numpy.diff to get an initial
+            # value for the RV from the initial value of the random walk.
             initval_kwarg: numpy.diff(initval, prepend=0) if initval is not None else None,
         }
 
