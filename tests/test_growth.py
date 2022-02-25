@@ -6,8 +6,7 @@ import scipy.stats
 try:
     import bletl.growth
     import calibr8
-    import pymc3
-    from theano.tensor import TensorVariable
+    from calibr8.utils import at, pm
 
     HAS_DEPENDENCIES = True
 except ImportError:
@@ -52,24 +51,24 @@ def biomass_curve():
 @pytest.mark.skipif(not HAS_DEPENDENCIES, reason="Needs optional dependencies.")
 class TestGrowthHelpers:
     def test_make_gaussian_random_walk(self):
-        with pymc3.Model() as pmodel:
+        with pm.Model() as pmodel:
             rv = bletl.growth._make_random_walk(
                 "testGRW",
                 sigma=0.02,
                 length=20,
                 student_t=False,
             )
-            assert isinstance(rv, TensorVariable)
+            assert isinstance(rv, at.TensorVariable)
 
     def test_make_studentt_random_walk(self):
-        with pymc3.Model() as pmodel:
+        with pm.Model() as pmodel:
             rv = bletl.growth._make_random_walk(
                 "testSTRW",
                 sigma=0.02,
                 length=20,
                 student_t=True,
             )
-            assert isinstance(rv, TensorVariable)
+            assert isinstance(rv, at.TensorVariable)
         pass
 
     def test_get_smoothed_mu(self, biomass_curve, biomass_calibration):
@@ -86,6 +85,7 @@ class TestGrowthHelpers:
         pass
 
 
+@pytest.mark.skipif(not HAS_DEPENDENCIES, reason="Needs optional dependencies.")
 class TestRandomWalkModel:
     def test_fit_mu_t_gaussian(self, biomass_curve, biomass_calibration):
         t, X, mu_true = biomass_curve

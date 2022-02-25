@@ -13,4 +13,4 @@ from . heuristics import find_do_peak
 from . splines import get_crossvalidated_spline
 
 
-__version__ = '1.0.5'
+__version__ = '1.1.0'

@@ -1,6 +1,6 @@
 name: pipeline
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   test-job:
@@ -8,6 +8,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.7, 3.8, 3.9]
+        pymc-version: ["without", "pymc==4.0.0b2", "pymc3"]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -17,19 +18,24 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -e .
-        pip install flake8 pytest pytest-cov codecov wheel calibr8 pymc3
+        pip install -r requirements-dev.txt
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings
         flake8 . --count --exit-zero --statistics
-    - name: Test with pytest
+    - name: Test without PyMC
+      if: matrix.pymc-version == 'without'
       run: |
+        pytest --cov=./bletl --cov-report xml --cov-report term-missing tests/
+    - name: Install and test with PyMC
+      if: matrix.pymc-version != 'without'
+      run: |
+        pip install ${{ matrix.pymc-version }}
         pytest --cov=./bletl --cov-report xml --cov-report term-missing tests/
     - name: Upload coverage
       uses: codecov/codecov-action@v1
-      if: matrix.python-version == 3.8
       with:
         file: ./coverage.xml
     - name: Test Wheel install and import
