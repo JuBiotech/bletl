@@ -1,28 +1,27 @@
 import copy
-import joblib
 import logging
 import multiprocessing
 import numbers
+import pickle
+from typing import Callable, Dict, Optional, Sequence, Tuple, Union
+
+import csaps
+import joblib
 import numpy
 import pandas
-import pickle
-import scipy.optimize
 import scipy.interpolate
+import scipy.optimize
 import scipy.stats
-import csaps
-from typing import Dict, Callable, Optional, Sequence, Tuple, Union
 
-
-from . types import FilterTimeSeries
-
+from .types import FilterTimeSeries
 
 logger = logging.getLogger(__file__)
 
 
 class UnivariateCubicSmoothingSpline(csaps.CubicSmoothingSpline):
-    """Overrides `csaps` type to align its API with the `scipy.interpolate` splines.
-    """
-    def derivative(self, order:int=1, *, epsilon=0.001) -> Callable[[numpy.ndarray], numpy.ndarray]:
+    """Overrides `csaps` type to align its API with the `scipy.interpolate` splines."""
+
+    def derivative(self, order: int = 1, *, epsilon=0.001) -> Callable[[numpy.ndarray], numpy.ndarray]:
         """Returns the derivative of the spline.
 
         Parameters
@@ -44,7 +43,9 @@ class UnivariateCubicSmoothingSpline(csaps.CubicSmoothingSpline):
             der = self.derivative(order - 1)
             der_f = lambda x: der(x)
             return lambda x: (der_f(x + epsilon) - der_f(x - epsilon)) / (2 * epsilon)
-        raise NotImplementedError(f'{order}-order derivatives are not implemented for the UnivariateCubicSmoothingSpline')
+        raise NotImplementedError(
+            f"{order}-order derivatives are not implemented for the UnivariateCubicSmoothingSpline"
+        )
 
     def __call__(self, xi: Union[float, numpy.ndarray]):
         """Evaluate the spline at some coordinates.
@@ -65,7 +66,7 @@ class UnivariateCubicSmoothingSpline(csaps.CubicSmoothingSpline):
         return result
 
 
-def _normalize_smoothing_factor(method:str, smooth:float, x: numpy.ndarray, y: numpy.ndarray) -> float:
+def _normalize_smoothing_factor(method: str, smooth: float, x: numpy.ndarray, y: numpy.ndarray) -> float:
     """Normalization of smoothing factor from the interval [0,1] to the value required by the Spline type.
 
     Parameters
@@ -84,9 +85,9 @@ def _normalize_smoothing_factor(method:str, smooth:float, x: numpy.ndarray, y: n
     smoothing_factor : float
         Smoothing factor transformed to the domain used by the spline `method`.
     """
-    if method == 'ucss':
+    if method == "ucss":
         return 1 - smooth
-    elif method == 'us':
+    elif method == "us":
         # the s parameter of the UnivariateSpline describes the maximum sum squared error of the fit
         # a reasonable upper bound for this SSE is the SSE of a linear fit
         slope, intercept, _, _, _ = scipy.stats.linregress(x, y)
@@ -96,9 +97,9 @@ def _normalize_smoothing_factor(method:str, smooth:float, x: numpy.ndarray, y: n
         raise NotImplementedError(f'Unknown method "{method}"')
 
 
-def _evaluate_smoothing_factor(smoothing_factor:float, timepoints, values, k:int, method:str) -> float:
+def _evaluate_smoothing_factor(smoothing_factor: float, timepoints, values, k: int, method: str) -> float:
     """Computes mean sum of squared residuals over K folds of the dataset.
-    
+
     Parameters
     ----------
     smoothing_factor : float
@@ -112,7 +113,7 @@ def _evaluate_smoothing_factor(smoothing_factor:float, timepoints, values, k:int
     method : str
         Kind of spline.
         Options: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline
-        
+
     Returns
     -------
     mssr : float
@@ -123,8 +124,7 @@ def _evaluate_smoothing_factor(smoothing_factor:float, timepoints, values, k:int
         raise ValueError(f"Need k≥2 splits for crossvalidation. Setting was k={k}.")
     if len(values) < 3 * k:
         raise ValueError(
-            f"Time series of {len(values)} elements is too short. "
-            f"Need at least a length of 3*k ({3*k})."
+            f"Time series of {len(values)} elements is too short. " f"Need at least a length of 3*k ({3*k})."
         )
     ssrs = []
     for kshift in range(k):
@@ -139,7 +139,7 @@ def _evaluate_smoothing_factor(smoothing_factor:float, timepoints, values, k:int
                 train_idxs=train_mask,
                 test_idxs=test_mask,
                 smoothing_factor=smoothing_factor,
-                method=method
+                method=method,
             )
         )
     return numpy.mean(ssrs)
@@ -150,8 +150,8 @@ def _evaluate_spline_test_error(
     y: numpy.ndarray,
     train_idxs: numpy.ndarray,
     test_idxs: numpy.ndarray,
-    smoothing_factor:float,
-    method:str
+    smoothing_factor: float,
+    method: str,
 ) -> float:
     """Fits spline to a test set and returns the sum of squared error on the test set.
 
@@ -177,25 +177,25 @@ def _evaluate_spline_test_error(
         Sum of squared residuals on test set.
     """
     smooth = _normalize_smoothing_factor(method, smoothing_factor[0], x, y)
-    if method == 'ucss':
+    if method == "ucss":
         spline = csaps.CubicSmoothingSpline(x[train_idxs], y[train_idxs], smooth=smooth)
-    elif method == 'us':
+    elif method == "us":
         spline = scipy.interpolate.UnivariateSpline(x[train_idxs], y[train_idxs], s=smooth)
     else:
         raise NotImplementedError(f'Unknown method "{method}"')
     y_val_pred = spline(x[test_idxs])
-    return numpy.sum(numpy.square(y_val_pred - y[test_idxs]))      
+    return numpy.sum(numpy.square(y_val_pred - y[test_idxs]))
 
 
 def get_crossvalidated_spline(
     x: numpy.ndarray,
     y: numpy.ndarray,
-    k_folds:int=5,
-    method:str='us',
-    bounds: Tuple[float, float]=(0.001,1)
+    k_folds: int = 5,
+    method: str = "us",
+    bounds: Tuple[float, float] = (0.001, 1),
 ) -> Union[UnivariateCubicSmoothingSpline, scipy.interpolate.UnivariateSpline]:
     """Returns spline with k-fold crossvalidated smoothing factor
-    
+
     Parameters
     ----------
     x : numpy.ndarray
@@ -216,28 +216,27 @@ def get_crossvalidated_spline(
         Spline of the specified `method` fitted to the data.
         Its optimal smoothing factor is determined by k-fold crossvalidation.
     """
-    opt = scipy.optimize.differential_evolution(_evaluate_smoothing_factor,
-        bounds=[bounds],
-        args=(x, y, k_folds, method)
+    opt = scipy.optimize.differential_evolution(
+        _evaluate_smoothing_factor, bounds=[bounds], args=(x, y, k_folds, method)
     )
     smooth = _normalize_smoothing_factor(method, opt.x[0], x, y)
-    if method == 'ucss':
+    if method == "ucss":
         return UnivariateCubicSmoothingSpline(x, y, smooth=smooth)
-    elif method == 'us':
+    elif method == "us":
         return scipy.interpolate.UnivariateSpline(x, y, s=smooth)
     else:
         raise NotImplementedError(f'Unknown method "{method}"')
 
 
 def get_multiple_splines(
-    fts:FilterTimeSeries,
-    wells:Sequence[str],
-    k_folds:int=5,
-    method:str='us',
-    last_cycle:Optional[int]=None
+    fts: FilterTimeSeries,
+    wells: Sequence[str],
+    k_folds: int = 5,
+    method: str = "us",
+    last_cycle: Optional[int] = None,
 ) -> Dict[str, Union[UnivariateCubicSmoothingSpline, scipy.interpolate.UnivariateSpline]]:
     """Returns multiple splines with k-fold crossvalidated smoothing factor
-    
+
     Parameters
     ----------
     fts : FilterTimeSeries
@@ -248,7 +247,7 @@ def get_multiple_splines(
         "k"s for cross-validation
     method : str
         Kind of spline.
-        Choices: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline 
+        Choices: "ucss" UnivariateCubicSmoothingSpline, "us" UnivariateSpline
 
     Returns
     -------
@@ -259,34 +258,43 @@ def get_multiple_splines(
     if last_cycle == None:
         last_cycle = len(x)
     elif last_cycle > len(x):
-        raise ValueError('Please change last_cycle.')  
+        raise ValueError("Please change last_cycle.")
+
     def get_spline_parallel(arg):
         well, timepoints, values, k_folds = arg
         spline = get_crossvalidated_spline(timepoints, values, k_folds, method=method)
         return (well, spline)
+
     args_get_spline = []
     for well in wells:
         timepoints, values = fts.get_timeseries(well)
-        args = (copy.deepcopy(well), copy.deepcopy(timepoints[:last_cycle]), copy.deepcopy(values[:last_cycle]), copy.deepcopy(k_folds))
+        args = (
+            copy.deepcopy(well),
+            copy.deepcopy(timepoints[:last_cycle]),
+            copy.deepcopy(values[:last_cycle]),
+            copy.deepcopy(k_folds),
+        )
         args_get_spline.append(args)
     if len(wells) > 1:
         try:
-            return joblib.Parallel(n_jobs=multiprocessing.cpu_count(), verbose=11)(map(joblib.delayed(get_spline_parallel), args_get_spline))
+            return joblib.Parallel(n_jobs=multiprocessing.cpu_count(), verbose=11)(
+                map(joblib.delayed(get_spline_parallel), args_get_spline)
+            )
         except pickle.PicklingError:
             logger.warning("Parallelization failed. Retrying without parallelization.")
     return list(map(get_spline_parallel, args_get_spline))
 
 
 def get_mue(
-    bsdata:FilterTimeSeries,
-    wells: Union[Sequence[str], str]='all',
-    blank: Union[float, str, Dict[str, float]]='first',
-    k_folds:int=5,
-    method:str='us',
-    last_cycle:Optional[int]=None
+    bsdata: FilterTimeSeries,
+    wells: Union[Sequence[str], str] = "all",
+    blank: Union[float, str, Dict[str, float]] = "first",
+    k_folds: int = 5,
+    method: str = "us",
+    last_cycle: Optional[int] = None,
 ):
     """Approximation of specific growth rate over time via spline approximation using splines with k-fold cross validated smoothing factor
-    
+
     Parameters
     ----------
     bsdata : FilterTimeSeries
@@ -319,20 +327,20 @@ def get_mue(
         of if an invalid blank option is passed.
     """
     # check inputs
-    if wells == 'all':
+    if wells == "all":
         wells = list(bsdata.time.columns)
-    if blank == 'first':
-        blank_dict = {well:data.iloc[0] for well, data in bsdata.value.iteritems()}
+    if blank == "first":
+        blank_dict = {well: data.iloc[0] for well, data in bsdata.value.iteritems()}
     elif isinstance(blank, numbers.Number):
-        blank_dict = {well:blank for well, data in bsdata.value.iteritems()}
+        blank_dict = {well: blank for well, data in bsdata.value.iteritems()}
     elif isinstance(blank, dict):
         if set(blank.keys()) != set(wells):
-            raise ValueError('Please provide blanks for every well')
+            raise ValueError("Please provide blanks for every well")
         blank_dict = blank
     else:
-        raise ValueError('Please provide proper blank option.')
+        raise ValueError("Please provide proper blank option.")
     # run spline fitting
-    results = get_multiple_splines(bsdata, wells, method=method, last_cycle=last_cycle)   
+    results = get_multiple_splines(bsdata, wells, method=method, last_cycle=last_cycle)
     # compute derivatives
     time = {}
     mues = {}
@@ -340,11 +348,11 @@ def get_mue(
         well = result[0]
         spline = result[1]
         der = spline.derivative(1)
-        if blank == 'first':
+        if blank == "first":
             time[well] = bsdata.time[well][1:last_cycle]
         else:
             time[well] = bsdata.time[well][:last_cycle]
-        mues[well] = der(time[well])/(spline(time[well]) - blank_dict[well])      
+        mues[well] = der(time[well]) / (spline(time[well]) - blank_dict[well])
     # summarize into FilterTimeSeries
     filtertimeseries = FilterTimeSeries(
         pandas.DataFrame(time),

@@ -2,8 +2,9 @@
 Signal analysis based on simple, deterministic heuristics.
 """
 import logging
-import numpy
 import typing
+
+import numpy
 
 _log = logging.getLogger(__file__)
 
@@ -12,14 +13,14 @@ def find_do_peak(
     x: numpy.ndarray,
     y: numpy.ndarray,
     *,
-    delay_a:float,
-    threshold_a:float,
-    delay_b:float,
-    threshold_b:float,
-    initial_delay:float=1
+    delay_a: float,
+    threshold_a: float,
+    delay_b: float,
+    threshold_b: float,
+    initial_delay: float = 1
 ) -> typing.Optional[int]:
     """Finds the index of a DO peak in the inputs [x] and [y].
-    
+
     Parameters
     ----------
     x : numpy.ndarray

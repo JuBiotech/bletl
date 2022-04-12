@@ -2,15 +2,21 @@
 BioLector files, applying calibration transformations and representing them in a standardized
 format.
 """
-from . types import (
-    BioLectorModel, BLData, BLDParser, FilterTimeSeries,
-    LotInformationError, LotInformationMismatch, InvalidLotNumberError,
-    NoMeasurementData, IncompatibleFileError, LotInformationNotFound
-)
-from . core import parse, get_parser, parsers
 from . import utils
-from . heuristics import find_do_peak
-from . splines import get_crossvalidated_spline
+from .core import get_parser, parse, parsers
+from .heuristics import find_do_peak
+from .splines import get_crossvalidated_spline
+from .types import (
+    BioLectorModel,
+    BLData,
+    BLDParser,
+    FilterTimeSeries,
+    IncompatibleFileError,
+    InvalidLotNumberError,
+    LotInformationError,
+    LotInformationMismatch,
+    LotInformationNotFound,
+    NoMeasurementData,
+)
 
-
-__version__ = '1.1.0'
+__version__ = "1.1.0"

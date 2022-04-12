@@ -1,13 +1,12 @@
 import logging
-import numpy
-from packaging import version
-import scipy.stats
 import typing
 
 import arviz
-
 import calibr8
+import numpy
+import scipy.stats
 from calibr8.utils import at, pm
+from packaging import version
 
 # Use the new ConstantData container if available,
 # because it gives superior computational performance.
@@ -21,19 +20,20 @@ _log = logging.getLogger(__file__)
 
 
 class GrowthRateResult:
-    """ Represents the result of applying the µ(t) model to one dataset. """
+    """Represents the result of applying the µ(t) model to one dataset."""
+
     def __init__(
         self,
         *,
-        t_data:numpy.ndarray,
-        t_segments:numpy.ndarray,
-        y:numpy.ndarray,
+        t_data: numpy.ndarray,
+        t_segments: numpy.ndarray,
+        y: numpy.ndarray,
         calibration_model: calibr8.CalibrationModel,
-        switchpoints:typing.Dict[float, str],
-        pmodel:pm.Model,
-        theta_map:dict,
+        switchpoints: typing.Dict[float, str],
+        pmodel: pm.Model,
+        theta_map: dict,
     ):
-        """ Creates a result object of a growth rate analysis.
+        """Creates a result object of a growth rate analysis.
 
         Parameters
         ----------
@@ -62,83 +62,75 @@ class GrowthRateResult:
 
     @property
     def t_data(self) -> numpy.ndarray:
-        """ Vector of data timepoints. """
+        """Vector of data timepoints."""
         return self._t_data
 
     @property
     def t_segments(self) -> numpy.ndarray:
-        """ Vector of growth rate segment time mid-points. """
+        """Vector of growth rate segment time mid-points."""
         return self._t_segments
 
     @property
     def y(self) -> numpy.ndarray:
-        """ Vector of backscatter observations. """
+        """Vector of backscatter observations."""
         return self._y
 
     @property
     def switchpoints(self) -> typing.Dict[float, str]:
-        """ Dictionary (by time) of known and detected switchpoints. """
+        """Dictionary (by time) of known and detected switchpoints."""
         return self._switchpoints
 
     @property
     def known_switchpoints(self) -> typing.Tuple[float]:
-        """ Time values of previously known switchpoints in the model. """
-        return tuple(
-            t
-            for t, label in self.switchpoints.items()
-            if label != 'detected'
-        )
+        """Time values of previously known switchpoints in the model."""
+        return tuple(t for t, label in self.switchpoints.items() if label != "detected")
 
     @property
     def detected_switchpoints(self) -> typing.Tuple[float]:
-        """ Time values of switchpoints that were autodetected from the fit. """
-        return tuple(
-            t
-            for t, label in self.switchpoints.items()
-            if label == 'detected'
-        )
+        """Time values of switchpoints that were autodetected from the fit."""
+        return tuple(t for t, label in self.switchpoints.items() if label == "detected")
 
     @property
     def pmodel(self) -> pm.Model:
-        """ The PyMC model underlying this analysis. """
+        """The PyMC model underlying this analysis."""
         return self._pmodel
 
     @property
     def theta_map(self) -> dict:
-        """ MAP estimate of the model parameters. """
+        """MAP estimate of the model parameters."""
         return self._theta_map
 
     @property
     def idata(self) -> typing.Optional[arviz.InferenceData]:
-        """ ArviZ InferenceData object of the MCMC trace. """
+        """ArviZ InferenceData object of the MCMC trace."""
         return self._idata
 
     @property
     def mu_map(self) -> numpy.ndarray:
-        """ MAP estimate of the growth rates in segments between data points. """
-        return self.theta_map['mu_t']
+        """MAP estimate of the growth rates in segments between data points."""
+        return self.theta_map["mu_t"]
 
     @property
     def x_map(self) -> numpy.ndarray:
-        """ MAP estimate of the biomass curve. """
-        return self.theta_map['X']
+        """MAP estimate of the biomass curve."""
+        return self.theta_map["X"]
 
     @property
     def mu_mcmc(self) -> typing.Optional[numpy.ndarray]:
-        """ Posterior samples of growth rates in segments between data points. """
+        """Posterior samples of growth rates in segments between data points."""
         if not self.idata:
             return None
-        return self.idata.posterior.mu_t.stack(sample=('chain', 'draw')).values.T
+        return self.idata.posterior.mu_t.stack(sample=("chain", "draw")).values.T
 
     @property
     def x_mcmc(self) -> typing.Optional[numpy.ndarray]:
-        """ Posterior samples of biomass curve. """
+        """Posterior samples of biomass curve."""
         if not self.idata:
             return None
-        return self._idata.posterior['X'].stack(sample=('chain', 'draw')).T
+        return self._idata.posterior["X"].stack(sample=("chain", "draw")).T
 
     def sample(self, **kwargs) -> None:
-        """ Runs MCMC sampling with default settings on the growth model.
+        """Runs MCMC sampling with default settings on the growth model.
 
         Parameters
         ----------
@@ -148,7 +140,7 @@ class GrowthRateResult:
         sample_kwargs = dict(
             return_inferencedata=True,
             target_accept=0.95,
-            init='jitter+adapt_diag',
+            init="jitter+adapt_diag",
             start=self.theta_map,
             tune=500,
             draws=500,
@@ -159,8 +151,17 @@ class GrowthRateResult:
         return
 
 
-def _make_random_walk(name:str, *, mu: float=0, sigma:float, nu: float=1, length:int, student_t:bool, initval: numpy.ndarray=None):
-    """ Create a random walk with either a Normal or Student-t distribution.
+def _make_random_walk(
+    name: str,
+    *,
+    mu: float = 0,
+    sigma: float,
+    nu: float = 1,
+    length: int,
+    student_t: bool,
+    initval: numpy.ndarray = None,
+):
+    """Create a random walk with either a Normal or Student-t distribution.
 
     For some PyMC versions and for Student-t distributed random walks,
     the distribution is created from a cumsum of a N-dimensional random variable.
@@ -202,13 +203,15 @@ def _make_random_walk(name:str, *, mu: float=0, sigma:float, nu: float=1, length
 
     if pmversion < version.parse("4.0.0b1") and not student_t:
         # Use the gaussian random walk distribution directly.
-        return pm.GaussianRandomWalk(**{
-            "name": name,
-            "mu": mu,
-            "sigma": sigma,
-            "shape": (length,),
-            initval_kwarg: initval,
-        })
+        return pm.GaussianRandomWalk(
+            **{
+                "name": name,
+                "mu": mu,
+                "sigma": sigma,
+                "shape": (length,),
+                initval_kwarg: initval,
+            }
+        )
     else:
         # Create the random walk manually.
         rv_kwargs = {
@@ -231,7 +234,9 @@ def _make_random_walk(name:str, *, mu: float=0, sigma:float, nu: float=1, length
         return pm.Deterministic(name, at.cumsum(rv_cls(**rv_kwargs)))
 
 
-def _get_smoothed_mu(t: numpy.ndarray, y: numpy.ndarray, cm_cdw: calibr8.CalibrationModel, *, clip=0.5) -> numpy.ndarray:
+def _get_smoothed_mu(
+    t: numpy.ndarray, y: numpy.ndarray, cm_cdw: calibr8.CalibrationModel, *, clip=0.5
+) -> numpy.ndarray:
     """Calculate a rough estimate of the specific growth rate from smoothed observations.
 
     Parameters
@@ -251,22 +256,22 @@ def _get_smoothed_mu(t: numpy.ndarray, y: numpy.ndarray, cm_cdw: calibr8.Calibra
         A vector of specific growth rates.
     """
     # apply moving average to reduce backscatter noise
-    y = numpy.convolve(y, numpy.ones(5)/5, "same")
-    
+    y = numpy.convolve(y, numpy.ones(5) / 5, "same")
+
     # convert to biomass
     X = cm_cdw.predict_independent(y)
-    
+
     # calculate growth rate
     dX = numpy.diff(X)
     dt = numpy.diff(t)
     Xsegment = numpy.mean([X[1:], X[:-1]], axis=0)
     mu = (dX / dt) / Xsegment
-    
+
     # clip growth rate into a realistic interval
     mu = numpy.clip(mu, -clip, clip)
-    
+
     # smooth again to reduce peaking
-    mu = numpy.convolve(mu, numpy.ones(5)/5, "same")
+    mu = numpy.convolve(mu, numpy.ones(5) / 5, "same")
 
     # Replace NaNs that can show up with non-linear calibration models
     mu[numpy.isnan(mu)] = 0
@@ -274,21 +279,21 @@ def _get_smoothed_mu(t: numpy.ndarray, y: numpy.ndarray, cm_cdw: calibr8.Calibra
 
 
 def fit_mu_t(
-    t:typing.Sequence[float],
-    y:typing.Sequence[float],
-    calibration_model:calibr8.CalibrationModel,
+    t: typing.Sequence[float],
+    y: typing.Sequence[float],
+    calibration_model: calibr8.CalibrationModel,
     *,
-    switchpoints:typing.Optional[typing.Union[typing.Sequence[float], typing.Dict[float, str]]]=None,
-    mcmc_samples:int=0,
-    mu_prior:float=0,
-    drift_scale:float,
-    nu:float=5,
-    x0_prior:float=0.25,
-    student_t:typing.Optional[bool]=None,
-    switchpoint_prob:float=0.01,
-    replicate_id:str='unnamed'
+    switchpoints: typing.Optional[typing.Union[typing.Sequence[float], typing.Dict[float, str]]] = None,
+    mcmc_samples: int = 0,
+    mu_prior: float = 0,
+    drift_scale: float,
+    nu: float = 5,
+    x0_prior: float = 0.25,
+    student_t: typing.Optional[bool] = None,
+    switchpoint_prob: float = 0.01,
+    replicate_id: str = "unnamed",
 ):
-    """ Models a vector of growth rates to describe the observations.
+    """Models a vector of growth rates to describe the observations.
 
     A MAP estimate is automatically determined.
 
@@ -333,10 +338,7 @@ def fit_mu_t(
         wraps around the data, model and fitting results
     """
     if not isinstance(switchpoints, dict):
-        switchpoints = {
-            t_switch : 'known'
-            for t_switch in switchpoints or []
-        }
+        switchpoints = {t_switch: "known" for t_switch in switchpoints or []}
     t_switchpoints_known = numpy.sort(list(switchpoints.keys()))
     if student_t is None:
         student_t = len(switchpoints) == 0
@@ -366,53 +368,78 @@ def fit_mu_t(
         "segment": numpy.arange(TS),
     }
     with pm.Model(coords=coords) as pmodel:
-        pmData('known_switchpoints', t_switchpoints_known)
-        pmData('t_data', t_data, dims="timepoint")
-        pmData('t_segments', t_segments, dims="segment")
-        dt = pmData('dt', numpy.diff(t_data), dims="segment")
+        pmData("known_switchpoints", t_switchpoints_known)
+        pmData("t_data", t_data, dims="timepoint")
+        pmData("t_segments", t_segments, dims="segment")
+        dt = pmData("dt", numpy.diff(t_data), dims="segment")
 
         if len(t_switchpoints_known) > 0:
-            _log.info('Creating model with %d switchpoints. StudentT=%b', len(t_switchpoints_known), student_t)
+            _log.info(
+                "Creating model with %d switchpoints. StudentT=%b", len(t_switchpoints_known), student_t
+            )
             # the growth rate vector is fragmented according to t_switchpoints_known
             mu_segments = []
             i_from = 0
             for i, t_switch in enumerate(t_switchpoints_known):
                 i_to = numpy.argmax(t > t_switch)
                 i_len = len(t[i_from:i_to])
-                name = f'mu_phase_{i}'
+                name = f"mu_phase_{i}"
                 slc = slice(i_from, i_to)
                 mu_segments.append(
-                    _make_random_walk(name, mu=mu_prior[slc], sigma=drift_scale, nu=nu, length=i_len, student_t=student_t, initval=mu_guess[slc])
+                    _make_random_walk(
+                        name,
+                        mu=mu_prior[slc],
+                        sigma=drift_scale,
+                        nu=nu,
+                        length=i_len,
+                        student_t=student_t,
+                        initval=mu_guess[slc],
+                    )
                 )
                 i_from += i_len
                 # remember the index to ignore it in potential autodetection
                 c_switchpoints_known.append(i_from)
             # the last segment until the end
             i_len = len(t[i_from:]) - 1
-            name = f'mu_phase_{len(mu_segments)}'
+            name = f"mu_phase_{len(mu_segments)}"
             slc = slice(i_from, None)
             mu_segments.append(
-                _make_random_walk(name, mu_prior[slc], sigma=drift_scale, nu=nu, length=i_len, student_t=student_t, initval=mu_guess[slc])
+                _make_random_walk(
+                    name,
+                    mu_prior[slc],
+                    sigma=drift_scale,
+                    nu=nu,
+                    length=i_len,
+                    student_t=student_t,
+                    initval=mu_guess[slc],
+                )
             )
-            mu_t = pm.Deterministic('mu_t', at.concatenate(mu_segments), dims="segment")
+            mu_t = pm.Deterministic("mu_t", at.concatenate(mu_segments), dims="segment")
         else:
-            _log.info('Creating model without switchpoints. StudentT=%b', len(t_switchpoints_known), student_t)
-            mu_t = _make_random_walk('mu_t', mu=mu_prior, sigma=drift_scale, nu=nu, length=TS, student_t=student_t, initval=mu_guess)
+            _log.info(
+                "Creating model without switchpoints. StudentT=%b", len(t_switchpoints_known), student_t
+            )
+            mu_t = _make_random_walk(
+                "mu_t",
+                mu=mu_prior,
+                sigma=drift_scale,
+                nu=nu,
+                length=TS,
+                student_t=student_t,
+                initval=mu_guess,
+            )
 
-        X0 = pm.Lognormal('X0', mu=numpy.log(x0_prior), sd=1)
+        X0 = pm.Lognormal("X0", mu=numpy.log(x0_prior), sd=1)
         Xt = pm.Deterministic(
-            'X',
-            at.concatenate([
-                X0[None],
-                X0 * pm.math.exp(at.extra_ops.cumsum(mu_t * dt))
-            ]),
+            "X",
+            at.concatenate([X0[None], X0 * pm.math.exp(at.extra_ops.cumsum(mu_t * dt))]),
             dims="timepoint",
         )
         calibration_model.loglikelihood(
             x=Xt,
-            y=pmData('backscatter', y, dims=('timepoint',)),
+            y=pmData("backscatter", y, dims=("timepoint",)),
             replicate_id=replicate_id,
-            dependent_key=calibration_model.dependent_key
+            dependent_key=calibration_model.dependent_key,
         )
 
     # MAP fit
@@ -424,15 +451,17 @@ def fit_mu_t(
         # first CDF values at all mu_t elements
         cdf_evals = []
         for rvname in sorted(theta_map.keys()):
-            if '__diff_' in rvname:
+            if "__diff_" in rvname:
                 rv = pmodel[rvname]
                 # for every µ, find out where it lies in the CDF of the StudentT prior distribution
-                cdf_evals += list(scipy.stats.t.cdf(
-                    x=theta_map[rvname],
-                    loc=rv.distribution.mu.eval(),
-                    scale=rv.distribution.sd.eval(),
-                    df=rv.distribution.nu.eval(),
-                ))
+                cdf_evals += list(
+                    scipy.stats.t.cdf(
+                        x=theta_map[rvname],
+                        loc=rv.distribution.mu.eval(),
+                        scale=rv.distribution.sd.eval(),
+                        df=rv.distribution.nu.eval(),
+                    )
+                )
         cdf_evals = numpy.array(cdf_evals)
         # filter for the elements that lie outside of the [0.005, 0.995] interval
         significance_mask = numpy.logical_or(
@@ -443,8 +472,8 @@ def fit_mu_t(
         # (ignore the first timepoint)
         for c_switch, (t_switch, is_switchpoint) in enumerate(zip(t_data, significance_mask[1:])):
             if is_switchpoint and c_switch not in c_switchpoints_known:
-                switchpoints[t_switch] = 'detected'
-    
+                switchpoints[t_switch] = "detected"
+
     # bundle up all relevant variables into a result object
     result = GrowthRateResult(
         t_data=t_data,
@@ -456,7 +485,11 @@ def fit_mu_t(
         theta_map=theta_map,
     )
     if len(result.detected_switchpoints):
-        _log.info('Detected %d previously unknown switchpoints: %s', len(result.detected_switchpoints), result.detected_switchpoints)
+        _log.info(
+            "Detected %d previously unknown switchpoints: %s",
+            len(result.detected_switchpoints),
+            result.detected_switchpoints,
+        )
     if mcmc_samples > 0:
         result.sample(draws=mcmc_samples)
 

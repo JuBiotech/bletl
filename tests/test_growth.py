@@ -2,11 +2,11 @@ import numpy
 import pytest
 import scipy.stats
 
-
 try:
-    import bletl.growth
     import calibr8
     from calibr8.utils import at, pm
+
+    import bletl.growth
 
     HAS_DEPENDENCIES = True
 except ImportError:
@@ -16,9 +16,12 @@ except ImportError:
 @pytest.fixture
 def biomass_calibration():
     """Creates a realistic biomass calibration for testing"""
+
     class LinearModel(calibr8.BasePolynomialModelT):
         def __init__(self) -> None:
-            super().__init__(independent_key="X", dependent_key="Pahpshmir_1400_BS3_CgWT", mu_degree=1, scale_degree=0)
+            super().__init__(
+                independent_key="X", dependent_key="Pahpshmir_1400_BS3_CgWT", mu_degree=1, scale_degree=0
+            )
 
     cmodel = LinearModel()
     cmodel.theta_fitted = [0, 1, 0.1, 5]
@@ -28,7 +31,7 @@ def biomass_calibration():
 @pytest.fixture
 def biomass_curve():
     """Simulates a biomass curve with three different growth rate segments"""
-    t_data = numpy.arange(0, 12, step=10/60)
+    t_data = numpy.arange(0, 12, step=10 / 60)
     t_segments = t_data[:-1]
 
     mu_true = numpy.ones_like(t_segments) * 0.05
@@ -37,10 +40,12 @@ def biomass_curve():
 
     # Simulate the biomass concentrations
     X0_true = 0.25
-    X = numpy.concatenate([
-        [X0_true],
-        X0_true * numpy.exp(numpy.cumsum(mu_true * numpy.diff(t_data))),
-    ])
+    X = numpy.concatenate(
+        [
+            [X0_true],
+            X0_true * numpy.exp(numpy.cumsum(mu_true * numpy.diff(t_data))),
+        ]
+    )
 
     assert X.shape == t_data.shape
     assert mu_true.shape == t_segments.shape
@@ -93,7 +98,8 @@ class TestRandomWalkModel:
         bs = scipy.stats.t.rvs(loc=loc, scale=scale, df=df)
 
         result = bletl.growth.fit_mu_t(
-            t=t, y=bs,
+            t=t,
+            y=bs,
             calibration_model=biomass_calibration,
             student_t=False,
             drift_scale=0.01,
@@ -117,7 +123,8 @@ class TestRandomWalkModel:
         bs = scipy.stats.t.rvs(loc=loc, scale=scale / 10, df=df)
 
         result = bletl.growth.fit_mu_t(
-            t=t, y=bs,
+            t=t,
+            y=bs,
             calibration_model=biomass_calibration,
             student_t=True,
             mu_prior=0.4,
@@ -146,7 +153,8 @@ class TestRandomWalkModel:
 
         numpy.random.seed(2022)
         result = bletl.growth.fit_mu_t(
-            t=t, y=bs,
+            t=t,
+            y=bs,
             calibration_model=biomass_calibration,
             student_t=student_t,
             mu_prior=0.42,

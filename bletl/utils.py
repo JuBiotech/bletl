@@ -1,14 +1,16 @@
 """Contains helper functions that do not depend on other modules within this package."""
 import datetime
-import pandas
+import pathlib
 import re
 import urllib
-import pathlib
 from typing import Sequence, Tuple, Union
 
-from . import core 
+import pandas
 
-def __to_typed_cols__(dfin:pandas.DataFrame, ocol_ncol_type:Tuple[str, str, type]) -> pandas.DataFrame:
+from . import core
+
+
+def __to_typed_cols__(dfin: pandas.DataFrame, ocol_ncol_type: Tuple[str, str, type]) -> pandas.DataFrame:
     """Can be used to filter & convert data frame columns.
 
     Parameters
@@ -51,7 +53,7 @@ def _unindex(dataframe: pandas.DataFrame) -> Tuple[Sequence[Union[str, None]], p
     return dataframe.index.names, dataframe.reset_index()
 
 
-def _reindex(dataframe:pandas.DataFrame, index_names: Sequence[str]) -> pandas.DataFrame:
+def _reindex(dataframe: pandas.DataFrame, index_names: Sequence[str]) -> pandas.DataFrame:
     """Applies an indexing scheme to a DataFrame.
 
     Parameters
@@ -72,7 +74,9 @@ def _reindex(dataframe:pandas.DataFrame, index_names: Sequence[str]) -> pandas.D
         return dataframe
 
 
-def _concatenate_fragments(fragments:Sequence[pandas.DataFrame], start_times:Sequence[datetime.datetime]) -> pandas.DataFrame:
+def _concatenate_fragments(
+    fragments: Sequence[pandas.DataFrame], start_times: Sequence[datetime.datetime]
+) -> pandas.DataFrame:
     """Concatenate multiple dataframes while shifting time and cycles.
 
     Parameters
@@ -91,16 +95,16 @@ def _concatenate_fragments(fragments:Sequence[pandas.DataFrame], start_times:Seq
     columns = set(stack.columns)
 
     for fragment, fragment_start in zip(fragments[1:], start_times[1:]):
-        assert isinstance(fragment, pandas.DataFrame), 'fragments must be a list of DataFrames'
+        assert isinstance(fragment, pandas.DataFrame), "fragments must be a list of DataFrames"
         index_names_f, fragment = _unindex(fragment)
-        assert set(index_names_f) == set(index_names), 'indices must match across all fragments'
-        assert set(fragment.columns) == columns, 'columns must match across all fragments'
+        assert set(index_names_f) == set(index_names), "indices must match across all fragments"
+        assert set(fragment.columns) == columns, "columns must match across all fragments"
 
         # shift time and cycle columns in the fragment
-        if 'time' in columns:
-            fragment['time'] += (fragment_start - start_times[0]).total_seconds() / 3600
-        if 'cycle' in columns and len(stack) > 0:
-            fragment['cycle'] += max(stack['cycle'])
+        if "time" in columns:
+            fragment["time"] += (fragment_start - start_times[0]).total_seconds() / 3600
+        if "cycle" in columns and len(stack) > 0:
+            fragment["cycle"] += max(stack["cycle"])
 
         # append the fragment to the stack
         stack = pandas.concat((stack, fragment))
@@ -109,7 +113,7 @@ def _concatenate_fragments(fragments:Sequence[pandas.DataFrame], start_times:Seq
     return _reindex(stack, index_names)
 
 
-def _last_well_in_cycle(measurements:pandas.DataFrame) -> str:
+def _last_well_in_cycle(measurements: pandas.DataFrame) -> str:
     """Finds the name of the last well measured in a cycle.
 
     Parameters
@@ -133,7 +137,7 @@ def _last_well_in_cycle(measurements:pandas.DataFrame) -> str:
     return previous_well
 
 
-def _last_full_cycle(measurements:pandas.DataFrame) -> int:
+def _last_full_cycle(measurements: pandas.DataFrame) -> int:
     """Find the number of the last cycle that was measured for all wells and filters.
 
     Parameters
@@ -155,12 +159,12 @@ def _last_full_cycle(measurements:pandas.DataFrame) -> int:
     last_well = measurements.iloc[-1].well
 
     if (last_filter, last_well) != (max_filter, max_well):
-        return last_cycle  - 1
+        return last_cycle - 1
     else:
         return last_cycle
 
 
-def _parse_calibration_info(calibration_info:str):
+def _parse_calibration_info(calibration_info: str):
     """Extracts lot number and temperature for a line of calibration info.
 
     Parameters
@@ -175,7 +179,7 @@ def _parse_calibration_info(calibration_info:str):
     temp : int
         Process temperature
     """
-    result = re.findall(r'(\d*)-hc-Temp(\d{2})', calibration_info)
+    result = re.findall(r"(\d*)-hc-Temp(\d{2})", calibration_info)
     lot_number = int(result[0][0])
     temp = int(result[0][1])
 
@@ -192,18 +196,18 @@ def download_calibration_data() -> bool:
     """
     try:
         module_path = pathlib.Path(core.__spec__.origin).parents[0]
-        
-        url_bl1 = 'http://updates.m2p-labs.com/CalibrationLot.ini'
-        filepath_bl1 = pathlib.Path(module_path, 'cache', 'CalibrationLot.ini')
+
+        url_bl1 = "http://updates.m2p-labs.com/CalibrationLot.ini"
+        filepath_bl1 = pathlib.Path(module_path, "cache", "CalibrationLot.ini")
         filepath_bl1.parents[0].mkdir(exist_ok=True)
         urllib.request.urlretrieve(url_bl1, filepath_bl1)
 
-        url_blpro = 'http://updates.m2p-labs.com/CalibrationLot_II.xml'
-        filepath_blpro = pathlib.Path(module_path, 'cache', 'CalibrationLot_II.xml')
+        url_blpro = "http://updates.m2p-labs.com/CalibrationLot_II.xml"
+        filepath_blpro = pathlib.Path(module_path, "cache", "CalibrationLot_II.xml")
         filepath_blpro.parents[0].mkdir(exist_ok=True)
         urllib.request.urlretrieve(url_blpro, filepath_blpro)
-        
+
         return True
-    
+
     except urllib.error.HTTPError:
         return False
