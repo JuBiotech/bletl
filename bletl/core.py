@@ -1,25 +1,35 @@
 """Specifies the base types for parsing and representing BioLector CSV files."""
 import abc
-from collections.abc import Iterable
 import enum
-import numpy
 import os
-import pandas
 import pathlib
 import typing
-import urllib.request
 import urllib.error
+import urllib.request
 import warnings
+from collections.abc import Iterable
 from typing import Optional, Union
 
-from . import parsing
-from . types import BLData, BLDParser, FilterTimeSeries, BioLectorModel, LotInformationError, InvalidLotNumberError, LotInformationMismatch, LotInformationNotFound, IncompatibleFileError, NoMeasurementData
-from . import utils
+import numpy
+import pandas
 
+from . import parsing, utils
+from .types import (
+    BioLectorModel,
+    BLData,
+    BLDParser,
+    FilterTimeSeries,
+    IncompatibleFileError,
+    InvalidLotNumberError,
+    LotInformationError,
+    LotInformationMismatch,
+    LotInformationNotFound,
+    NoMeasurementData,
+)
 
 parsers = {
-    (BioLectorModel.BL1, '3.3') : parsing.bl1.BioLector1Parser,
-    (BioLectorModel.BLPro, '0.0.0') : parsing.blpro.BioLectorProParser,
+    (BioLectorModel.BL1, "3.3"): parsing.bl1.BioLector1Parser,
+    (BioLectorModel.BLPro, "0.0.0"): parsing.blpro.BioLectorProParser,
 }
 
 
@@ -45,32 +55,34 @@ def get_parser(filepath: Union[str, pathlib.Path]) -> BLDParser:
         # Note:
         # BioLector II files are encoded as UTF8-BOM
         # BioLector Pro files are encoded as UTF-8
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             lines = f.readlines()
     except UnicodeDecodeError:
-        with open(filepath, 'r', encoding='latin-1') as f:
+        with open(filepath, "r", encoding="latin-1") as f:
             lines = f.readlines()
 
     model = None
     version = None
 
-    if '=====' in lines[0]:
-        if 'parameters' in lines[0]:
-            raise IncompatibleFileError('It seems like this file has been edited by the BioLection software. Please provide the raw data file.')
+    if "=====" in lines[0]:
+        if "parameters" in lines[0]:
+            raise IncompatibleFileError(
+                "It seems like this file has been edited by the BioLection software. Please provide the raw data file."
+            )
         model = BioLectorModel.BLPro
         for line in lines:
-            if line.startswith('[file_version_number]'):
-                version = line.split(']')[1].strip()
+            if line.startswith("[file_version_number]"):
+                version = line.split("]")[1].strip()
                 break
-    elif 'FILENAME;' in lines[0]:
+    elif "FILENAME;" in lines[0]:
         model = BioLectorModel.BL1
         version = lines[2][13:-2]
     if not model:
-        raise ValueError('Unable to detect the BioLector model from the file contents.')
-    if not version :
-        raise ValueError('Unable to detect the file version from the contents.')
+        raise ValueError("Unable to detect the BioLector model from the file contents.")
+    if not version:
+        raise ValueError("Unable to detect the file version from the contents.")
     if not (model, version) in parsers:
-        raise NotImplementedError(f'Unsupported {model} file version: {version}')
+        raise NotImplementedError(f"Unsupported {model} file version: {version}")
 
     # select a parser for this version
     parser_cls = parsers[(model, version)]
@@ -78,16 +90,16 @@ def get_parser(filepath: Union[str, pathlib.Path]) -> BLDParser:
 
 
 def _parse(
-    filepath:str,
-    drop_incomplete_cycles:bool,
-    lot_number:int,
-    temp:int,
-    cal_0:float=None,
-    cal_100:float=None,
-    phi_min:float=None,
-    phi_max:float=None,
-    pH_0:float=None,
-    dpH:float=None,
+    filepath: str,
+    drop_incomplete_cycles: bool,
+    lot_number: int,
+    temp: int,
+    cal_0: float = None,
+    cal_100: float = None,
+    phi_min: float = None,
+    phi_max: float = None,
+    pH_0: float = None,
+    dpH: float = None,
 ) -> BLData:
     """Parses a raw BioLector CSV file into a BLData object.
 
@@ -140,15 +152,15 @@ def _parse(
 def parse(
     filepaths,
     *,
-    drop_incomplete_cycles:bool=True,
-    lot_number:int=None,
-    temp:int=None,
-    cal_0:float=None,
-    cal_100:float=None,
-    phi_min:float=None,
-    phi_max:float=None,
-    pH_0:float=None,
-    dpH:float=None,
+    drop_incomplete_cycles: bool = True,
+    lot_number: int = None,
+    temp: int = None,
+    cal_0: float = None,
+    cal_100: float = None,
+    phi_min: float = None,
+    phi_max: float = None,
+    pH_0: float = None,
+    dpH: float = None,
 ) -> BLData:
     """Parses a raw BioLector CSV file into a BLData object and applies calibration.
 
@@ -196,43 +208,50 @@ def parse(
     if isinstance(filepaths, Iterable) and not isinstance(filepaths, str):
         fragments = []
         for filepath in filepaths:
-            fragment = _parse(filepath, drop_incomplete_cycles, lot_number, temp, cal_0, cal_100, phi_min, phi_max, pH_0, dpH)
+            fragment = _parse(
+                filepath,
+                drop_incomplete_cycles,
+                lot_number,
+                temp,
+                cal_0,
+                cal_100,
+                phi_min,
+                phi_max,
+                pH_0,
+                dpH,
+            )
             fragments.append(fragment)
-        start_times = [
-            fragment.metadata['date_start']
-            for fragment in fragments
-        ]
-        
+        start_times = [fragment.metadata["date_start"] for fragment in fragments]
+
         data = fragments[0]
 
         # iterate over all DataFrame-attributes
         for attr, stack in data.__dict__.items():
             if isinstance(stack, pandas.DataFrame):
                 # time/cycle aware concatenation of all fragments
-                fragment_frames = [
-                    getattr(fragment, attr)
-                    for fragment in fragments
-                ]
+                fragment_frames = [getattr(fragment, attr) for fragment in fragments]
                 stack = utils._concatenate_fragments(fragment_frames, start_times)
                 setattr(data, attr, stack)
-        
+
         # also iterate over FilterTimeSeries and concatenate them
         if len(fragments) > 1:
             for fs in data.keys():
                 # already increment the time here, because utils._concatenate_fragments won't do that
-                conc_times = utils._concatenate_fragments([
-                   f[fs].time + (fragment_start - start_times[0]).total_seconds() / 3600
-                   for f, fragment_start in zip(fragments, start_times)
-                ], start_times)
-                conc_values = utils._concatenate_fragments([
-                    f[fs].value
-                    for f in fragments
-                ], start_times)
+                conc_times = utils._concatenate_fragments(
+                    [
+                        f[fs].time + (fragment_start - start_times[0]).total_seconds() / 3600
+                        for f, fragment_start in zip(fragments, start_times)
+                    ],
+                    start_times,
+                )
+                conc_values = utils._concatenate_fragments([f[fs].value for f in fragments], start_times)
                 # overwrite with concatenated FilterTimeSeries
                 data[fs] = FilterTimeSeries(conc_times, conc_values)
 
-        data.metadata['date_end'] = fragments[-1].metadata['date_end']
+        data.metadata["date_end"] = fragments[-1].metadata["date_end"]
     else:
-        data = _parse(filepaths, drop_incomplete_cycles, lot_number, temp, cal_0, cal_100, phi_min, phi_max, pH_0, dpH)
+        data = _parse(
+            filepaths, drop_incomplete_cycles, lot_number, temp, cal_0, cal_100, phi_min, phi_max, pH_0, dpH
+        )
 
     return data

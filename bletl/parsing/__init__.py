@@ -1,2 +1,1 @@
-from . import bl1
-from . import blpro
+from . import bl1, blpro

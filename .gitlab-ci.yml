@@ -15,7 +15,7 @@ build-bletl:
     paths:
       - ./*.whl
     expire_in: 30 days
- 
+
 
 test-bletl-py38:
   stage: test
