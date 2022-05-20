@@ -463,9 +463,9 @@ def fit_mu_t(
                 cdf_evals += list(
                     scipy.stats.t.cdf(
                         x=theta_map[rvname],
-                        loc=rv.distribution.mu.eval(),
-                        scale=rv.distribution.sd.eval(),
-                        df=rv.distribution.nu.eval(),
+                        loc=rv.owner.inputs[3].eval(),
+                        scale=rv.owner.inputs[4].eval(),
+                        df=rv.owner.inputs[2].eval(),
                     )
                 )
         cdf_evals = numpy.array(cdf_evals)
