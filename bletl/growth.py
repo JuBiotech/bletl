@@ -146,7 +146,7 @@ class GrowthRateResult:
         sample_kwargs = dict(
             return_inferencedata=True,
             target_accept=0.95,
-            init="jitter+adapt_diag",
+            init="adapt_diag",
             start=self.theta_map,
             tune=500,
             draws=500,
