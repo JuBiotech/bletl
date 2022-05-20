@@ -5,7 +5,7 @@ import arviz
 import calibr8
 import numpy
 import scipy.stats
-from calibr8.utils import at, pm
+from calibr8.utils import pm
 from packaging import version
 
 # Use the new ConstantData container if available,
@@ -14,6 +14,12 @@ if hasattr(pm, "ConstantData"):
     pmData = pm.ConstantData
 else:
     pmData = pm.Data
+
+
+try:
+    import aesara.tensor as at
+except ModuleNotFoundError:
+    import theano.tensor as at
 
 
 _log = logging.getLogger(__file__)
