@@ -435,7 +435,7 @@ def fit_mu_t(
                 initval=mu_guess,
             )
 
-        X0 = pm.Lognormal("X0", mu=numpy.log(x0_prior), sd=1)
+        X0 = pm.LogNormal("X0", mu=numpy.log(x0_prior), sigma=1)
         Xt = pm.Deterministic(
             "X",
             at.concatenate([X0[None], X0 * pm.math.exp(at.extra_ops.cumsum(mu_t * dt))]),
