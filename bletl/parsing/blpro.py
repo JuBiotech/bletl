@@ -410,7 +410,7 @@ def transform_into_filtertimeseries(
         # test if any filterset is not available in measurements due to invalid data #issue24
         if filter_number not in measurements.index.get_level_values("filterset"):
             logger.warn(
-                f'Skipped channel %s with name "%s" because no valid measurements are available.',
+                'Skipped channel %s with name "%s" because no valid measurements are available.',
                 fs.filter_type,
                 fs.filter_name,
             )
