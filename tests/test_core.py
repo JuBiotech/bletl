@@ -33,14 +33,7 @@ BL1_files_without_calibration_info = [
 not_a_bl_file = pathlib.Path(dir_testfiles, "BL1", "incremental", "C42.tmp")
 
 BL2_files = list(pathlib.Path(dir_testfiles, "BLII").iterdir())
-BLPro_files = [
-    fp
-    for fp in pathlib.Path(dir_testfiles, "BLPro").iterdir()
-    if fp.name
-    not in {
-        "issue24.csv",
-    }
-]
+BLPro_files = list(pathlib.Path(dir_testfiles, "BLPro").iterdir())
 calibration_test_file = pathlib.Path(dir_testfiles, "BLPro", "18-FZJ-Test2--2018-02-07-10-01-11.csv")
 incompatible_file = pathlib.Path(dir_testfiles, "incompatible_files", "BL2-file-saved-with-biolection.csv")
 
@@ -490,15 +483,14 @@ class TestBLProParsing:
             assert len(y) == n
         pass
 
-    @pytest.mark.xfail(reason="See https://github.com/JuBiotech/bletl/issues/24")
     def test_issue24(self):
         bldata = bletl.parse(dir_testfiles / "BLPro" / "issue24.csv")
         assert "BS1" in bldata
         assert "BS3" in bldata
         assert "pH" in bldata
         assert "DO" in bldata
-        assert "Fluorescence5" in bldata
-        assert "Fluorescence9" in bldata
+        assert "Fluorescence5" not in bldata
+        assert "Fluorescence9" not in bldata
         pass
 
 

@@ -407,7 +407,15 @@ def transform_into_filtertimeseries(
         key = None
         times = None
         values = None
-        if fs.filter_type == "Intensity" and ("Biomass" in fs.filter_name or "BS" in fs.filter_name):
+        # test if any filterset is not available in measurements due to invalid data #issue24
+        if filter_number not in measurements.index.get_level_values("filterset"):
+            logger.warn(
+                'Skipped channel %s with name "%s" because no valid measurements are available.',
+                fs.filter_type,
+                fs.filter_name,
+            )
+            continue
+        elif fs.filter_type == "Intensity" and ("Biomass" in fs.filter_name or "BS" in fs.filter_name):
             key = f"BS{int(fs.gain_1)}"
             times = measurements.xs(filter_number, level="filterset")["time"].unstack()
             values = measurements.xs(filter_number, level="filterset")["amp_ref_1"].unstack()
