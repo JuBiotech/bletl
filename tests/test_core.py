@@ -497,8 +497,8 @@ class TestBLProParsing:
         assert "BS3" in bldata
         assert "pH" in bldata
         assert "DO" in bldata
-        assert "Fluorescence5" in bldata
-        assert "Fluorescence9" in bldata
+        assert "Fluorescence5" not in bldata
+        assert "Fluorescence9" not in bldata
         pass
 
 

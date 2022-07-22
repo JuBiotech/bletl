@@ -407,42 +407,44 @@ def transform_into_filtertimeseries(
         key = None
         times = None
         values = None
-        if filter_number in measurements.index.get_level_values("filterset"): #test if any filterset is not available in measurements due to invalid data issue24
-            if fs.filter_type == "Intensity" and ("Biomass" in fs.filter_name or "BS" in fs.filter_name):
-                key = f"BS{int(fs.gain_1)}"
-                times = measurements.xs(filter_number, level="filterset")["time"].unstack()
-                values = measurements.xs(filter_number, level="filterset")["amp_ref_1"].unstack()
-            elif fs.filter_type in {"pH", "DO"} and not return_uncalibrated_optode_data:
-                key = fs.filter_type
-                times = measurements.xs(filter_number, level="filterset")["time"].unstack()
-                values = measurements.xs(filter_number, level="filterset")["cal"].unstack()
-            elif fs.filter_type in {"pH", "DO"} and return_uncalibrated_optode_data:
-                key = fs.filter_type
-                times = measurements.xs(filter_number, level="filterset")["time"].unstack()
-                values = measurements.xs(filter_number, level="filterset")["phase"].unstack()
-            elif fs.filter_type == "Intensity":
-                key = fs.filter_name
-                times = measurements.xs(filter_number, level="filterset")["time"].unstack()
-                values = measurements.xs(filter_number, level="filterset")["amp_ref_1"].unstack()
-            else:
-                logger.warn(
-                    f'Skipped {fs.filter_type} channel with name "{fs.filter_name}" because no processing routine is implemented.'
-                )
-                continue
-
-            # transform into nicely formatted DataFrames for FilterTimeSeries
-            times.columns = [no_to_id[c] for c in times.columns]
-            times = times.reindex(sorted(times.columns), axis=1)
-            times.columns.name = "well"
-            values.columns = [no_to_id[c] for c in values.columns]
-            values = values.reindex(sorted(values.columns), axis=1)
-            values.columns.name = "well"
-            fts = FilterTimeSeries(times, values)
-            yield (key, fts)
-        else:#if filterset is not available like in issue 24 print warning
+        #test if any filterset is not available in measurements due to invalid data #issue24
+        if filter_number not in measurements.index.get_level_values("filterset"):
             logger.warn(
                     f'Skipped {fs.filter_type} channel with name "{fs.filter_name}" because no valid measurements available.'
-                )
+            )
+            continue
+        elif fs.filter_type == "Intensity" and ("Biomass" in fs.filter_name or "BS" in fs.filter_name):
+            key = f"BS{int(fs.gain_1)}"
+            times = measurements.xs(filter_number, level="filterset")["time"].unstack()
+            values = measurements.xs(filter_number, level="filterset")["amp_ref_1"].unstack()
+        elif fs.filter_type in {"pH", "DO"} and not return_uncalibrated_optode_data:
+            key = fs.filter_type
+            times = measurements.xs(filter_number, level="filterset")["time"].unstack()
+            values = measurements.xs(filter_number, level="filterset")["cal"].unstack()
+        elif fs.filter_type in {"pH", "DO"} and return_uncalibrated_optode_data:
+            key = fs.filter_type
+            times = measurements.xs(filter_number, level="filterset")["time"].unstack()
+            values = measurements.xs(filter_number, level="filterset")["phase"].unstack()
+        elif fs.filter_type == "Intensity":
+            key = fs.filter_name
+            times = measurements.xs(filter_number, level="filterset")["time"].unstack()
+            values = measurements.xs(filter_number, level="filterset")["amp_ref_1"].unstack()
+        else:
+            logger.warn(
+                f'Skipped {fs.filter_type} channel with name "{fs.filter_name}" because no processing routine is implemented.'
+            )
+            continue
+
+        # transform into nicely formatted DataFrames for FilterTimeSeries
+        times.columns = [no_to_id[c] for c in times.columns]
+        times = times.reindex(sorted(times.columns), axis=1)
+        times.columns.name = "well"
+        values.columns = [no_to_id[c] for c in values.columns]
+        values = values.reindex(sorted(values.columns), axis=1)
+        values.columns.name = "well"
+        fts = FilterTimeSeries(times, values)
+        yield (key, fts)
+        
 
 def fetch_calibration_data(lot_number: int, temp: int):
     """Loads calibration data from calibration file. Also triggers file download.
