@@ -441,7 +441,7 @@ def transform_into_filtertimeseries(
             yield (key, fts)
         else:#if filterset is not available like in issue 24 print warning
             logger.warn(
-                    f'Skipped {fs.filter_type} channel with name "{fs.filter_name}" because no valid measurements available.'
+                    'Skipped channel %s with name "%s" because no valid measurements are available.', fs.filter_type, fs.filter_name
                 )
 
 def fetch_calibration_data(lot_number: int, temp: int):
