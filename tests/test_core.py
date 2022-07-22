@@ -490,7 +490,6 @@ class TestBLProParsing:
             assert len(y) == n
         pass
 
-    #@pytest.mark.xfail(reason="See https://github.com/JuBiotech/bletl/issues/24")
     def test_issue24(self):
         bldata = bletl.parse(dir_testfiles / "BLPro" / "issue24.csv")
         assert "BS1" in bldata

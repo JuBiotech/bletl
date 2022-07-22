@@ -410,7 +410,7 @@ def transform_into_filtertimeseries(
         #test if any filterset is not available in measurements due to invalid data #issue24
         if filter_number not in measurements.index.get_level_values("filterset"):
             logger.warn(
-                    f'Skipped {fs.filter_type} channel with name "{fs.filter_name}" because no valid measurements available.'
+                    f'Skipped channel %s with name "%s" because no valid measurements are available.', fs.filter_type, fs.filter_name
             )
             continue
         elif fs.filter_type == "Intensity" and ("Biomass" in fs.filter_name or "BS" in fs.filter_name):
