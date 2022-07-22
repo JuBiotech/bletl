@@ -83,7 +83,7 @@ class BLData(dict):
             to_add["value"] = pandas.melt(filtertimeseries.value, value_name="value").loc[:, "value"]
             to_add["filterset"] = filterset
             to_add.astype({"value": float})
-            narrow = narrow.append(to_add, sort=False)
+            narrow = pandas.concat([narrow, to_add], sort=False)
 
         return narrow.reset_index()
 
