@@ -407,10 +407,12 @@ def transform_into_filtertimeseries(
         key = None
         times = None
         values = None
-        #test if any filterset is not available in measurements due to invalid data #issue24
+        # test if any filterset is not available in measurements due to invalid data #issue24
         if filter_number not in measurements.index.get_level_values("filterset"):
             logger.warn(
-                    f'Skipped channel %s with name "%s" because no valid measurements are available.', fs.filter_type, fs.filter_name
+                f'Skipped channel %s with name "%s" because no valid measurements are available.',
+                fs.filter_type,
+                fs.filter_name,
             )
             continue
         elif fs.filter_type == "Intensity" and ("Biomass" in fs.filter_name or "BS" in fs.filter_name):
@@ -444,7 +446,7 @@ def transform_into_filtertimeseries(
         values.columns.name = "well"
         fts = FilterTimeSeries(times, values)
         yield (key, fts)
-        
+
 
 def fetch_calibration_data(lot_number: int, temp: int):
     """Loads calibration data from calibration file. Also triggers file download.
