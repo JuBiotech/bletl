@@ -301,7 +301,7 @@ def get_mue(
         FilterTimeSeries containing timepoints and backscatter data.
     wells : 'all' or list
         List of wells to calculate specific growth rate for. 'all' calculates for all wells.
-    blanks : 'first', float or dict
+    blank : 'first', float or dict
         Blanks to use for specific growth rate calculation.
         Options:
         - 'first': Use first data point.
