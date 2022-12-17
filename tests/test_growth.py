@@ -4,9 +4,9 @@ import scipy.stats
 
 try:
     import calibr8
-    from calibr8.utils import at, pm
 
     import bletl.growth
+    from bletl.growth import at, pm
 
     HAS_DEPENDENCIES = True
 except ImportError:
@@ -32,7 +32,7 @@ def biomass_calibration():
 def biomass_curve():
     """Simulates a biomass curve with three different growth rate segments"""
     t_data = numpy.arange(0, 12, step=10 / 60)
-    t_segments = t_data[:-1]
+    t_segments = numpy.mean([t_data[1:], t_data[:-1]], axis=0)
 
     mu_true = numpy.ones_like(t_segments) * 0.05
     mu_true[t_segments < 10] = 0.2
@@ -59,6 +59,7 @@ class TestGrowthHelpers:
         with pm.Model() as pmodel:
             rv = bletl.growth._make_random_walk(
                 "testGRW",
+                init_dist=pm.Normal.dist(),
                 sigma=0.02,
                 length=20,
                 student_t=False,
@@ -69,6 +70,7 @@ class TestGrowthHelpers:
         with pm.Model() as pmodel:
             rv = bletl.growth._make_random_walk(
                 "testSTRW",
+                init_dist=pm.Normal.dist(),
                 sigma=0.02,
                 length=20,
                 student_t=True,
@@ -137,9 +139,37 @@ class TestRandomWalkModel:
         assert numpy.abs(result.mu_map - mu_true).mean() < 0.1
 
         # There were two switchpoints in the data
-        assert len(result.switchpoints) == 2
-        assert len(result.detected_switchpoints) == 2
-        assert len(result.known_switchpoints) == 0
+        assert set(result.switchpoints) == {8.0, 10.0}
+        assert set(result.known_switchpoints) == set()
+        assert set(result.detected_switchpoints) == {8.0, 10.0}
+        pass
+
+    def test_fit_mu_t_studentt_with_known_switchpoints(self, biomass_curve, biomass_calibration):
+        t, X, mu_true = biomass_curve
+        loc, scale, df = biomass_calibration.predict_dependent(X)
+
+        bs = scipy.stats.t.rvs(loc=loc, scale=scale / 10, df=df)
+
+        result = bletl.growth.fit_mu_t(
+            t=t,
+            y=bs,
+            calibration_model=biomass_calibration,
+            student_t=True,
+            # Let one of the real switchpoints be known already.
+            # The 7.99 switchpoint replaces the autodetection at 8.0.
+            switchpoints=[4.0, 7.99],
+            mu_prior=0.4,
+            drift_scale=0.01,
+        )
+        assert len(result.mu_map) == len(t) - 1
+
+        # Verify based on the mean error w.r.t. the ground truth
+        assert numpy.abs(result.mu_map - mu_true).mean() < 0.1
+
+        # There were two switchpoints in the data
+        assert set(result.switchpoints) == {4.0, 7.99, 10.0}
+        assert set(result.known_switchpoints) == {4.0, 7.99}
+        assert set(result.detected_switchpoints) == {10.0}
         pass
 
     @pytest.mark.parametrize("student_t", [False, True])
