@@ -6,7 +6,7 @@ try:
     import calibr8
 
     import bletl.growth
-    from bletl.growth import at, pm
+    from bletl.growth import pm, pt
 
     HAS_DEPENDENCIES = True
 except ImportError:
@@ -64,7 +64,7 @@ class TestGrowthHelpers:
                 length=20,
                 student_t=False,
             )
-            assert isinstance(rv, at.TensorVariable)
+            assert isinstance(rv, pt.TensorVariable)
 
     def test_make_studentt_random_walk(self):
         with pm.Model() as pmodel:
@@ -75,7 +75,7 @@ class TestGrowthHelpers:
                 length=20,
                 student_t=True,
             )
-            assert isinstance(rv, at.TensorVariable)
+            assert isinstance(rv, pt.TensorVariable)
         pass
 
     def test_get_smoothed_mu(self, biomass_curve, biomass_calibration):

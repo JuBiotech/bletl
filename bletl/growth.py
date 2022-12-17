@@ -8,9 +8,9 @@ import pymc as pm
 from packaging import version
 
 try:
-    import aesara.tensor as at
+    import pytensor.tensor as pt
 except ModuleNotFoundError:
-    import theano.tensor as at
+    import aesara.tensor as pt
 
 
 _log = logging.getLogger(__file__)
@@ -151,7 +151,7 @@ class GrowthRateResult:
 def _make_random_walk(
     name: str,
     *,
-    init_dist: at.TensorVariable,
+    init_dist: pt.TensorVariable,
     mu: float = 0,
     sigma: float,
     nu: float = 1,
@@ -347,7 +347,7 @@ def fit_mu_t(
         # The init dist for the random walk is where each segment starts.
         # Here we center it on the user-provided mu_prior,
         # taking the absolute of it (+0.05 safety margin to avoid 0) as the scale.
-        init_dist = pm.Normal.dist(mu=mu_prior, sigma=at.abs(mu_prior) + 0.05)
+        init_dist = pm.Normal.dist(mu=mu_prior, sigma=pt.abs(mu_prior) + 0.05)
 
         if len(t_switchpoints_known) > 0:
             _log.info(
@@ -390,7 +390,7 @@ def fit_mu_t(
                     initval=mu_guess[slc],
                 )
             )
-            mu_t = pm.Deterministic("mu_t", at.concatenate(mu_segments), dims="segment")
+            mu_t = pm.Deterministic("mu_t", pt.concatenate(mu_segments), dims="segment")
         else:
             _log.info(
                 "Creating model without switchpoints. StudentT=%b", len(t_switchpoints_known), student_t
@@ -410,7 +410,7 @@ def fit_mu_t(
         X0 = pm.LogNormal("X0", mu=numpy.log(x0_prior), sigma=1)
         Xt = pm.Deterministic(
             "X",
-            at.concatenate([X0[None], X0 * pm.math.exp(at.extra_ops.cumsum(mu_t * dt))]),
+            pt.concatenate([X0[None], X0 * pm.math.exp(pt.extra_ops.cumsum(mu_t * dt))]),
             dims="timepoint",
         )
         calibration_model.loglikelihood(
