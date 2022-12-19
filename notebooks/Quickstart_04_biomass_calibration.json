@@ -1,5 +1,5 @@
 {
-    "calibr8_version": "6.0.0",
+    "calibr8_version": "7.0.0",
     "model_type": "models.BLProCDWBackscatterModelV1",
     "theta_names": [
         "L_L",
