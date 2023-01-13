@@ -416,6 +416,17 @@ def transform_into_filtertimeseries(
             continue
 
         dfm = measurements.xs(filter_number, level="filterset")
+        # De-duplicate based on the index because in long-running experiments
+        # the BioLector sometimes duplicates parts of the data.
+        mask = dfm.index.duplicated(keep="first")
+        if any(mask):
+            logger.warning(
+                "Duplicate filter %s measurements for (cycles, wells) %s.",
+                filter_number,
+                dfm[mask].index.to_list(),
+            )
+            dfm = dfm[~mask]
+
         if fs.filter_type == "Intensity" and ("Biomass" in fs.filter_name or "BS" in fs.filter_name):
             key = f"BS{int(fs.gain_1)}"
             times = dfm["time"].unstack()
