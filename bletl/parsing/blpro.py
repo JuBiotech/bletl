@@ -7,7 +7,6 @@ import pathlib
 import re
 import warnings
 import xml.etree.ElementTree
-from xml.etree.ElementTree import Element
 
 import numpy
 import pandas
@@ -409,7 +408,7 @@ def transform_into_filtertimeseries(
         values = None
         # test if any filterset is not available in measurements due to invalid data #issue24
         if filter_number not in measurements.index.get_level_values("filterset"):
-            logger.warn(
+            logger.warning(
                 'Skipped channel %s with name "%s" because no valid measurements are available.',
                 fs.filter_type,
                 fs.filter_name,

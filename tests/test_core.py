@@ -456,7 +456,7 @@ class TestBLProParsing:
         assert data.metadata["date_end"] is None
         numpy.testing.assert_array_equal(data["BS5"].time.index, numpy.arange(1, 4 + 254 + 1))
         numpy.testing.assert_array_almost_equal(
-            data["BS5"].time["A01"][:5], [0.013056, 0.179444, 0.346111, 0.512778, 0.738611]
+            data["BS5"].time["A01"].iloc[:5], [0.013056, 0.179444, 0.346111, 0.512778, 0.738611]
         )
         return
 
@@ -466,7 +466,7 @@ class TestBLProParsing:
         pass
 
     def test_refoverld_issue12(self):
-        with pytest.warns(UserWarning, match="cycles \[269, 636\].*REFOVERLD"):
+        with pytest.warns(UserWarning, match=r"cycles \[269, 636\].*REFOVERLD"):
             bldata = bletl.parse(dir_testfiles / "BLPro" / "issue12.csv")
         for fs, n in zip(["BS3", "DO", "pH"], [682, 684, 684]):
             t, y = bldata.get_timeseries(fs, "A01")
