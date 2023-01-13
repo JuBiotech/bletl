@@ -414,22 +414,24 @@ def transform_into_filtertimeseries(
                 fs.filter_name,
             )
             continue
-        elif fs.filter_type == "Intensity" and ("Biomass" in fs.filter_name or "BS" in fs.filter_name):
+
+        dfm = measurements.xs(filter_number, level="filterset")
+        if fs.filter_type == "Intensity" and ("Biomass" in fs.filter_name or "BS" in fs.filter_name):
             key = f"BS{int(fs.gain_1)}"
-            times = measurements.xs(filter_number, level="filterset")["time"].unstack()
-            values = measurements.xs(filter_number, level="filterset")["amp_ref_1"].unstack()
+            times = dfm["time"].unstack()
+            values = dfm["amp_ref_1"].unstack()
         elif fs.filter_type in {"pH", "DO"} and not return_uncalibrated_optode_data:
             key = fs.filter_type
-            times = measurements.xs(filter_number, level="filterset")["time"].unstack()
-            values = measurements.xs(filter_number, level="filterset")["cal"].unstack()
+            times = dfm["time"].unstack()
+            values = dfm["cal"].unstack()
         elif fs.filter_type in {"pH", "DO"} and return_uncalibrated_optode_data:
             key = fs.filter_type
-            times = measurements.xs(filter_number, level="filterset")["time"].unstack()
-            values = measurements.xs(filter_number, level="filterset")["phase"].unstack()
+            times = dfm["time"].unstack()
+            values = dfm["phase"].unstack()
         elif fs.filter_type == "Intensity":
             key = fs.filter_name
-            times = measurements.xs(filter_number, level="filterset")["time"].unstack()
-            values = measurements.xs(filter_number, level="filterset")["amp_ref_1"].unstack()
+            times = dfm["time"].unstack()
+            values = dfm["amp_ref_1"].unstack()
         else:
             logger.warn(
                 f'Skipped {fs.filter_type} channel with name "{fs.filter_name}" because no processing routine is implemented.'
