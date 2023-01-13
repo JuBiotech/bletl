@@ -72,12 +72,11 @@ file_with_no_measurements = pathlib.Path(
 
 
 class TestParserSelection:
-    def test_selects_parsers(self):
-        for fp in BL1_files:
-            parser = bletl.get_parser(fp)
-            assert isinstance(parser, core.BLDParser)
-            assert isinstance(parser, parsing.bl1.BioLector1Parser)
-
+    @pytest.mark.parametrize("fp", BL1_files)
+    def test_selects_parsers(self, fp):
+        parser = bletl.get_parser(fp)
+        assert isinstance(parser, core.BLDParser)
+        assert isinstance(parser, parsing.bl1.BioLector1Parser)
         return
 
     def test_fail_on_unsupported(self):
@@ -85,18 +84,18 @@ class TestParserSelection:
             bletl.get_parser(not_a_bl_file)
         return
 
-    def test_selects_parsers_pro(self):
-        for fp in BLPro_files:
-            parser = bletl.get_parser(fp)
-            assert isinstance(parser, core.BLDParser)
-            assert isinstance(parser, parsing.blpro.BioLectorProParser)
+    @pytest.mark.parametrize("fp", BLPro_files)
+    def test_selects_parsers_pro(self, fp):
+        parser = bletl.get_parser(fp)
+        assert isinstance(parser, core.BLDParser)
+        assert isinstance(parser, parsing.blpro.BioLectorProParser)
         return
 
-    def test_selects_parsers_ii(self):
-        for fp in BL2_files:
-            parser = bletl.get_parser(fp)
-            assert isinstance(parser, core.BLDParser)
-            assert isinstance(parser, parsing.blpro.BioLectorProParser)
+    @pytest.mark.parametrize("fp", BL2_files)
+    def test_selects_parsers_ii(self, fp):
+        parser = bletl.get_parser(fp)
+        assert isinstance(parser, core.BLDParser)
+        assert isinstance(parser, parsing.blpro.BioLectorProParser)
         return
 
     def test_incompatible_file_detecion(self):
@@ -148,29 +147,29 @@ class TestUtils:
 
 
 class TestBL1Parsing:
-    def test_splitting(self):
-        for fp in BL1_files:
-            with open(fp, "r", encoding="latin-1") as f:
-                lines = f.readlines()
+    @pytest.mark.parametrize("fp", BL1_files)
+    def test_splitting(self, fp):
+        with open(fp, "r", encoding="latin-1") as f:
+            lines = f.readlines()
 
-            headerlines, data = parsing.bl1.split_header_data(fp)
+        headerlines, data = parsing.bl1.split_header_data(fp)
 
-            assert len(headerlines) + len(data) == len(lines)
+        assert len(headerlines) + len(data) == len(lines)
         return
 
-    def test_parsing(self):
-        for fp in BL1_files:
-            data = bletl.parse(fp)
+    @pytest.mark.parametrize("fp", BL1_files)
+    def test_parsing(self, fp):
+        data = bletl.parse(fp)
 
-            assert isinstance(data.model, core.BioLectorModel)
-            assert data.model == core.BioLectorModel.BL1
-            assert isinstance(data.metadata, dict)
-            assert isinstance(data.environment, pandas.DataFrame)
-            assert isinstance(data.comments, pandas.DataFrame)
-            assert isinstance(data.measurements, pandas.DataFrame)
-            assert isinstance(data.references, pandas.DataFrame)
-            assert isinstance(data.wells, tuple)
-            assert len(data.wells) == 48
+        assert isinstance(data.model, core.BioLectorModel)
+        assert data.model == core.BioLectorModel.BL1
+        assert isinstance(data.metadata, dict)
+        assert isinstance(data.environment, pandas.DataFrame)
+        assert isinstance(data.comments, pandas.DataFrame)
+        assert isinstance(data.measurements, pandas.DataFrame)
+        assert isinstance(data.references, pandas.DataFrame)
+        assert isinstance(data.wells, tuple)
+        assert len(data.wells) == 48
         return
 
     def test_concat_parsing(self):
@@ -393,48 +392,40 @@ class TestOnlineMethods:
 
 
 class TestBL2Parsing:
-    def test_parse_metadata_data(self):
-        for fp in BL2_files:
-            metadata, data = parsing.blpro.parse_metadata_data(fp)
+    @pytest.mark.parametrize("fp", BL2_files)
+    def test_parse_metadata_data(self, fp):
+        metadata, data = parsing.blpro.parse_metadata_data(fp)
 
-            assert isinstance(metadata, dict)
-            assert isinstance(data, pandas.DataFrame)
+        assert isinstance(metadata, dict)
+        assert isinstance(data, pandas.DataFrame)
         pass
 
-    def test_parsing(self):
-        for fp in BL2_files:
-            try:
-                data = bletl.parse(fp)
-                assert isinstance(data, dict)
-                assert isinstance(data.wells, tuple)
-                assert len(data.wells) == 48
-            except:
-                print("parsing failed for: {}".format(fp))
-                raise
+    @pytest.mark.parametrize("fp", BL2_files)
+    def test_parsing(self, fp):
+        data = bletl.parse(fp)
+        assert isinstance(data, dict)
+        assert isinstance(data.wells, tuple)
+        assert len(data.wells) == 48
         pass
 
 
 class TestBLProParsing:
-    def test_parse_metadata_data(self):
-        for fp in BLPro_files:
-            metadata, data = parsing.blpro.parse_metadata_data(fp)
+    @pytest.mark.parametrize("fp", BLPro_files)
+    def test_parse_metadata_data(self, fp):
+        metadata, data = parsing.blpro.parse_metadata_data(fp)
 
-            assert isinstance(metadata, dict)
-            assert isinstance(data, pandas.DataFrame)
+        assert isinstance(metadata, dict)
+        assert isinstance(data, pandas.DataFrame)
 
-            # 👇 Regression check against https://github.com/JuBiotech/bletl/issues/8
-            filtersets = bletl.parsing.blpro.extract_filtersets(metadata)
-            assert "01_reference_gain_Biomass" not in metadata["process"]
+        # 👇 Regression check against https://github.com/JuBiotech/bletl/issues/8
+        filtersets = bletl.parsing.blpro.extract_filtersets(metadata)
+        assert "01_reference_gain_Biomass" not in metadata["process"]
         return
 
-    def test_parsing(self):
-        for fp in BLPro_files:
-            try:
-                data = bletl.parse(fp)
-                assert isinstance(data, dict)
-            except:
-                print("parsing failed for: {}".format(fp))
-                raise
+    @pytest.mark.parametrize("fp", BLPro_files)
+    def test_parsing(self, fp):
+        data = bletl.parse(fp)
+        assert isinstance(data, dict)
         return
 
     def test_parse_metadata_data_new_format(self):
