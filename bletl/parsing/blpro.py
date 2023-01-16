@@ -7,7 +7,6 @@ import pathlib
 import re
 import warnings
 import xml.etree.ElementTree
-from xml.etree.ElementTree import Element
 
 import numpy
 import pandas
@@ -409,28 +408,41 @@ def transform_into_filtertimeseries(
         values = None
         # test if any filterset is not available in measurements due to invalid data #issue24
         if filter_number not in measurements.index.get_level_values("filterset"):
-            logger.warn(
+            logger.warning(
                 'Skipped channel %s with name "%s" because no valid measurements are available.',
                 fs.filter_type,
                 fs.filter_name,
             )
             continue
-        elif fs.filter_type == "Intensity" and ("Biomass" in fs.filter_name or "BS" in fs.filter_name):
+
+        dfm = measurements.xs(filter_number, level="filterset")
+        # De-duplicate based on the index because in long-running experiments
+        # the BioLector sometimes duplicates parts of the data.
+        mask = dfm.index.duplicated(keep="first")
+        if any(mask):
+            logger.warning(
+                "Duplicate filter %s measurements for (cycles, wells) %s.",
+                filter_number,
+                dfm[mask].index.to_list(),
+            )
+            dfm = dfm[~mask]
+
+        if fs.filter_type == "Intensity" and ("Biomass" in fs.filter_name or "BS" in fs.filter_name):
             key = f"BS{int(fs.gain_1)}"
-            times = measurements.xs(filter_number, level="filterset")["time"].unstack()
-            values = measurements.xs(filter_number, level="filterset")["amp_ref_1"].unstack()
+            times = dfm["time"].unstack()
+            values = dfm["amp_ref_1"].unstack()
         elif fs.filter_type in {"pH", "DO"} and not return_uncalibrated_optode_data:
             key = fs.filter_type
-            times = measurements.xs(filter_number, level="filterset")["time"].unstack()
-            values = measurements.xs(filter_number, level="filterset")["cal"].unstack()
+            times = dfm["time"].unstack()
+            values = dfm["cal"].unstack()
         elif fs.filter_type in {"pH", "DO"} and return_uncalibrated_optode_data:
             key = fs.filter_type
-            times = measurements.xs(filter_number, level="filterset")["time"].unstack()
-            values = measurements.xs(filter_number, level="filterset")["phase"].unstack()
+            times = dfm["time"].unstack()
+            values = dfm["phase"].unstack()
         elif fs.filter_type == "Intensity":
             key = fs.filter_name
-            times = measurements.xs(filter_number, level="filterset")["time"].unstack()
-            values = measurements.xs(filter_number, level="filterset")["amp_ref_1"].unstack()
+            times = dfm["time"].unstack()
+            values = dfm["amp_ref_1"].unstack()
         else:
             logger.warn(
                 f'Skipped {fs.filter_type} channel with name "{fs.filter_name}" because no processing routine is implemented.'
