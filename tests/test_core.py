@@ -268,11 +268,10 @@ class TestBL1Parsing:
         unified_df = data["BS20"].get_unified_dataframe()
         assert isinstance(unified_df, pandas.DataFrame)
         numpy.testing.assert_approx_equal(unified_df.index[2], 0.35313, significant=4)
-        numpy.testing.assert_approx_equal(
-            unified_df.iloc[unified_df.index.get_loc(5, method="nearest"), unified_df.columns.get_loc("A05")],
-            63.8517,
-            significant=6,
-        )
+        idx = unified_df.index.get_indexer([5], method="nearest")
+        col = unified_df.columns.get_indexer(["A05"])
+        values = unified_df.iloc[idx, col].to_numpy()
+        numpy.testing.assert_approx_equal(values, 63.8517, significant=6)
 
     def test_get_narrow_data(self):
         fp = pathlib.Path(

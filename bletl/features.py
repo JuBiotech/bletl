@@ -429,7 +429,10 @@ def from_bldata(
         data["x"] = narrow[fs]
         _log.info("Applying tsfresh extractor to %s\n", fs)
         df_fs = ts_extractor._extract(data)
-        for i, mname in enumerate(df_fs.columns):
-            df_result[f"{fs}_{mname}"] = df_fs.to_numpy()[:, i]
+        # Rename columns to include the filterset name
+        df_fs.columns = [f"{fs}_{col}" for col in df_fs.columns]
+        # Add columns with new features for this filterset to the result
+        df_fs.index = [i for i, in df_fs.index]
+        df_result = pandas.concat([df_result, df_fs], axis=1)
     _log.info("Extraction finished in: %s minutes", round((time.time() - s_time) / 60, ndigits=1))
     return df_result

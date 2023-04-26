@@ -66,7 +66,7 @@ class TestSplineMueScipy:
 
         # dictionary of scalars (first 5 cycles)
         blank_dict = {
-            well: data.iloc[:5].mean() for well, data in bldata["BS3"].value.iteritems() if well in wells
+            well: data.iloc[:5].mean() for well, data in bldata["BS3"].value.items() if well in wells
         }
         mue_blank_dict = bletl.splines.get_mue(bldata["BS3"], wells=wells, blank=blank_dict, method="us")
         mue_median = numpy.median(mue_blank_dict.value.loc[60:75, "B03"])
@@ -98,7 +98,7 @@ class TestSplineMueScipy:
         numpy.testing.assert_allclose(mue_median, 0.30, atol=0.01)
 
         # dictionary of scalars (first 5 cycles)
-        blank_dict = {well: data.iloc[:5].mean() for well, data in bldata["BS3"].value.iteritems()}
+        blank_dict = {well: data.iloc[:5].mean() for well, data in bldata["BS3"].value.items()}
         mue_blank_dict = bletl.splines.get_mue(bldata["BS3"], blank=blank_dict, method="us")
         mue_median = numpy.median(mue_blank_dict.value.loc[60:75, "B03"])
         numpy.testing.assert_allclose(mue_median, 0.38, atol=0.02)
@@ -142,7 +142,7 @@ class TestSplineMueCsaps:
 
         # dictionary of scalars (first 5 cycles)
         blank_dict = {
-            well: data.iloc[:5].mean() for well, data in bldata["BS3"].value.iteritems() if well in wells
+            well: data.iloc[:5].mean() for well, data in bldata["BS3"].value.items() if well in wells
         }
         mue_blank_dict = bletl.splines.get_mue(bldata["BS3"], wells=wells, blank=blank_dict, method="ucss")
         mue_median = numpy.median(mue_blank_dict.value.loc[60:75, "B03"])
@@ -174,7 +174,7 @@ class TestSplineMueCsaps:
         numpy.testing.assert_allclose(mue_median, 0.30, atol=0.02)
 
         # dictionary of scalars (first 5 cycles)
-        blank_dict = {well: data.iloc[:5].mean() for well, data in bldata["BS3"].value.iteritems()}
+        blank_dict = {well: data.iloc[:5].mean() for well, data in bldata["BS3"].value.items()}
         mue_blank_dict = bletl.splines.get_mue(bldata["BS3"], blank=blank_dict, method="ucss")
         mue_median = numpy.median(mue_blank_dict.value.loc[60:75, "B03"])
         numpy.testing.assert_allclose(mue_median, 0.38, atol=0.02)

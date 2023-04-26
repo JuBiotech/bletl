@@ -330,9 +330,9 @@ def get_mue(
     if wells == "all":
         wells = list(bsdata.time.columns)
     if blank == "first":
-        blank_dict = {well: data.iloc[0] for well, data in bsdata.value.iteritems()}
+        blank_dict = {well: data.iloc[0] for well, data in bsdata.value.items()}
     elif isinstance(blank, numbers.Number):
-        blank_dict = {well: blank for well, data in bsdata.value.iteritems()}
+        blank_dict = {well: blank for well, data in bsdata.value.items()}
     elif isinstance(blank, dict):
         if set(blank.keys()) != set(wells):
             raise ValueError("Please provide blanks for every well")
