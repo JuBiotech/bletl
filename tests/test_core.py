@@ -9,7 +9,7 @@ from numpy import random
 
 import bletl
 from bletl import core, parsing, utils
-from bletl.parsing import bl1
+from bletl.parsing import bl1, blpro
 
 dir_testfiles = pathlib.Path(pathlib.Path(__file__).absolute().parent, "data")
 
@@ -595,3 +595,43 @@ class TestDataEquivalence:
 
         assert list(d_1.comments.columns) == list(d_p.comments.columns)
         return
+
+
+class TestBLProMF:
+    def test_well_num_mappings(self):
+        # C-style counts right then down
+        assert blpro._MF_WELL_NUMC_TO_ID[0] == "C01"
+        assert blpro._MF_WELL_NUMC_TO_ID[1] == "C02"
+        assert blpro._MF_WELL_NUMC_TO_ID[7] == "C08"
+        assert blpro._MF_WELL_NUMC_TO_ID[8] == "D01"
+        assert blpro._MF_WELL_NUMC_TO_ID[31] == "F08"
+        # F-style counts down then right
+        assert blpro._MF_WELL_NUMF_TO_ID[0] == "C01"
+        assert blpro._MF_WELL_NUMF_TO_ID[1] == "D01"
+        assert blpro._MF_WELL_NUMF_TO_ID[2] == "E01"
+        assert blpro._MF_WELL_NUMF_TO_ID[3] == "F01"
+        assert blpro._MF_WELL_NUMF_TO_ID[4] == "C02"
+        assert blpro._MF_WELL_NUMF_TO_ID[31] == "F08"
+        # Measurement order style is 1-based and goes left/right vice versa
+        assert blpro._MF_WELL_NUMM_TO_ID[1] == "C01"
+        assert blpro._MF_WELL_NUMM_TO_ID[2] == "C02"
+        assert blpro._MF_WELL_NUMM_TO_ID[8] == "C08"
+        assert blpro._MF_WELL_NUMM_TO_ID[9] == "D08"
+        assert blpro._MF_WELL_NUMM_TO_ID[16] == "D01"
+        assert blpro._MF_WELL_NUMM_TO_ID[32] == "F01"
+        pass
+
+    def test_issue_38(self):
+        fp = dir_testfiles / "BLPro" / "18-FZJ-Test2--2018-02-07-10-01-11.csv"
+        bldata = bletl.parse(fp)
+        assert bldata.fluidics.index.name == "well"
+        assert bldata.module.index.names == ["well", "valve", "cycle"]
+        assert bldata.valves.index.names == ["well", "valve", "cycle"]
+        # Check some initial and final well volumes against values shown in the BioLection
+        assert bldata.fluidics.loc["C01", "volume"][0] == 800
+        assert bldata.fluidics.loc["C01", "volume"][-1] == 1201.776
+        assert bldata.fluidics.loc["D01", "volume"][-1] == 1204.892
+        assert bldata.fluidics.loc["D02", "volume"][-1] == 954.68
+        assert bldata.fluidics.loc["E06", "volume"][-1] == 913.16
+        assert bldata.fluidics.loc["F01", "volume"][-1] == 1202.719
+        pass

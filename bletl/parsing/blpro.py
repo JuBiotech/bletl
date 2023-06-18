@@ -25,6 +25,28 @@ from ..types import (
 logger = logging.getLogger("blpro")
 
 
+_MF_WELL_NUMC_TO_ID = {
+    (colnumber + rownumber * 8): f"{row}{column:02d}"
+    for colnumber, column in enumerate(range(1, 9))
+    for rownumber, row in enumerate("CDEF")
+}
+"""Maps 0-based well numbers in MF mode by **C-style** counting order (→ then ↓) to alphanumeric well IDs."""
+
+_MF_WELL_NUMF_TO_ID = {
+    (rownumber + colnumber * 4): f"{row}{column:02d}"
+    for rownumber, row in enumerate("CDEF")
+    for colnumber, column in enumerate(range(1, 9))
+}
+"""Maps 0-based well numbers in MF mode by **Fortran-style** counting order (↓ then →) to alphanumeric well IDs."""
+
+_MF_WELL_NUMM_TO_ID = {
+    1 + (colnumber + rownumber * 8): f"{row}{column:02d}"
+    for rownumber, row in enumerate("CDEF")
+    for colnumber, column in enumerate(reversed(range(1, 9)) if rownumber % 2 else range(1, 9))
+}
+"""Maps 1-based well numbers in MF mode by **measurement counting order** (→→→ ↓ ←←← ↓ →→→ ...) to alphanumeric well IDs."""
+
+
 class BioLectorProParser(BLDParser):
     def parse(
         self,
@@ -329,6 +351,7 @@ def extract_fluidics(dfraw):
         ("Temp_Ch4", "volume", float),
     ]
     df = utils.__to_typed_cols__(dfraw[dfraw["Type"] == "F"], ocol_ncol_type)
+    df["well"] = [_MF_WELL_NUMM_TO_ID[w] for w in df["well"]]
     df = df.sort_values(["well", "cycle"]).set_index(["well"])
     return standardize(df)
 
@@ -348,6 +371,7 @@ def extract_valves_module(dfraw):
     df_valves.columns = ["cycle", "valve", "well", "acid", "base"]
     df_valves["valve"] = df_valves["valve"].str.replace("Valve ", "").astype(int)
     df_valves["well"] = df_valves["well"].str.replace("Well", "").astype(int)
+    # TODO: Which numbering style is this?
     df_valves["acid"] = df_valves["acid"].str.replace("Sollvolumen (Acid) ", "", regex=False).astype(float)
     df_valves["base"] = df_valves["base"].str.replace("Sollvolumen (Base) ", "", regex=False).astype(float)
     df_valves = standardize(df_valves).set_index(["well", "valve", "cycle"])
@@ -357,6 +381,7 @@ def extract_valves_module(dfraw):
     df_module.columns = ["cycle", "module", "valve", "well", "volume"]
     df_module["valve"] = df_module["valve"].str.replace("Valve ", "").astype(int)
     df_module["well"] = df_module["well"].str.replace("Well ", "").astype(int)
+    # TODO: Which numbering style is this?
     df_module["volume"] = df_module["volume"].str.replace("Volume ", "").astype(float)
     df_module = standardize(df_module).set_index(["well", "valve", "cycle"])
 
