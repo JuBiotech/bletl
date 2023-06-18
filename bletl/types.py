@@ -1,10 +1,10 @@
 """Specifies the base types for parsing and representing BioLector CSV files."""
 import abc
 import enum
-import pathlib
+import os
 import typing
 import warnings
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Union
 
 import numpy
 import pandas
@@ -22,13 +22,27 @@ class BioLectorModel(enum.Enum):
 class BLData(dict):
     """Standardized data type for BioLector data."""
 
-    def __init__(self, model, environment, filtersets, references, measurements, comments):
+    def __init__(
+        self,
+        model: BioLectorModel,
+        environment: pandas.DataFrame,
+        filtersets: pandas.DataFrame,
+        references: pandas.DataFrame,
+        measurements: pandas.DataFrame,
+        comments: pandas.DataFrame,
+    ):
         self._model = model
         self._environment = environment
         self._filtersets = filtersets
         self._references = references
         self._measurements = measurements
         self._comments = comments
+        # Optional, depending on the BioLector Model
+        self.metadata: dict = {}
+        self.fluidics: Optional[pandas.DataFrame] = None
+        self.module: Optional[pandas.DataFrame] = None
+        self.valves: Optional[pandas.DataFrame] = None
+        self.diagnostics: Optional[pandas.DataFrame] = None
         super().__init__()
 
     @property
@@ -47,7 +61,7 @@ class BLData(dict):
         return self._filtersets
 
     @property
-    def wells(self) -> typing.Tuple[str]:
+    def wells(self) -> typing.Tuple[str, ...]:
         """Wells that were measured."""
         if len(self) == 0:
             return tuple()
@@ -200,7 +214,7 @@ class FilterTimeSeries:
     """Generalizable data type for calibrated timeseries."""
 
     @property
-    def wells(self) -> typing.Tuple[str]:
+    def wells(self) -> typing.Tuple[str, ...]:
         """Well IDs that were measured."""
         return tuple(self.time.columns)
 
@@ -208,7 +222,9 @@ class FilterTimeSeries:
         self.time = time_df
         self.value = value_df
 
-    def get_timeseries(self, well: str, *, last_cycle: int = None) -> Tuple[numpy.ndarray, numpy.ndarray]:
+    def get_timeseries(
+        self, well: str, *, last_cycle: Optional[int] = None
+    ) -> Tuple[numpy.ndarray, numpy.ndarray]:
         """Retrieves (time, value) for a specific well.
 
         Parameters
@@ -268,7 +284,7 @@ class BLDParser:
     @abc.abstractmethod
     def parse(
         self,
-        filepath: pathlib.Path,
+        filepath: Union[str, os.PathLike],
         *,
         lot_number: Optional[int] = None,
         temp: Optional[int] = None,

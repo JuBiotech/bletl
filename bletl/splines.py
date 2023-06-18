@@ -3,7 +3,7 @@ import logging
 import multiprocessing
 import numbers
 import pickle
-from typing import Callable, Dict, Optional, Sequence, Tuple, Union
+from typing import Callable, Dict, List, Optional, Sequence, Tuple, Union
 
 import csaps
 import joblib
@@ -47,7 +47,12 @@ class UnivariateCubicSmoothingSpline(csaps.CubicSmoothingSpline):
             f"{order}-order derivatives are not implemented for the UnivariateCubicSmoothingSpline"
         )
 
-    def __call__(self, xi: Union[float, numpy.ndarray]):
+    def __call__(
+        self,
+        x: csaps.UnivariateDataType,
+        nu: Optional[int] = None,
+        extrapolate: Optional[Union[bool, str]] = None,
+    ) -> numpy.ndarray:
         """Evaluate the spline at some coordinates.
 
         This method overrides the implementation of the base type
@@ -55,13 +60,13 @@ class UnivariateCubicSmoothingSpline(csaps.CubicSmoothingSpline):
 
         Parameters
         ----------
-        xi : float, numpy.ndarray
+        x : float, numpy.ndarray
             One or more coordinates at which the spline should be evaluated.
         """
         # scipy splines can be called on scalars
-        xi_arr = numpy.atleast_1d(xi)
+        xi_arr = numpy.atleast_1d(numpy.asarray(x))
         result = super().__call__(xi_arr)
-        if isinstance(xi, (int, float)):
+        if isinstance(x, (int, float)):
             return result[0]
         return result
 
@@ -119,7 +124,7 @@ def _evaluate_smoothing_factor(smoothing_factor: float, timepoints, values, k: i
     mssr : float
         Mean sum of squared residuals of the splines fitted to data subsets.
     """
-    smoothing_factor = numpy.atleast_1d(smoothing_factor)
+    smoothing_factor_arr = numpy.atleast_1d(smoothing_factor)
     if k < 2:
         raise ValueError(f"Need k≥2 splits for crossvalidation. Setting was k={k}.")
     if len(values) < 3 * k:
@@ -138,11 +143,11 @@ def _evaluate_smoothing_factor(smoothing_factor: float, timepoints, values, k: i
                 y=values,
                 train_idxs=train_mask,
                 test_idxs=test_mask,
-                smoothing_factor=smoothing_factor,
+                smoothing_factor=smoothing_factor_arr,
                 method=method,
             )
         )
-    return numpy.mean(ssrs)
+    return float(numpy.mean(ssrs))
 
 
 def _evaluate_spline_test_error(
@@ -150,7 +155,7 @@ def _evaluate_spline_test_error(
     y: numpy.ndarray,
     train_idxs: numpy.ndarray,
     test_idxs: numpy.ndarray,
-    smoothing_factor: float,
+    smoothing_factor: numpy.ndarray,
     method: str,
 ) -> float:
     """Fits spline to a test set and returns the sum of squared error on the test set.
@@ -234,7 +239,7 @@ def get_multiple_splines(
     k_folds: int = 5,
     method: str = "us",
     last_cycle: Optional[int] = None,
-) -> Dict[str, Union[UnivariateCubicSmoothingSpline, scipy.interpolate.UnivariateSpline]]:
+) -> List[Tuple[str, Union[UnivariateCubicSmoothingSpline, scipy.interpolate.UnivariateSpline]]]:
     """Returns multiple splines with k-fold crossvalidated smoothing factor
 
     Parameters
@@ -255,7 +260,7 @@ def get_multiple_splines(
         Dict with {well:spline} for each well of "wells"
     """
     x, y = fts.get_timeseries(wells[0])
-    if last_cycle == None:
+    if last_cycle is None:
         last_cycle = len(x)
     elif last_cycle > len(x):
         raise ValueError("Please change last_cycle.")

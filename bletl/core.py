@@ -8,7 +8,7 @@ import urllib.error
 import urllib.request
 import warnings
 from collections.abc import Iterable
-from typing import Optional, Union
+from typing import Optional, Sequence, Union
 
 import numpy
 import pandas
@@ -92,14 +92,14 @@ def get_parser(filepath: Union[str, pathlib.Path]) -> BLDParser:
 def _parse(
     filepath: str,
     drop_incomplete_cycles: bool,
-    lot_number: int,
-    temp: int,
-    cal_0: float = None,
-    cal_100: float = None,
-    phi_min: float = None,
-    phi_max: float = None,
-    pH_0: float = None,
-    dpH: float = None,
+    lot_number: Optional[int],
+    temp: Optional[int],
+    cal_0: Optional[float] = None,
+    cal_100: Optional[float] = None,
+    phi_min: Optional[float] = None,
+    phi_max: Optional[float] = None,
+    pH_0: Optional[float] = None,
+    dpH: Optional[float] = None,
 ) -> BLData:
     """Parses a raw BioLector CSV file into a BLData object.
 
@@ -138,29 +138,39 @@ def _parse(
         When the file contents do not match with a known BioLector result file format.
     """
     parser = get_parser(filepath)
-    data = parser.parse(filepath, lot_number, temp, cal_0, cal_100, phi_min, phi_max, pH_0, dpH)
+    data = parser.parse(
+        filepath,
+        lot_number=lot_number,
+        temp=temp,
+        cal_0=cal_0,
+        cal_100=cal_100,
+        phi_min=phi_min,
+        phi_max=phi_max,
+        pH_0=pH_0,
+        dpH=dpH,
+    )
 
     if (not data.measurements.empty) and drop_incomplete_cycles:
         index_names, measurements = utils._unindex(data.measurements)
         latest_full_cycle = utils._last_full_cycle(measurements)
         measurements = measurements[measurements.cycle <= latest_full_cycle]
-        data._measurements = utils._reindex(measurements, index_names)
+        data._measurements = utils._reindex(measurements, index_names)  # type: ignore
 
     return data
 
 
 def parse(
-    filepaths,
+    filepaths: Union[str, Sequence[str]],
     *,
     drop_incomplete_cycles: bool = True,
-    lot_number: int = None,
-    temp: int = None,
-    cal_0: float = None,
-    cal_100: float = None,
-    phi_min: float = None,
-    phi_max: float = None,
-    pH_0: float = None,
-    dpH: float = None,
+    lot_number: Optional[int] = None,
+    temp: Optional[int] = None,
+    cal_0: Optional[float] = None,
+    cal_100: Optional[float] = None,
+    phi_min: Optional[float] = None,
+    phi_max: Optional[float] = None,
+    pH_0: Optional[float] = None,
+    dpH: Optional[float] = None,
 ) -> BLData:
     """Parses a raw BioLector CSV file into a BLData object and applies calibration.
 

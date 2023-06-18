@@ -26,6 +26,7 @@ if __name__ == "__main__":
     setuptools.setup(
         name=__packagename__,
         packages=setuptools.find_packages(),
+        package_data={"bletl": ["py.typed"]},
         zip_safe=False,
         version=__version__,
         description="Package for parsing and transforming BioLector raw data.",

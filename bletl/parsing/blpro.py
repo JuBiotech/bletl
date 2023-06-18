@@ -3,15 +3,15 @@ import collections
 import datetime
 import io
 import logging
+import os
 import pathlib
 import re
 import warnings
 import xml.etree.ElementTree
+from typing import Optional, Union
 
 import numpy
 import pandas
-
-from bletl.parsing.bl1 import fetch_calibration_data
 
 from .. import utils
 from ..types import (
@@ -28,15 +28,15 @@ logger = logging.getLogger("blpro")
 class BioLectorProParser(BLDParser):
     def parse(
         self,
-        filepath,
-        lot_number: int = None,
-        temp: int = None,
-        cal_0: float = None,
-        cal_100: float = None,
-        phi_min: float = None,
-        phi_max: float = None,
-        pH_0: float = None,
-        dpH: float = None,
+        filepath: Union[str, os.PathLike],
+        lot_number: Optional[int] = None,
+        temp: Optional[int] = None,
+        cal_0: Optional[float] = None,
+        cal_100: Optional[float] = None,
+        phi_min: Optional[float] = None,
+        phi_max: Optional[float] = None,
+        pH_0: Optional[float] = None,
+        dpH: Optional[float] = None,
     ) -> BLData:
         metadata, data = parse_metadata_data(filepath)
 
@@ -54,7 +54,7 @@ class BioLectorProParser(BLDParser):
         bld.valves, bld.module = extract_valves_module(data)
         bld.diagnostics = extract_diagnostics(data)
 
-        if not None in [lot_number, temp]:
+        if lot_number is not None and temp is not None:
             lot_cal_data = fetch_calibration_data(lot_number, temp)
         else:
             lot_cal_data = None
@@ -476,6 +476,8 @@ def fetch_calibration_data(lot_number: int, temp: int):
         Dictionary containing calibration data.
         Can be readily used in calibration function.
     """
+    assert utils.__spec__ is not None
+    assert utils.__spec__.origin is not None
     module_path = pathlib.Path(utils.__spec__.origin).parents[0]
     calibration_file = pathlib.Path(module_path, "cache", "CalibrationLot_II.xml")
 
