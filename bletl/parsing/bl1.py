@@ -92,12 +92,12 @@ class BioLector1Parser(BLDParser):
     def calibrate_with_parameters(
         self,
         data: BLData,
-        cal_0: float = None,
-        cal_100: float = None,
-        phi_min: float = None,
-        phi_max: float = None,
-        pH_0: float = None,
-        dpH: float = None,
+        cal_0: Optional[float] = None,
+        cal_100: Optional[float] = None,
+        phi_min: Optional[float] = None,
+        phi_max: Optional[float] = None,
+        pH_0: Optional[float] = None,
+        dpH: Optional[float] = None,
     ):
         def process_backscatter(raw_data_df, cycle_ref_df, global_ref):
             """
@@ -182,14 +182,14 @@ class BioLector1Parser(BLDParser):
     def parse(
         self,
         filepath,
-        lot_number: int = None,
-        temp: int = None,
-        cal_0: float = None,
-        cal_100: float = None,
-        phi_min: float = None,
-        phi_max: float = None,
-        pH_0: float = None,
-        dpH: float = None,
+        lot_number: Optional[int] = None,
+        temp: Optional[int] = None,
+        cal_0: Optional[float] = None,
+        cal_100: Optional[float] = None,
+        phi_min: Optional[float] = None,
+        phi_max: Optional[float] = None,
+        pH_0: Optional[float] = None,
+        dpH: Optional[float] = None,
     ):
         headerlines, data = split_header_data(filepath)
 
@@ -476,6 +476,8 @@ def fetch_calibration_data(lot_number: int, temp: int):
         Dictionary containing calibration data.
         Can be readily used in calibration function.
     """
+    assert utils.__spec__ is not None
+    assert utils.__spec__.origin is not None
     module_path = pathlib.Path(utils.__spec__.origin).parents[0]
     calibration_file = pathlib.Path(module_path, "cache", "CalibrationLot.ini")
 

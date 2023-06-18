@@ -3,14 +3,16 @@ import datetime
 import pathlib
 import re
 import urllib
-from typing import Sequence, Tuple, Union
+from typing import Optional, Sequence, Tuple, Union
 
 import pandas
 
 from . import core
 
 
-def __to_typed_cols__(dfin: pandas.DataFrame, ocol_ncol_type: Tuple[str, str, type]) -> pandas.DataFrame:
+def __to_typed_cols__(
+    dfin: pandas.DataFrame, ocol_ncol_type: Sequence[Tuple[Optional[str], str, type]]
+) -> pandas.DataFrame:
     """Can be used to filter & convert data frame columns.
 
     Parameters
@@ -35,7 +37,7 @@ def __to_typed_cols__(dfin: pandas.DataFrame, ocol_ncol_type: Tuple[str, str, ty
     return dfout
 
 
-def _unindex(dataframe: pandas.DataFrame) -> Tuple[Sequence[Union[str, None]], pandas.DataFrame]:
+def _unindex(dataframe: pandas.DataFrame) -> Tuple[Sequence[Optional[str]], pandas.DataFrame]:
     """Resets the index of the DataFrame.
 
     Parameters
@@ -110,10 +112,10 @@ def _concatenate_fragments(
         stack = pandas.concat((stack, fragment))
 
     # re-apply the original indexing scheme
-    return _reindex(stack, index_names)
+    return _reindex(stack, index_names)  # type: ignore
 
 
-def _last_well_in_cycle(measurements: pandas.DataFrame) -> str:
+def _last_well_in_cycle(measurements: pandas.DataFrame) -> Optional[str]:
     """Finds the name of the last well measured in a cycle.
 
     Parameters
@@ -195,6 +197,8 @@ def download_calibration_data() -> bool:
         `True` if calibration data was downloaded successfully, `False` otherwise.
     """
     try:
+        assert core.__spec__ is not None
+        assert core.__spec__.origin is not None
         module_path = pathlib.Path(core.__spec__.origin).parents[0]
 
         url_bl1 = "http://updates.m2p-labs.com/CalibrationLot.ini"
