@@ -30,6 +30,8 @@ if __name__ == "__main__":
         zip_safe=False,
         version=__version__,
         description="Package for parsing and transforming BioLector raw data.",
+        long_description=open(pathlib.Path(__file__).parent / "README.md").read(),
+        long_description_content_type="text/markdown",
         url="https://github.com/jubiotech/bletl",
         author="Michael Osthege",
         author_email="m.osthege@fz-juelich.de",
