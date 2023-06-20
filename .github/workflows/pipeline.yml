@@ -41,9 +41,10 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         file: ./coverage.xml
-    - name: Test Wheel install and import
+    - name: Test Wheel build, install and import
       run: |
         python setup.py bdist_wheel
+        twine check dist/*
         cd dist
         pip install bletl*.whl
         python -c "import bletl; print(bletl.__version__)"
