@@ -1,18 +1,12 @@
 import logging
-import typing
 from typing import Dict, Optional, Sequence, Tuple, Union
 
 import arviz
 import calibr8
 import numpy
 import pymc as pm
+import pytensor.tensor as pt
 from packaging import version
-
-try:
-    import pytensor.tensor as pt
-except ModuleNotFoundError:
-    import aesara.tensor as pt  # type: ignore
-
 
 _log = logging.getLogger(__file__)
 
@@ -198,8 +192,8 @@ def _make_random_walk(
     """
     pmversion = version.parse(pm.__version__)
 
-    if pmversion < version.parse("4.2.2"):
-        raise NotImplementedError("PyMC versions <4.2.2 are no longer supported.")
+    if pmversion < version.parse("5.0.0"):
+        raise NotImplementedError("PyMC versions <5.0.0 are no longer supported.")
 
     if student_t:
         innov_dist = pm.StudentT.dist(mu=mu, sigma=sigma, nu=nu)

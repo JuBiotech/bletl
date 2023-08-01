@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.8", "3.10", "3.11"]
-        pymc-version: ["without", "'pymc>=4.2.2,<5'", "'pymc>=5.0.0'"]
+        pymc-version: ["without", "'pymc>=5.0.0'"]
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
