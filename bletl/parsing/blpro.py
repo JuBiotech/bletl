@@ -19,6 +19,7 @@ from ..types import (
     BLData,
     BLDParser,
     FilterTimeSeries,
+    FluidicsSource,
     InvalidLotNumberError,
 )
 
@@ -346,7 +347,7 @@ def extract_fluidics(dfraw):
         ("Cycle", "cycle", int),
         ("Well", "well", int),
         ("Time", "time", float),
-        ("Reservoir", "reservoir", float),
+        ("Reservoir", "reservoir", FluidicsSource),
         ("MF_Volume", "mf_volume", float),
         ("Temp_Ch4", "volume", float),
     ]

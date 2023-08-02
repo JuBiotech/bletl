@@ -11,6 +11,7 @@ from .types import (
     BLData,
     BLDParser,
     FilterTimeSeries,
+    FluidicsSource,
     IncompatibleFileError,
     InvalidLotNumberError,
     LotInformationError,

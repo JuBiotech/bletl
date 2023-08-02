@@ -635,3 +635,9 @@ class TestBLProMF:
         assert bldata.fluidics.loc["E06", "volume"][-1] == 913.16
         assert bldata.fluidics.loc["F01", "volume"][-1] == 1202.719
         pass
+
+    def test_fluidics_source(self):
+        fp = dir_testfiles / "BLPro" / "18-FZJ-Test2--2018-02-07-10-01-11.csv"
+        bldata = bletl.parse(fp)
+        assert isinstance(bldata.fluidics["reservoir"][0], bletl.FluidicsSource)
+        pass

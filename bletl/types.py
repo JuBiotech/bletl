@@ -3,7 +3,6 @@ import abc
 import enum
 import os
 import typing
-import warnings
 from typing import Dict, Optional, Tuple, Union
 
 import numpy
@@ -17,6 +16,20 @@ class BioLectorModel(enum.Enum):
     BL2 = "bl2"
     BLPro = "blpro"
     XT = "blXT"
+
+
+class FluidicsSource(enum.IntEnum):
+    """Number that identifies the source of volume changes."""
+
+    ReservoirA = 1
+
+    """Additions from reservoir A."""
+    ReservoirB = 2
+
+    """Additions from reservoir B."""
+
+    Pipetting = -1
+    """Additions from pipetting."""
 
 
 class BLData(dict):

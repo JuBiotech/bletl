@@ -1,9 +1,10 @@
 """Contains helper functions that do not depend on other modules within this package."""
 import datetime
+import enum
 import pathlib
 import re
 import urllib
-from typing import Optional, Sequence, Tuple, Union
+from typing import Optional, Sequence, Tuple
 
 import pandas
 
@@ -32,6 +33,9 @@ def __to_typed_cols__(
     for ocol, ncol, typ in ocol_ncol_type:
         if ocol is None or not ocol in dfin:
             dfout[ncol] = None
+        elif issubclass(typ, enum.Enum):
+            # Enum types are kept as object-series
+            dfout[ncol] = dfin[ocol].apply(lambda x: typ(x), convert_dtype=False)
         else:
             dfout[ncol] = dfin[ocol].astype(typ)
     return dfout
