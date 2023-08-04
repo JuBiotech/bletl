@@ -258,6 +258,7 @@ def extract_filtersets(metadata):
 
 def extract_comments(dfraw):
     ocol_ncol_type = [
+        ("Cycle", "cycle", int),
         ("Time", "time", float),
         ("User_Comment", "user_comment", str),
         ("Sys_Comment", "sys_comment", str),
