@@ -8,7 +8,7 @@ import pathlib
 import re
 import warnings
 import xml.etree.ElementTree
-from typing import Optional, Union
+from typing import Any, DefaultDict, Dict, List, Optional, Tuple, Union
 
 import numpy
 import pandas
@@ -20,6 +20,7 @@ from ..types import (
     BLDParser,
     FilterTimeSeries,
     FluidicsSource,
+    IncompatibleFileError,
     InvalidLotNumberError,
 )
 
@@ -128,14 +129,13 @@ def _parse_datalines(datalines) -> pandas.DataFrame:
     return dfraw
 
 
-def parse_metadata_data(fp):
+def parse_metadata_data(fp) -> Tuple[Dict[str, Any], pandas.DataFrame]:
     with open(fp, "r", encoding="utf-8") as f:
         lines = f.readlines()
 
-    metadata = collections.defaultdict(dict)
-    datalines = collections.defaultdict(list)
+    metadata: DefaultDict[str, Any] = collections.defaultdict(dict)
     section = None
-    data_start = None
+    data_start: Optional[int] = None
 
     for l, line in enumerate(lines):
         if line.startswith("="):
@@ -143,11 +143,15 @@ def parse_metadata_data(fp):
             section = line.strip().strip("=").strip()
             if not data_start and section == "data":
                 data_start = l + 1
+        elif section is None:
+            raise IncompatibleFileError("No metadata section header before first setting.")
         elif line.startswith("["):
             # register the value
             key, value = line.split("]")
             key = key.strip("[")
             metadata[section][key] = value.strip()
+    if data_start is None:
+        raise IncompatibleFileError("Section header 'data' not found.")
 
     # standardize the metadata keys
     metadata["date_start"] = datetime.datetime.strptime(
@@ -195,7 +199,7 @@ def parse_metadata_data(fp):
             f"{fp} contains defects in lines {defect_lines}. Be extra skeptical about the parsed results."
         )
 
-    return metadata, dfraw[list(dfraw.columns)[:-1]]
+    return dict(metadata), dfraw[list(dfraw.columns)[:-1]]
 
 
 def standardize(df):
