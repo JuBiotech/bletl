@@ -315,6 +315,22 @@ def extract_measurements(dfraw):
         )
     df_M = df_M[~mask]
 
+    # Drop filtersets with non-monotonically increasing time
+    drop_idxs = []
+    for idx, fsblock in df_M.groupby(["Cycle", "Filterset"]):
+        t = fsblock["Time"].astype(int).to_numpy()
+        if any(t[1:] < t[:-1]):
+            drop_idxs.append(idx)
+    ndrop = len(drop_idxs)
+    if ndrop:
+        for dropC, dropF in drop_idxs:
+            mask = numpy.logical_and(df_M["Cycle"] == dropC, df_M["Filterset"] == dropF)
+            df_M = df_M[~mask]
+            warnings.warn(
+                f"Dropped cycle {dropC} filterset {dropF} because of non-monotonically increasing time values.",
+                UserWarning,
+            )
+
     # Convert to the expected data types
     df = utils.__to_typed_cols__(df_M, ocol_ncol_type)
     df = df.set_index(["filterset", "cycle", "well"])
