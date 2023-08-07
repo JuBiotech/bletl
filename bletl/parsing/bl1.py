@@ -196,8 +196,8 @@ class BioLector1Parser(BLDParser):
         metadata = extract_metadata(headerlines)
         process_parameters = extract_process_parameters(headerlines)
         filtersets = extract_filtersets(headerlines)
-        comments = extract_comments(data)
         references = extract_references(data)
+        comments = extract_comments(data, references)
         measurements = extract_measurements(data)
 
         data = BLData(
@@ -377,16 +377,25 @@ def extract_process_parameters(headerlines):
     return process_parameters
 
 
-def extract_comments(dfraw):
+def extract_comments(dfraw: pandas.DataFrame, references: pandas.DataFrame) -> pandas.DataFrame:
+    """This adds cycle numbers using timestamps from references."""
     ocol_ncol_type = [
         ("TIME [h]", "time", float),
         ("COMMENTS", "user_comment", str),
     ]
     df = utils.__to_typed_cols__(dfraw[dfraw["READING"] == "K"], ocol_ncol_type)
+
+    # Get the times when each cycle started
+    start_times = references.reset_index().drop_duplicates("cycle", keep="first").set_index("cycle").time
+    start_times.loc[1] = 0
+    # Add cycle numbers based on cycle start times and comment timestamps
+    df["cycle"] = [start_times[t > start_times].index[-1] for t in df["time"]]
+
     # TODO: automatically separate comments into user/sys
     df["sys_comment"] = None
     df.index = range(len(df))
-    return df
+    # Change column order
+    return df[["cycle", "time", "user_comment", "sys_comment"]]
 
 
 def extract_references(dfraw):

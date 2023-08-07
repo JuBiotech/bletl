@@ -464,6 +464,17 @@ class TestBLProParsing:
         bletl.parse(pathlib.Path(dir_testfiles, "BLPro", "line_duplication.csv"))
         pass
 
+    @pytest.mark.filterwarnings("ignore:cycle 2 filterset 02")
+    def test_drop_non_monotonically_increasing_time_filtersets(self):
+        """This happens when line/block defects accidentally result in a parseable CSV."""
+        with pytest.warns(UserWarning, match="cycle 2 filterset 02"):
+            bldata = bletl.parse(dir_testfiles / "BLPro" / "non_monotonic_time.csv")
+            assert len(bldata["BS5"].time) == 4
+            assert len(bldata["pH"].time) == 3
+            assert 2 not in bldata["pH"].time.index
+            assert len(bldata["DO"].time) == 4
+        pass
+
     def test_refoverld_issue12(self):
         with pytest.warns(UserWarning, match=r"cycles \[269, 636\].*REFOVERLD"):
             bldata = bletl.parse(dir_testfiles / "BLPro" / "issue12.csv")
