@@ -13,6 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# For more information contact the maintainers of https://github.com/JuBiotech.
 """BioLector Extraction Transformation and Loading (bletl) is a package for parsing raw
 BioLector files, applying calibration transformations and representing them in a standardized
 format.
