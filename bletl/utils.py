@@ -1,4 +1,5 @@
 """Contains helper functions that do not depend on other modules within this package."""
+
 import datetime
 import enum
 import pathlib
@@ -35,7 +36,7 @@ def __to_typed_cols__(
             dfout[ncol] = None
         elif issubclass(typ, enum.Enum):
             # Enum types are kept as object-series
-            dfout[ncol] = dfin[ocol].apply(lambda x: typ(x), convert_dtype=False)
+            dfout[ncol] = pandas.Series([typ(x) for x in dfin[ocol]], name=ncol, dtype=object)
         else:
             dfout[ncol] = dfin[ocol].astype(typ)
     return dfout
