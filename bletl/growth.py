@@ -417,8 +417,7 @@ def fit_mu_t(
         calibration_model.loglikelihood(
             x=Xt,
             y=pm.ConstantData("backscatter", y, dims=("timepoint",)),
-            replicate_id=replicate_id,
-            dependent_key=calibration_model.dependent_key,
+            name=f"{replicate_id}_{calibration_model.dependent_key}",
             dims="timepoint",
         )
 
