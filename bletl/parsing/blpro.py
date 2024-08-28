@@ -53,7 +53,7 @@ _WELL_NUMM_TO_ID = {
     for rownumber, row in enumerate("ABCDEF")
     for colnumber, column in enumerate(reversed(range(1, 9)) if rownumber % 2 else range(1, 9))
 }
-"""Maps 1-based well numbers in non-microfluidic mode by **measurement counting order** (→→→ ↓ ←←← ↓ →→→ ...) to alphanumeric well IDs."""
+"""Maps 1-based well numbers in non-MF mode by **measurement counting order** (→→→ ↓ ←←← ↓ →→→ ...) to alphanumeric well IDs."""
 
 
 class BioLectorProParser(BLDParser):
