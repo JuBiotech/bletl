@@ -229,6 +229,7 @@ def extract_filtersets(metadata):
         "201": "Biomass",
         "202": "pH(HP8)",
         "203": "DO(PSt3)",
+        "401": "Biomass",
     }
     for fnum, fset in filtersets.items():
         for k in ["reference_value", "reference_gain", "gain"]:
