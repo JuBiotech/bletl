@@ -48,6 +48,13 @@ _MF_WELL_NUMM_TO_ID = {
 }
 """Maps 1-based well numbers in MF mode by **measurement counting order** (→→→ ↓ ←←← ↓ →→→ ...) to alphanumeric well IDs."""
 
+_WELL_NUMM_TO_ID = {
+    1 + (colnumber + rownumber * 8): f"{row}{column:02d}"
+    for rownumber, row in enumerate("ABCDEF")
+    for colnumber, column in enumerate(reversed(range(1, 9)) if rownumber % 2 else range(1, 9))
+}
+"""Maps 1-based well numbers in non-microfluidic mode by **measurement counting order** (→→→ ↓ ←←← ↓ →→→ ...) to alphanumeric well IDs."""
+
 
 class BioLectorProParser(BLDParser):
     def parse(
@@ -74,7 +81,10 @@ class BioLectorProParser(BLDParser):
         )
 
         bld.metadata = metadata
-        bld.fluidics = extract_fluidics(data)
+        bld.fluidics = extract_fluidics(
+            data,
+            mf_mode="MF32" in metadata["main"]["mtp"],
+        )
         bld.valves, bld.module = extract_valves_module(data)
         bld.diagnostics = extract_diagnostics(data)
 
@@ -364,7 +374,7 @@ def extract_environment(dfraw):
     return standardize(df)
 
 
-def extract_fluidics(dfraw):
+def extract_fluidics(dfraw, mf_mode: bool):
     ocol_ncol_type = [
         ("Cycle", "cycle", int),
         ("Well", "well", int),
@@ -374,7 +384,11 @@ def extract_fluidics(dfraw):
         ("Temp_Ch4", "volume", float),
     ]
     df = utils.__to_typed_cols__(dfraw[dfraw["Type"] == "F"], ocol_ncol_type)
-    df["well"] = [_MF_WELL_NUMM_TO_ID[w] for w in df["well"]]
+    if mf_mode:
+        df["well"] = [_MF_WELL_NUMM_TO_ID[w] for w in df["well"]]
+    else:
+        df["well"] = [_WELL_NUMM_TO_ID[w] for w in df["well"]]
+
     df = df.sort_values(["well", "cycle"]).set_index(["well"])
     return standardize(df)
 
