@@ -5,6 +5,8 @@ import enum
 import pathlib
 import re
 import urllib
+import urllib.error
+import urllib.request
 from typing import Optional, Sequence, Tuple
 
 import pandas
