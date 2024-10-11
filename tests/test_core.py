@@ -107,6 +107,14 @@ class TestParserSelection:
     def test_incompatible_file_detecion(self):
         with pytest.raises(bletl.IncompatibleFileError):
             bletl.get_parser(incompatible_file)
+        with pytest.raises(bletl.IncompatibleFileError):
+            bletl.get_parser(dir_testfiles / "incompatible_files" / "other.zip")
+
+    def test_xt_file_recognition(self):
+        fp = dir_testfiles / "BLXT" / "4_BG_test.zip"
+        with pytest.raises(NotImplementedError, match=r"XT.*?version: 1\.0\.0"):
+            bletl.get_parser(fp)
+        pass
 
 
 class TestUtils:

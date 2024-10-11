@@ -1,4 +1,6 @@
 """Specifies the base types for parsing and representing BioLector CSV files."""
+import json
+import zipfile
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Optional, Sequence, Union
@@ -38,6 +40,26 @@ def get_parser(filepath: Union[str, Path]) -> BLDParser:
     NotImlementedError
         When the file contents do not match with a known BioLector refult file format.
     """
+
+    model = None
+    version = None
+
+    # Check for XT file types first because they are zipped
+    if Path(filepath).suffix.lower() == ".zip":
+        with zipfile.ZipFile(filepath, "r") as zfile:
+            for fp in zfile.namelist():
+                if not fp.endswith(".meta"):
+                    continue
+                with zfile.open(fp) as jfile:
+                    metadict = json.load(jfile)
+                version = metadict["CsvFileVersion"]
+                model = BioLectorModel.XT
+                if not (model, version) in parsers:
+                    raise NotImplementedError(f"Unsupported {model} file version: {version}")
+                return parsers[(model, version)]()
+        raise IncompatibleFileError("Unable to detect the BioLector model from the file contents.")
+
+    # Now check I/II/Pro file which are plain text
     try:
         # Note:
         # BioLector II files are encoded as UTF8-BOM
@@ -47,9 +69,6 @@ def get_parser(filepath: Union[str, Path]) -> BLDParser:
     except UnicodeDecodeError:
         with open(filepath, "r", encoding="latin-1") as f:
             lines = f.readlines()
-
-    model = None
-    version = None
 
     if "=====" in lines[0]:
         if "parameters" in lines[0]:
