@@ -5,10 +5,16 @@ import pathlib
 import numpy
 import pandas
 import pytest
-from numpy import random
 
 import bletl
-from bletl import core, parsing, utils
+from bletl import (
+    InvalidLotNumberError,
+    LotInformationMismatch,
+    NoMeasurementData,
+    core,
+    parsing,
+    utils,
+)
 from bletl.parsing import bl1, blpro
 
 dir_testfiles = pathlib.Path(pathlib.Path(__file__).absolute().parent, "data")
@@ -302,7 +308,7 @@ class TestBL1Parsing:
             data.get_unified_narrow_data(source_well="O9000")
 
     def test_NoMeasurements_Warning(self):
-        with pytest.warns(core.NoMeasurementData):
+        with pytest.warns(NoMeasurementData):
             bletl.parse(file_with_no_measurements)
 
 
@@ -369,7 +375,7 @@ class TestBL1Calibration:
         return
 
     def test_mismatch_warning(self):
-        with pytest.warns(core.LotInformationMismatch):
+        with pytest.warns(LotInformationMismatch):
             bletl.parse(file_with_lot_info, lot_number=1818, temp=37)
         return
 
@@ -381,7 +387,7 @@ class TestOnlineMethods:
         return
 
     def test_invalid_lot_number(self):
-        with pytest.raises(core.InvalidLotNumberError):
+        with pytest.raises(InvalidLotNumberError):
             bl1.fetch_calibration_data(99, 99)
         return
 

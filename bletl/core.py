@@ -1,16 +1,8 @@
 """Specifies the base types for parsing and representing BioLector CSV files."""
-import abc
-import enum
-import os
-import pathlib
-import typing
-import urllib.error
-import urllib.request
-import warnings
 from collections.abc import Iterable
+from pathlib import Path
 from typing import Optional, Sequence, Union
 
-import numpy
 import pandas
 
 from . import parsing, utils
@@ -20,11 +12,6 @@ from .types import (
     BLDParser,
     FilterTimeSeries,
     IncompatibleFileError,
-    InvalidLotNumberError,
-    LotInformationError,
-    LotInformationMismatch,
-    LotInformationNotFound,
-    NoMeasurementData,
 )
 
 parsers = {
@@ -33,12 +20,12 @@ parsers = {
 }
 
 
-def get_parser(filepath: Union[str, pathlib.Path]) -> BLDParser:
+def get_parser(filepath: Union[str, Path]) -> BLDParser:
     """Analyzes a raw BioLector file and selects an appropiate parser.
 
     Parameters
     ----------
-    filepath : str or pathlib.Path
+    filepath : str or Path
         Path pointing to the file of interest.
 
     Returns
@@ -90,7 +77,7 @@ def get_parser(filepath: Union[str, pathlib.Path]) -> BLDParser:
 
 
 def _parse(
-    filepath: str,
+    filepath: Union[str, Path],
     drop_incomplete_cycles: bool,
     lot_number: Optional[int],
     temp: Optional[int],
@@ -105,7 +92,7 @@ def _parse(
 
     Parameters
     ----------
-    filepath : str or pathlib.Path
+    filepath : str or Path
         Path pointing to the file of interest.
     drop_incomplete_cycles : bool
         If `True`, incomplete cycles at the end are discarded.
@@ -160,7 +147,7 @@ def _parse(
 
 
 def parse(
-    filepaths: Union[str, Sequence[str]],
+    filepaths: Union[Union[str, Path], Sequence[Union[str, Path]]],
     *,
     drop_incomplete_cycles: bool = True,
     lot_number: Optional[int] = None,
@@ -176,7 +163,7 @@ def parse(
 
     Parameters
     ----------
-    filepaths : str or pathlib.Path or iterable
+    filepaths : str or Path or iterable
         Path pointing to the file(s) of interest.
         If an iterable is provided, files are concatenated.
     drop_incomplete_cycles : bool
