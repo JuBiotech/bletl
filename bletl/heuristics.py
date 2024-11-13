@@ -75,4 +75,10 @@ def find_do_peak(
                 if overshot_since >= delay_b:
                     # the DO has remained above the threshold for long enough
                     break
-    return i_overshot
+
+    # Did the series continue long enough after reaching the threshold?
+    if i_overshot is not None:
+        overshot_since = x[i_total - 1] - x[i_overshot]
+        if overshot_since >= delay_b:
+            return i_overshot
+    return None
