@@ -9,7 +9,7 @@ name = "bletl"
 version = "1.5.2"
 description = "Package for parsing and transforming BioLector raw data."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.8"
 license = {text = "GNU Affero General Public License v3"}
 authors = [
     {name = "Michael Osthege", email = "m.osthege@fz-juelich.de"},
