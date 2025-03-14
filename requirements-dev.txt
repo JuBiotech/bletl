@@ -5,4 +5,4 @@ pandas>=2.0.0
 pytest
 pytest-cov
 twine
-wheel
+build

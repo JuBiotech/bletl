@@ -1,8 +1,47 @@
 # inspired by https://hynek.me/articles/sharing-your-labor-of-love-pypi-quick-and-dirty/
 
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "bletl"
+version = "1.5.2"
+description = "Package for parsing and transforming BioLector raw data."
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "GNU Affero General Public License v3"}
+authors = [
+    {name = "Michael Osthege", email = "m.osthege@fz-juelich.de"},
+]
+classifiers = [
+    "Programming Language :: Python",
+            "Operating System :: OS Independent",
+            "Programming Language :: Python :: 3.8",
+            "Programming Language :: Python :: 3.9",
+            "Programming Language :: Python :: 3.10",
+            "Programming Language :: Python :: 3.11",
+            "Intended Audience :: Science/Research",
+            "License :: OSI Approved :: GNU Affero General Public License v3",
+]
+dependencies = [
+    "csaps>=0.11",
+    "fastprogress",
+    "joblib",
+    "numpy",
+    "pandas",
+    "scipy",
+    "tsfresh",
+    "setuptools",
+]
+
+[project.urls]
+Homepage = "https://github.com/jubiotech/bletl"
+Documentation = "https://bletl.readthedocs.io/en/latest/"
+Download = "https://pypi.org/project/bletl/"
+
+[tool.setuptools]
+package-dir = {"bletl" = "bletl"}
 
 [tool.black]
 line-length = 110

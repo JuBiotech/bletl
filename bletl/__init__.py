@@ -18,6 +18,8 @@
 BioLector files, applying calibration transformations and representing them in a standardized
 format.
 """
+import importlib.metadata
+
 from . import utils
 from .core import get_parser, parse, parsers
 from .heuristics import find_do_peak
@@ -36,4 +38,4 @@ from .types import (
     NoMeasurementData,
 )
 
-__version__ = "1.5.1"
+__version__ = importlib.metadata.version(__package__ or __name__)
