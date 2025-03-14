@@ -35,5 +35,6 @@ from .types import (
     LotInformationNotFound,
     NoMeasurementData,
 )
+import importlib.metadata
 
-__version__ = "1.5.1"
+__version__ = importlib.metadata.version(__package__ or __name__)
