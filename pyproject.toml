@@ -32,6 +32,7 @@ dependencies = [
     "pandas",
     "scipy",
     "tsfresh",
+    "setuptools",
 ]
 
 [project.urls]
