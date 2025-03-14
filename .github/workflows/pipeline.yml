@@ -43,7 +43,7 @@ jobs:
         file: ./coverage.xml
     - name: Test Wheel build, install and import
       run: |
-        python setup.py bdist_wheel
+        python -m build
         twine check dist/*
         cd dist
         pip install bletl*.whl
