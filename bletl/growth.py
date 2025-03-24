@@ -1,9 +1,9 @@
+import importlib.util
 import logging
 from typing import Dict, Optional, Sequence, Tuple, Union
 
 import arviz
 import calibr8
-import importlib
 import numpy
 import pymc as pm
 import pytensor.tensor as pt
