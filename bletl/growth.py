@@ -1,3 +1,4 @@
+import importlib.util
 import logging
 from typing import Dict, Optional, Sequence, Tuple, Union
 
@@ -131,14 +132,25 @@ class GrowthRateResult:
         **sample_kwargs
             optional keyword-arguments to pymc.sample(...) to override defaults
         """
-        sample_kwargs = dict(
-            return_inferencedata=True,
-            target_accept=0.95,
-            init="adapt_diag",
-            initvals=self.theta_map,
-            tune=500,
-            draws=500,
-        )
+        if importlib.util.find_spec("nutpie"):
+            sample_kwargs = dict(
+                return_inferencedata=True,
+                target_accept=0.95,
+                nuts_sampler="nutpie",
+                init="adapt_diag",
+                init_means=self.theta_map,
+                tune=500,
+                draws=500,
+            )
+        else:
+            sample_kwargs = dict(
+                return_inferencedata=True,
+                target_accept=0.95,
+                init="adapt_diag",
+                initvals=self.theta_map,
+                tune=500,
+                draws=500,
+            )
         sample_kwargs.update(kwargs)
         with self.pmodel:
             self._idata = pm.sample(**sample_kwargs)
