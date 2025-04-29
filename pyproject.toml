@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bletl"
-version = "1.5.3"
+version = "1.5.4"
 description = "Package for parsing and transforming BioLector raw data."
 readme = "README.md"
 requires-python = ">=3.8"
