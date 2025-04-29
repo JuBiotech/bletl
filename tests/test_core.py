@@ -319,6 +319,17 @@ class TestBL1Parsing:
         with pytest.warns(NoMeasurementData):
             bletl.parse(file_with_no_measurements)
 
+    def test_get_unified_dataframe_invalid_well(self):
+        # Create test data
+        time_df = pandas.DataFrame({"A01": [0.0, 0.5, 1.0], "A02": [0.0, 0.5, 1.0]})
+        value_df = pandas.DataFrame({"A01": [1.0, 2.0, 3.0], "A02": [1.5, 2.5, 3.5]})
+
+        fts = bletl.FilterTimeSeries(time_df, value_df)
+
+        # Test with invalid well ID
+        with pytest.raises(KeyError, match="Could not find well id"):
+            fts.get_unified_dataframe(well="X99")
+
 
 class TestBL1Calibration:
     def test_calibration_data_type(self):
