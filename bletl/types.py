@@ -32,8 +32,6 @@ class FluidicsSource(enum.IntEnum):
     """Additions from pipetting."""
 
 
-
-
 class FilterTimeSeries:
     """Generalizable data type for calibrated timeseries."""
 
@@ -289,6 +287,7 @@ class BLData(Dict[str, FilterTimeSeries]):
             + "\n".join([f'  "{key}": {fts.__repr__()},' for key, fts in self.items()])
             + "\n}"
         )
+
 
 class BLDParser:
     """Abstract type for parsers that read BioLector CSV files."""
