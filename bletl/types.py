@@ -32,7 +32,73 @@ class FluidicsSource(enum.IntEnum):
     """Additions from pipetting."""
 
 
-class BLData(dict):
+class FilterTimeSeries:
+    """Generalizable data type for calibrated timeseries."""
+
+    @property
+    def wells(self) -> typing.Tuple[str, ...]:
+        """Well IDs that were measured."""
+        return tuple(self.time.columns)
+
+    def __init__(self, time_df: pandas.DataFrame, value_df: pandas.DataFrame):
+        self.time = time_df
+        self.value = value_df
+
+    def get_timeseries(
+        self, well: str, *, last_cycle: Optional[int] = None
+    ) -> Tuple[numpy.ndarray, numpy.ndarray]:
+        """Retrieves (time, value) for a specific well.
+
+        Parameters
+        ----------
+        well : str
+            Well id to retrieve.
+        last_cycle : int, optional
+            Cycle number of the last cycle to be included (defaults to all cycles).
+
+        Returns
+        -------
+        x : numpy.ndarray
+            Timepoints of measurements.
+        y : numpy.ndarray
+            Measured values.
+        """
+        if last_cycle is not None and last_cycle <= 0:
+            raise ValueError(f"last_cycle must be > 0")
+        x = numpy.array(self.time[well])[:last_cycle]
+        y = numpy.array(self.value[well])[:last_cycle]
+        return x, y
+
+    def get_unified_dataframe(self, well: Optional[str] = None) -> pandas.DataFrame:
+        """Retrieves a DataFrame with unified time on index.
+
+        Parameters
+        ----------
+        well : str, optional
+            Well id from which time is taken.
+            If `None`, the first well is used.
+
+        Returns
+        -------
+        unified_df : pandas.DataFrame
+            Dataframe with unified time on index.
+        """
+        if not well is None:
+            if not well in self.time.columns:
+                raise KeyError("Could not find well id")
+            time = self.time.loc[:, well]
+        else:
+            time = self.time.iloc[:, 0]
+
+        new_index = pandas.Index(time, name="time in h")
+        unified_df = self.value.set_index(new_index)
+        return unified_df
+
+    def __repr__(self):
+        return f"FilterTimeSeries({len(self.time)} cycles, {len(self.time.columns)} wells)"
+
+
+class BLData(Dict[str, FilterTimeSeries]):
     """Standardized data type for BioLector data."""
 
     def __init__(
@@ -221,72 +287,6 @@ class BLData(dict):
             + "\n".join([f'  "{key}": {fts.__repr__()},' for key, fts in self.items()])
             + "\n}"
         )
-
-
-class FilterTimeSeries:
-    """Generalizable data type for calibrated timeseries."""
-
-    @property
-    def wells(self) -> typing.Tuple[str, ...]:
-        """Well IDs that were measured."""
-        return tuple(self.time.columns)
-
-    def __init__(self, time_df: pandas.DataFrame, value_df: pandas.DataFrame):
-        self.time = time_df
-        self.value = value_df
-
-    def get_timeseries(
-        self, well: str, *, last_cycle: Optional[int] = None
-    ) -> Tuple[numpy.ndarray, numpy.ndarray]:
-        """Retrieves (time, value) for a specific well.
-
-        Parameters
-        ----------
-        well : str
-            Well id to retrieve.
-        last_cycle : int, optional
-            Cycle number of the last cycle to be included (defaults to all cycles).
-
-        Returns
-        -------
-        x : numpy.ndarray
-            Timepoints of measurements.
-        y : numpy.ndarray
-            Measured values.
-        """
-        if last_cycle is not None and last_cycle <= 0:
-            raise ValueError(f"last_cycle must be > 0")
-        x = numpy.array(self.time[well])[:last_cycle]
-        y = numpy.array(self.value[well])[:last_cycle]
-        return x, y
-
-    def get_unified_dataframe(self, well: Optional[str] = None) -> pandas.DataFrame:
-        """Retrieves a DataFrame with unified time on index.
-
-        Parameters
-        ----------
-        well : str, optional
-            Well id from which time is taken.
-            If `None`, the first well is used.
-
-        Returns
-        -------
-        unified_df : pandas.DataFrame
-            Dataframe with unified time on index.
-        """
-        if not well is None:
-            if not well in self.time.columns:
-                raise KeyError("Could not find well id")
-            time = self.time.loc[:, well]
-        else:
-            time = self.time.iloc[:, 0]
-
-        new_index = pandas.Index(time, name="time in h")
-        unified_df = self.value.set_index(new_index)
-        return unified_df
-
-    def __repr__(self):
-        return f"FilterTimeSeries({len(self.time)} cycles, {len(self.time.columns)} wells)"
 
 
 class BLDParser:
