@@ -73,7 +73,7 @@ class BioLectorProParser(BLDParser):
 
         bld = BLData(
             model=BioLectorModel.BLPro,
-            environment=extract_environment(data),
+            environment=extract_environment(data, metadata),
             filtersets=extract_filtersets(metadata),
             references=extract_references(data),
             measurements=extract_measurements(data),
@@ -353,7 +353,7 @@ def extract_measurements(dfraw):
     return standardize(df)
 
 
-def extract_environment(dfraw):
+def extract_environment(dfraw, metadata):
     ocol_ncol_type = [
         ("Cycle", "cycle", int),
         ("Time", "time", float),
@@ -368,8 +368,11 @@ def extract_environment(dfraw):
         ("Shaker", "shaker_actual", float),
     ]
     df = utils.__to_typed_cols__(dfraw[dfraw["Type"] == "R"], ocol_ncol_type)
-    # TODO: write initial setpoints (temp & shaker) into df
-    # TODO: parse setpoint changes (temp & shaker) from comments
+    # Write initial setpoints (temp & shaker) into df
+    df["humidity_setpoint"] = float(metadata["process"]["humidity"])
+    df["O2_setpoint"] = float(metadata["process"]["o2"])
+    df["CO2_setpoint"] = float(metadata["process"]["co2"])
+    # TODO: parse setpoint changes (temp & shaker) from profiles in the metadata
     # TODO: clean up -9999.0 values in co2 column
     return standardize(df)
 

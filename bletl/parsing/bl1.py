@@ -199,10 +199,14 @@ class BioLector1Parser(BLDParser):
         references = extract_references(data)
         comments = extract_comments(data, references)
         measurements = extract_measurements(data)
+        environment = extract_environment(data, process_parameters, comments)
+        # Also put process parameters into the metadata
+        for k, v in process_parameters.items():
+            metadata[f"process_parameter_{k}"] = v
 
         data = BLData(
             model=BioLectorModel.BL1,
-            environment=extract_environment(data, process_parameters, comments),
+            environment=environment,
             filtersets=filtersets,
             references=references,
             measurements=measurements,
@@ -454,6 +458,9 @@ def extract_environment(dfraw, process_parameters: dict, comments: pandas.DataFr
     df = utils.__to_typed_cols__(dfraw, ocol_ncol_type)
     df["shaker_setpoint"] = process_parameters["shaking"]
     df["temp_setpoint"] = process_parameters["temperature"]
+    df["humidity_setpoint"] = process_parameters["humidity"]
+    df["O2_setpoint"] = process_parameters["O2"]
+    df["CO2_setpoint"] = process_parameters["CO2"]
     # process the comments column to extract setpoint changes
     for t_comment, cmts in zip(comments["time"], comments["user_comment"]):
         # multiple comments may be ,-separated in one line
