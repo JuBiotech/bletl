@@ -352,10 +352,10 @@ def fit_mu_t(
         "segment": numpy.arange(TS),
     }
     with pm.Model(coords=coords) as pmodel:
-        pm.ConstantData("known_switchpoints", t_switchpoints_known)
-        pm.ConstantData("t_data", t_data, dims="timepoint")
-        pm.ConstantData("t_segments", t_segments, dims="segment")
-        dt = pm.ConstantData("dt", numpy.diff(t_data), dims="segment")
+        pm.Data("known_switchpoints", t_switchpoints_known)
+        pm.Data("t_data", t_data, dims="timepoint")
+        pm.Data("t_segments", t_segments, dims="segment")
+        dt = pm.Data("dt", numpy.diff(t_data), dims="segment")
 
         # The init dist for the random walk is where each segment starts.
         # Here we center it on the user-provided mu_prior,
@@ -428,7 +428,7 @@ def fit_mu_t(
         )
         calibration_model.loglikelihood(
             x=Xt,
-            y=pm.ConstantData("backscatter", y, dims=("timepoint",)),
+            y=pm.Data("backscatter", y, dims=("timepoint",)),
             name=f"{replicate_id}_{calibration_model.dependent_key}",
             dims="timepoint",
         )
