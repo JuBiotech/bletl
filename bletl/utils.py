@@ -38,7 +38,9 @@ def __to_typed_cols__(
             dfout[ncol] = None
         elif issubclass(typ, enum.Enum):
             # Enum types are kept as object-series
-            dfout[ncol] = pandas.Series([typ(x) for x in dfin[ocol]], name=ncol, dtype=object)
+            dfout[ncol] = pandas.Series(
+                [typ(x) for x in dfin[ocol]], index=dfin.index, name=ncol, dtype=object
+            )
         else:
             dfout[ncol] = dfin[ocol].astype(typ)
     return dfout

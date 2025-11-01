@@ -683,5 +683,8 @@ class TestBLProMF:
     def test_fluidics_source(self):
         fp = dir_testfiles / "BLPro" / "18-FZJ-Test2--2018-02-07-10-01-11.csv"
         bldata = bletl.parse(fp)
-        assert isinstance(bldata.fluidics["reservoir"][0], bletl.FluidicsSource)
+        correct_type = numpy.array(
+            [isinstance(r, bletl.FluidicsSource) for r in bldata.fluidics["reservoir"]]
+        )
+        assert all(correct_type), f"{sum(correct_type)/len(correct_type)} % correct"
         pass
