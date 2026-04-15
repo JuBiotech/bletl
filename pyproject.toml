@@ -6,10 +6,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bletl"
-version = "1.6.2"
+version = "1.7.0"
 description = "Package for parsing and transforming BioLector raw data."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 license = {text = "GNU Affero General Public License v3"}
 authors = [
     {name = "Michael Osthege", email = "m.osthege@fz-juelich.de"},
@@ -17,10 +17,10 @@ authors = [
 classifiers = [
     "Programming Language :: Python",
             "Operating System :: OS Independent",
-            "Programming Language :: Python :: 3.8",
-            "Programming Language :: Python :: 3.9",
-            "Programming Language :: Python :: 3.10",
             "Programming Language :: Python :: 3.11",
+            "Programming Language :: Python :: 3.12",
+            "Programming Language :: Python :: 3.13",
+            "Programming Language :: Python :: 3.14",
             "Intended Audience :: Science/Research",
             "License :: OSI Approved :: GNU Affero General Public License v3",
 ]
