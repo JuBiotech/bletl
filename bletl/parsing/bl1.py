@@ -1,4 +1,5 @@
 """Parsing functions for the BioLector 1"""
+
 import configparser
 import datetime
 import io

@@ -1,4 +1,5 @@
 """Specifies the base types for parsing and representing BioLector CSV files."""
+
 import abc
 import enum
 import os

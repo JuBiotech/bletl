@@ -1,6 +1,7 @@
 """
 Signal analysis based on simple, deterministic heuristics.
 """
+
 import logging
 import typing
 
@@ -17,7 +18,7 @@ def find_do_peak(
     threshold_a: float,
     delay_b: float,
     threshold_b: float,
-    initial_delay: float = 1
+    initial_delay: float = 1,
 ) -> typing.Optional[int]:
     """Finds the index of a DO peak in the inputs [x] and [y].
 

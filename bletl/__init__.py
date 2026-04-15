@@ -18,6 +18,7 @@
 BioLector files, applying calibration transformations and representing them in a standardized
 format.
 """
+
 import importlib.metadata
 
 from . import utils
