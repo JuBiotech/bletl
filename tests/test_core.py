@@ -286,7 +286,7 @@ class TestBL1Parsing:
         idx = unified_df.index.get_indexer([5], method="nearest")
         col = unified_df.columns.get_indexer(["A05"])
         values = unified_df.iloc[idx, col].to_numpy()
-        numpy.testing.assert_approx_equal(values, 63.8517, significant=6)
+        numpy.testing.assert_approx_equal(values[0, 0], 63.8517, significant=6)
 
     def test_get_narrow_data(self):
         fp = pathlib.Path(
@@ -673,12 +673,12 @@ class TestBLProMF:
         assert bldata.module.index.names == ["well", "valve", "cycle"]
         assert bldata.valves.index.names == ["well", "valve", "cycle"]
         # Check some initial and final well volumes against values shown in the BioLection
-        assert bldata.fluidics.loc["C01", "volume"][0] == 800
-        assert bldata.fluidics.loc["C01", "volume"][-1] == 1201.776
-        assert bldata.fluidics.loc["D01", "volume"][-1] == 1204.892
-        assert bldata.fluidics.loc["D02", "volume"][-1] == 954.68
-        assert bldata.fluidics.loc["E06", "volume"][-1] == 913.16
-        assert bldata.fluidics.loc["F01", "volume"][-1] == 1202.719
+        assert bldata.fluidics.loc["C01", "volume"].values[0] == 800
+        assert bldata.fluidics.loc["C01", "volume"].values[-1] == 1201.776
+        assert bldata.fluidics.loc["D01", "volume"].values[-1] == 1204.892
+        assert bldata.fluidics.loc["D02", "volume"].values[-1] == 954.68
+        assert bldata.fluidics.loc["E06", "volume"].values[-1] == 913.16
+        assert bldata.fluidics.loc["F01", "volume"].values[-1] == 1202.719
         pass
 
     def test_fluidics_source(self):

@@ -563,13 +563,13 @@ def fetch_calibration_data(lot_number: int, temp: int):
         return element
 
     element = search_for_lot(calibration_file, lot_number)
-    if not element:
+    if element is None or len(element) == 0:
         if not utils.download_calibration_data():
             return None
         else:
             element = search_for_lot(calibration_file, lot_number)
 
-    if not element:
+    if element is None or len(element) == 0:
         raise InvalidLotNumberError(
             "Latest calibration information was downloaded from m2p-labs, "
             f"but the provided lot number/temperature combination (lot_number={lot_number}, temp={temp}) could not be found. "
