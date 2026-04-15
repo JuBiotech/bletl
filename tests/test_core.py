@@ -2,6 +2,7 @@
 
 import datetime
 import pathlib
+import warnings
 
 import numpy
 import pandas
@@ -174,7 +175,8 @@ class TestBL1Parsing:
 
     @pytest.mark.parametrize("fp", BL1_files)
     def test_parsing(self, fp):
-        data = bletl.parse(fp)
+        with warnings.catch_warnings(category=UserWarning, action="ignore"):
+            data = bletl.parse(fp)
 
         assert isinstance(data.model, core.BioLectorModel)
         assert data.model == core.BioLectorModel.BL1
@@ -189,7 +191,8 @@ class TestBL1Parsing:
 
     def test_concat_parsing(self):
         filepaths = BL1_fragment_files
-        data = bletl.parse(filepaths)
+        with warnings.catch_warnings(category=UserWarning, action="ignore"):
+            data = bletl.parse(filepaths)
         assert isinstance(data.metadata, dict)
         assert isinstance(data.environment, pandas.DataFrame)
         assert isinstance(data.comments, pandas.DataFrame)
@@ -199,10 +202,12 @@ class TestBL1Parsing:
 
     def test_incomplete_cycle_drop(self):
         filepath = BL1_files[2]
-        data = bletl.parse(filepath, drop_incomplete_cycles=False)
+        with warnings.catch_warnings(category=UserWarning, action="ignore"):
+            data = bletl.parse(filepath, drop_incomplete_cycles=False)
         assert data.measurements.index[-1] == (3, 179, "C08")
 
-        data = bletl.parse(filepath, drop_incomplete_cycles=True)
+        with warnings.catch_warnings(category=UserWarning, action="ignore"):
+            data = bletl.parse(filepath, drop_incomplete_cycles=True)
         assert data.measurements.index[-1] == (3, 178, "F01")
         return
 
@@ -457,7 +462,8 @@ class TestBLProParsing:
 
     @pytest.mark.parametrize("fp", BLPro_files)
     def test_parsing(self, fp):
-        data = bletl.parse(fp)
+        with warnings.catch_warnings(category=UserWarning, action="ignore"):
+            data = bletl.parse(fp)
         assert isinstance(data, dict)
         return
 
@@ -519,7 +525,8 @@ class TestBLProParsing:
         pass
 
     def test_issue24(self):
-        bldata = bletl.parse(dir_testfiles / "BLPro" / "issue24.csv")
+        with pytest.warns(UserWarning, match="Dropped 192 measurement rows.*?REFOVERLD"):
+            bldata = bletl.parse(dir_testfiles / "BLPro" / "issue24.csv")
         assert "BS1" in bldata
         assert "BS3" in bldata
         assert "pH" in bldata
