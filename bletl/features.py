@@ -4,10 +4,10 @@ import logging
 import time
 import typing
 
-import fastprogress
 import numpy
 import pandas
 import tsfresh
+from rich.progress import track
 
 from . import splines
 from .types import BLData, FilterTimeSeries
@@ -416,7 +416,7 @@ def from_bldata(
     _log.info("Applying custom extractors to %i wells.", len(wells))
     s_time = time.time()
     df_result = pandas.DataFrame(index=wells)
-    for well in fastprogress.progress_bar(wells):
+    for well in track(wells):
         for mname, method in extraction_methods.items():
             t, y = bldata[mname.split("__")[0]].get_timeseries(well, last_cycle=last_cycles.get(well))
             df_result.loc[well, mname] = method(t, y)

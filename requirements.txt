@@ -1,8 +1,8 @@
 csaps>=0.11
-fastprogress
 joblib
 numpy
 pandas
+rich
 scipy
 tsfresh
 setuptools
