@@ -2,11 +2,11 @@ import importlib.util
 import logging
 from typing import Dict, Optional, Sequence, Tuple, Union
 
-import arviz
 import calibr8
 import numpy
 import pymc as pm
 import pytensor.tensor as pt
+import xarray as xa
 from packaging import version
 
 _log = logging.getLogger(__file__)
@@ -94,8 +94,8 @@ class GrowthRateResult:
         return self._theta_map
 
     @property
-    def idata(self) -> Optional[arviz.InferenceData]:
-        """ArviZ InferenceData object of the MCMC trace."""
+    def idata(self) -> Optional[xa.DataTree]:
+        """MCMC trace obtained from running :func:`GrowthRateResult.sample`."""
         return self._idata
 
     @property
@@ -134,7 +134,6 @@ class GrowthRateResult:
         """
         if importlib.util.find_spec("nutpie"):
             sample_kwargs = dict(
-                return_inferencedata=True,
                 target_accept=0.95,
                 nuts_sampler="nutpie",
                 init="adapt_diag",
@@ -144,7 +143,6 @@ class GrowthRateResult:
             )
         else:
             sample_kwargs = dict(
-                return_inferencedata=True,
                 target_accept=0.95,
                 init="adapt_diag",
                 initvals=self.theta_map,
