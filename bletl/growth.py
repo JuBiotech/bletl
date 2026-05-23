@@ -114,7 +114,7 @@ class GrowthRateResult:
         if not self.idata:
             return None
         assert hasattr(self.idata, "posterior")
-        return self.idata.posterior.mu_t.stack(sample=("chain", "draw")).values.T
+        return self.idata["posterior"].mu_t.stack(sample=("chain", "draw")).values.T
 
     @property
     def x_mcmc(self) -> Optional[numpy.ndarray]:
@@ -122,7 +122,7 @@ class GrowthRateResult:
         if self.idata is None:
             return None
         assert hasattr(self.idata, "posterior")
-        return self.idata.posterior["X"].stack(sample=("chain", "draw")).T
+        return self.idata["posterior"]["X"].stack(sample=("chain", "draw")).T
 
     def sample(self, **kwargs) -> None:
         """Runs MCMC sampling with default settings on the growth model.
