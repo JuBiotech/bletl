@@ -1,7 +1,7 @@
 calibr8
 codecov
 flake8
-pandas>=3.0.6
+pandas>=3.1.0
 pytest
 pytest-cov
 twine
