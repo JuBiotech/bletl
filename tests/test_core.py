@@ -1,6 +1,7 @@
 """Contains unit tests for the `bletl` package"""
 
 import datetime
+import io
 import pathlib
 import warnings
 
@@ -119,6 +120,38 @@ class TestParserSelection:
         pass
 
 
+class TestSources:
+    def test_read_source(self):
+        raw = file_with_no_measurements.read_bytes()
+        for source in [raw, file_with_no_measurements, str(file_with_no_measurements), io.BytesIO(raw)]:
+            assert bletl.read_source(source) == raw
+        with pytest.raises(TypeError):
+            bletl.read_source(io.StringIO("text"))
+
+    def test_parse_bytes_and_stream(self):
+        # bytes and streams are iterable, but are single sources that must be read only once
+        raw = pathlib.Path(dir_testfiles, "BLPro", "new_metadata_format.csv").read_bytes()
+        for source in [raw, io.BytesIO(raw)]:
+            _, y = bletl.parse(source)["BS3"].get_timeseries("A01")
+            numpy.testing.assert_array_almost_equal(y, [4.19, 1.96])
+
+    def test_crlf_line_endings(self):
+        raw = file_with_no_measurements.read_bytes()
+        crlf = raw.replace(b"\n", b"\r\n")
+        assert isinstance(bletl.get_parser(crlf), bl1.BioLector1Parser)
+        headerlines, data = bl1.split_header_data(crlf)
+        expected_headerlines, expected_data = bl1.split_header_data(raw)
+        assert headerlines == expected_headerlines
+        pandas.testing.assert_frame_equal(data, expected_data)
+
+    def test_deprecated_filepaths(self):
+        fp = pathlib.Path(dir_testfiles, "BLPro", "new_metadata_format.csv")
+        with pytest.warns(DeprecationWarning):
+            bletl.parse(filepaths=fp)
+        with pytest.raises(TypeError):
+            bletl.parse(fp, filepaths=fp)
+
+
 class TestUtils:
     def test_last_well_in_cycle(self):
         measurements = pandas.DataFrame(
@@ -168,7 +201,7 @@ class TestBL1Parsing:
         with open(fp, "r", encoding="latin-1") as f:
             lines = f.readlines()
 
-        headerlines, data = parsing.bl1.split_header_data(fp)
+        headerlines, data = parsing.bl1.split_header_data(fp.read_bytes())
 
         assert len(headerlines) + len(data) == len(lines)
         return
@@ -392,7 +425,7 @@ class TestBL1Calibration:
     def test_fragments_with_cal_data(self):
         filepaths = BL1_fragment_files
         data = bletl.parse(
-            filepaths=filepaths,
+            sources=filepaths,
             cal_0=71.93,
             cal_100=38.64,
             phi_min=55.36,
@@ -432,7 +465,7 @@ class TestOnlineMethods:
 class TestBL2Parsing:
     @pytest.mark.parametrize("fp", BL2_files)
     def test_parse_metadata_data(self, fp):
-        metadata, data = parsing.blpro.parse_metadata_data(fp)
+        metadata, data = parsing.blpro.parse_metadata_data(fp.read_bytes())
 
         assert isinstance(metadata, dict)
         assert isinstance(data, pandas.DataFrame)
@@ -450,7 +483,7 @@ class TestBL2Parsing:
 class TestBLProParsing:
     @pytest.mark.parametrize("fp", BLPro_files)
     def test_parse_metadata_data(self, fp):
-        metadata, data = parsing.blpro.parse_metadata_data(fp)
+        metadata, data = parsing.blpro.parse_metadata_data(fp.read_bytes())
 
         assert isinstance(metadata, dict)
         assert isinstance(data, pandas.DataFrame)
@@ -469,7 +502,7 @@ class TestBLProParsing:
 
     def test_parse_metadata_data_new_format(self):
         fp = pathlib.Path(dir_testfiles, "BLPro", "new_metadata_format.csv")
-        metadata, data = parsing.blpro.parse_metadata_data(fp)
+        metadata, data = parsing.blpro.parse_metadata_data(fp.read_bytes())
         assert isinstance(metadata, dict)
         assert isinstance(data, pandas.DataFrame)
         pass
@@ -485,7 +518,7 @@ class TestBLProParsing:
 
     def test_parse_with_concat(self):
         data = bletl.parse(
-            filepaths=[
+            sources=[
                 pathlib.Path(dir_testfiles, "BLPro", "224-MO_Coryne--2019-07-12-16-54-30.csv"),
                 pathlib.Path(dir_testfiles, "BLPro", "226-MO_Coryne--2019-07-12-17-38-02.csv"),
             ]
