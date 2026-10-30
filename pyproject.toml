@@ -6,10 +6,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bletl"
-version = "1.7.1"
+version = "1.8.0"
 description = "Package for parsing and transforming BioLector raw data."
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = "AGPL-3.0-or-later"
 authors = [
     {name = "Michael Osthege", email = "m.osthege@fz-juelich.de"},
@@ -17,10 +17,10 @@ authors = [
 classifiers = [
     "Programming Language :: Python",
             "Operating System :: OS Independent",
-            "Programming Language :: Python :: 3.11",
             "Programming Language :: Python :: 3.12",
             "Programming Language :: Python :: 3.13",
             "Programming Language :: Python :: 3.14",
+            "Programming Language :: Python :: 3.15",
             "Intended Audience :: Science/Research",
 ]
 dependencies = [
@@ -32,6 +32,7 @@ dependencies = [
     "scipy",
     "tsfresh",
     "setuptools",
+    "typing_extensions>=4.5; python_version < '3.13'",
 ]
 
 [project.urls]
