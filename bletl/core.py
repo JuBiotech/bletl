@@ -1,10 +1,13 @@
 """Specifies the base types for parsing and representing BioLector CSV files."""
 
+import io
 import json
+import os
+import sys
+import warnings
 import zipfile
-from collections.abc import Iterable
-from pathlib import Path
-from typing import Optional, Sequence, Union
+from collections.abc import Sequence
+from typing import Optional, overload
 
 import pandas
 
@@ -15,7 +18,15 @@ from .types import (
     BLDParser,
     FilterTimeSeries,
     IncompatibleFileError,
+    Source,
+    SupportsRead,
+    read_source,
 )
+
+if sys.version_info >= (3, 13):
+    from warnings import deprecated
+else:
+    from typing_extensions import deprecated
 
 parsers = {
     (BioLectorModel.BL1, "3.3"): parsing.bl1.BioLector1Parser,
@@ -23,13 +34,13 @@ parsers = {
 }
 
 
-def get_parser(filepath: Union[str, Path]) -> BLDParser:
+def get_parser(source: Source) -> BLDParser:
     """Analyzes a raw BioLector file and selects an appropiate parser.
 
     Parameters
     ----------
-    filepath : str or Path
-        Path pointing to the file of interest.
+    source : str, os.PathLike, bytes or binary stream
+        Path to the file of interest, its content as bytes, or a binary stream.
 
     Returns
     -------
@@ -41,13 +52,13 @@ def get_parser(filepath: Union[str, Path]) -> BLDParser:
     NotImlementedError
         When the file contents do not match with a known BioLector refult file format.
     """
-
+    content = read_source(source)
     model = None
     version = None
 
     # Check for XT file types first because they are zipped
-    if Path(filepath).suffix.lower() == ".zip":
-        with zipfile.ZipFile(filepath, "r") as zfile:
+    if zipfile.is_zipfile(io.BytesIO(content)):
+        with zipfile.ZipFile(io.BytesIO(content), "r") as zfile:
             for fp in zfile.namelist():
                 if not fp.endswith(".meta"):
                     continue
@@ -65,11 +76,9 @@ def get_parser(filepath: Union[str, Path]) -> BLDParser:
         # Note:
         # BioLector II files are encoded as UTF8-BOM
         # BioLector Pro files are encoded as UTF-8
-        with open(filepath, "r", encoding="utf-8") as f:
-            lines = f.readlines()
+        lines = utils._decode_lines(content, "utf-8")
     except UnicodeDecodeError:
-        with open(filepath, "r", encoding="latin-1") as f:
-            lines = f.readlines()
+        lines = utils._decode_lines(content, "latin-1")
 
     if "=====" in lines[0]:
         if "parameters" in lines[0]:
@@ -96,8 +105,8 @@ def get_parser(filepath: Union[str, Path]) -> BLDParser:
     return parser_cls()
 
 
-def _parse(
-    filepath: Union[str, Path],
+def _parse_single(
+    source: Source,
     drop_incomplete_cycles: bool,
     lot_number: Optional[int],
     temp: Optional[int],
@@ -112,8 +121,8 @@ def _parse(
 
     Parameters
     ----------
-    filepath : str or Path
-        Path pointing to the file of interest.
+    source : str, os.PathLike, bytes or binary stream
+        Path to the file of interest, its content as bytes, or a binary stream.
     drop_incomplete_cycles : bool
         If `True`, incomplete cycles at the end are discarded.
         IMPORTANT: if the file contains only one cycle, it will always be considered "completed".
@@ -144,9 +153,11 @@ def _parse(
     NotImlementedError
         When the file contents do not match with a known BioLector result file format.
     """
-    parser = get_parser(filepath)
+    # Read once, so streams are consumed only once by detection and parsing
+    content = read_source(source)
+    parser = get_parser(content)
     data = parser.parse(
-        filepath,
+        content,
         lot_number=lot_number,
         temp=temp,
         cal_0=cal_0,
@@ -166,26 +177,64 @@ def _parse(
     return data
 
 
+@overload
 def parse(
-    filepaths: Union[Union[str, Path], Sequence[Union[str, Path]]],
+    sources: Source | Sequence[Source],
     *,
     drop_incomplete_cycles: bool = True,
-    lot_number: Optional[int] = None,
-    temp: Optional[int] = None,
-    cal_0: Optional[float] = None,
-    cal_100: Optional[float] = None,
-    phi_min: Optional[float] = None,
-    phi_max: Optional[float] = None,
-    pH_0: Optional[float] = None,
-    dpH: Optional[float] = None,
+    lot_number: int | None = None,
+    temp: int | None = None,
+    cal_0: float | None = None,
+    cal_100: float | None = None,
+    phi_min: float | None = None,
+    phi_max: float | None = None,
+    pH_0: float | None = None,
+    dpH: float | None = None,
+) -> BLData: ...
+
+
+@overload
+@deprecated("'filepaths' is deprecated. Use 'sources' instead.")
+def parse(
+    *,
+    filepaths: Source | Sequence[Source],
+    drop_incomplete_cycles: bool = True,
+    lot_number: int | None = None,
+    temp: int | None = None,
+    cal_0: float | None = None,
+    cal_100: float | None = None,
+    phi_min: float | None = None,
+    phi_max: float | None = None,
+    pH_0: float | None = None,
+    dpH: float | None = None,
+) -> BLData: ...
+
+
+def parse(
+    sources: Source | Sequence[Source] | None = None,
+    *,
+    filepaths: Source | Sequence[Source] | None = None,
+    drop_incomplete_cycles: bool = True,
+    lot_number: int | None = None,
+    temp: int | None = None,
+    cal_0: float | None = None,
+    cal_100: float | None = None,
+    phi_min: float | None = None,
+    phi_max: float | None = None,
+    pH_0: float | None = None,
+    dpH: float | None = None,
 ) -> BLData:
     """Parses a raw BioLector CSV file into a BLData object and applies calibration.
 
     Parameters
     ----------
-    filepaths : str or Path or iterable
-        Path pointing to the file(s) of interest.
-        If an iterable is provided, files are concatenated.
+    sources : str, os.PathLike, bytes, binary stream or sequence of these
+        Path to the file of interest, its content as bytes, or a binary stream.
+        A ``str`` is always interpreted as a path. Streams must be opened in binary mode;
+        they are read from their current position and are not closed.
+        If a sequence is provided, the files are concatenated.
+    filepaths : deprecated
+        Deprecated alias for `sources`.
     drop_incomplete_cycles : bool
         If `True`, incomplete cycles at the end are discarded
         IMPORTANT: if the file contains only one cycle, it will always be considered "completed".
@@ -214,7 +263,8 @@ def parse(
     Raises
     ------
     TypeError
-        When either lot number or temperature, but not both, are None.
+        When either lot number or temperature, but not both, are None,
+        or when not exactly one of `sources` and `filepaths` is given.
     NotImplementedError
         When the file contents do not match with a known BioLector result file format.
     LotInformationError
@@ -222,11 +272,25 @@ def parse(
     LotInformationMismatch
         When lot information given as parameters is not equal to lot information found in data file.
     """
-    if isinstance(filepaths, Iterable) and not isinstance(filepaths, str):
+    if filepaths is not None:
+        if sources is not None:
+            raise TypeError("parse() got both 'sources' and 'filepaths'")
+        # @deprecated on an overload only informs type checkers, so warn at runtime too
+        warnings.warn("'filepaths' is deprecated, use 'sources' instead.", DeprecationWarning, stacklevel=2)
+        sources = filepaths
+    elif sources is None:
+        raise TypeError("parse() missing required argument: 'sources'")
+
+    # bytes and streams are iterable too, so single sources must be recognized explicitly
+    if isinstance(sources, (str, os.PathLike, bytes, SupportsRead)):
+        data = _parse_single(
+            sources, drop_incomplete_cycles, lot_number, temp, cal_0, cal_100, phi_min, phi_max, pH_0, dpH
+        )
+    else:
         fragments = []
-        for filepath in filepaths:
-            fragment = _parse(
-                filepath,
+        for source in sources:
+            fragment = _parse_single(
+                source,
                 drop_incomplete_cycles,
                 lot_number,
                 temp,
@@ -266,9 +330,5 @@ def parse(
                 data[fs] = FilterTimeSeries(conc_times, conc_values)
 
         data.metadata["date_end"] = fragments[-1].metadata["date_end"]
-    else:
-        data = _parse(
-            filepaths, drop_incomplete_cycles, lot_number, temp, cal_0, cal_100, phi_min, phi_max, pH_0, dpH
-        )
 
     return data

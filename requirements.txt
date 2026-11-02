@@ -1,8 +1,0 @@
-csaps>=0.11
-joblib
-numpy
-pandas
-rich
-scipy
-tsfresh
-setuptools

@@ -13,20 +13,19 @@ jobs:
       PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
     steps:
     - uses: actions/checkout@v7
-    - name: Set up Python
-      uses: actions/setup-python@v7
+    - name: Setup uv
+      uses: astral-sh/setup-uv@v10.3.3
       with:
-        python-version: "3.13"
+        python-version: "3.14"
     - name: Install dependencies
       run: |
-        pip install -e .
-        pip install -r requirements-dev.txt
+        uv sync --group dev
     - name: Test with pytest
       run: |
-        pytest --cov=./bletl --cov-report xml --cov-report term-missing tests/
+        uv run pytest --cov=./bletl --cov-report xml --cov-report term-missing tests/
     - name: Build package
       run: |
-        python -m build
+        uv run python -m build
     - name: Check version number match
       run: |
         echo "GITHUB_REF: ${GITHUB_REF}"
@@ -34,9 +33,9 @@ jobs:
         grep -Rq "^Version: ${GITHUB_REF:11}$" bletl.egg-info/PKG-INFO
     - name: Publish to PyPI
       run: |
-        twine check dist/*
-        twine upload --repository pypi --username __token__ --password ${PYPI_TOKEN} dist/*
+        uv run twine check dist/*
+        uv run twine upload --repository pypi --username __token__ --password ${PYPI_TOKEN} dist/*
     - name: Test installation
       run: |
         sleep 120
-        pip install bletl==${GITHUB_REF:11}
+        uv pip install bletl==${GITHUB_REF:11}

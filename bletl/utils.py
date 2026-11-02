@@ -2,6 +2,7 @@
 
 import datetime
 import enum
+import io
 import pathlib
 import re
 import urllib
@@ -44,6 +45,12 @@ def __to_typed_cols__(
         else:
             dfout[ncol] = dfin[ocol].astype(typ)
     return dfout
+
+
+def _decode_lines(raw: bytes, encoding: str) -> list[str]:
+    """Decodes ``raw`` into lines like ``open()`` does: universal newlines, line endings kept."""
+    # str.splitlines() would also split on "\x85" (NEL), a valid Latin-1 character
+    return io.StringIO(raw.decode(encoding), newline=None).readlines()
 
 
 def _unindex(dataframe: pandas.DataFrame) -> Tuple[Sequence[Optional[str]], pandas.DataFrame]:

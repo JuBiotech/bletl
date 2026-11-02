@@ -3,8 +3,9 @@
 import abc
 import enum
 import os
+import pathlib
 import typing
-from typing import Dict, Optional, Tuple, Union
+from typing import Dict, Optional, Protocol, Tuple, runtime_checkable
 
 import numpy
 import pandas
@@ -290,24 +291,53 @@ class BLData(Dict[str, FilterTimeSeries]):
         )
 
 
+@runtime_checkable
+class SupportsRead[T](Protocol):
+    """Object with a ``read()`` method returning ``T``, such as a file opened in binary mode."""
+
+    def read(self) -> T: ...
+
+
+type Source = str | os.PathLike[str] | bytes | SupportsRead[bytes]
+"""Raw BioLector data: a file path, the file content, or a binary stream.
+
+A ``str`` is always interpreted as a path. Streams must be opened in binary mode;
+they are read from their current position and are not closed.
+"""
+
+
+def read_source(source: Source) -> bytes:
+    """Return the raw content of ``source``, reading it from disk or the stream if needed."""
+    if isinstance(source, bytes):
+        return source
+    if isinstance(source, (str, os.PathLike)):
+        return pathlib.Path(source).read_bytes()
+    content = source.read()
+    if not isinstance(content, bytes):
+        raise TypeError(
+            f"Expected a binary stream, got {type(content).__name__} content. "
+            "Open the file in binary mode ('rb')."
+        )
+    return content
+
+
 class BLDParser:
     """Abstract type for parsers that read BioLector CSV files."""
 
     __metaclass__ = abc.ABCMeta
 
-    @abc.abstractmethod
     def parse(
         self,
-        filepath: Union[str, os.PathLike],
+        source: Source,
         *,
-        lot_number: Optional[int] = None,
-        temp: Optional[int] = None,
-        cal_0: Optional[float] = None,
-        cal_100: Optional[float] = None,
-        phi_min: Optional[float] = None,
-        phi_max: Optional[float] = None,
-        pH_0: Optional[float] = None,
-        dpH: Optional[float] = None,
+        lot_number: int | None = None,
+        temp: int | None = None,
+        cal_0: float | None = None,
+        cal_100: float | None = None,
+        phi_min: float | None = None,
+        phi_max: float | None = None,
+        pH_0: float | None = None,
+        dpH: float | None = None,
     ) -> BLData:
         """Parses the provided BioLector CSV file into a data object.
 
@@ -315,8 +345,8 @@ class BLDParser:
 
         Parameters
         ----------
-        filepath : str or pathlib.Path
-            Path pointing to the file of interest.
+        source : str, os.PathLike, bytes or binary stream
+            Path to the file of interest, its content as bytes, or a binary stream.
         lot_number : int or None
             Lot number of the microtiter plate used.
         temp :int, optional
@@ -334,6 +364,33 @@ class BLDParser:
         dpH : float, optional
             Calibration parameter dpH for pH measurement.
         """
+        return self._parse(
+            read_source(source),
+            lot_number=lot_number,
+            temp=temp,
+            cal_0=cal_0,
+            cal_100=cal_100,
+            phi_min=phi_min,
+            phi_max=phi_max,
+            pH_0=pH_0,
+            dpH=dpH,
+        )
+
+    @abc.abstractmethod
+    def _parse(
+        self,
+        raw: bytes,
+        *,
+        lot_number: int | None = None,
+        temp: int | None = None,
+        cal_0: float | None = None,
+        cal_100: float | None = None,
+        phi_min: float | None = None,
+        phi_max: float | None = None,
+        pH_0: float | None = None,
+        dpH: float | None = None,
+    ) -> BLData:
+        """Parses the raw content of a BioLector CSV file into a data object."""
         raise NotImplementedError(f"Whoever implemented {self.__class__.__name__} screwed up.")
 
 

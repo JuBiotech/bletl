@@ -4,12 +4,11 @@ import collections
 import datetime
 import io
 import logging
-import os
 import pathlib
 import re
 import warnings
 import xml.etree.ElementTree
-from typing import Any, DefaultDict, Dict, List, Optional, Tuple, Union
+from typing import Any, DefaultDict, Dict, Optional, Tuple
 
 import numpy
 import pandas
@@ -58,9 +57,10 @@ _WELL_NUMM_TO_ID = {
 
 
 class BioLectorProParser(BLDParser):
-    def parse(
+    def _parse(
         self,
-        filepath: Union[str, os.PathLike],
+        raw: bytes,
+        *,
         lot_number: Optional[int] = None,
         temp: Optional[int] = None,
         cal_0: Optional[float] = None,
@@ -70,7 +70,7 @@ class BioLectorProParser(BLDParser):
         pH_0: Optional[float] = None,
         dpH: Optional[float] = None,
     ) -> BLData:
-        metadata, data = parse_metadata_data(filepath)
+        metadata, data = parse_metadata_data(raw)
 
         bld = BLData(
             model=BioLectorModel.BLPro,
@@ -140,9 +140,8 @@ def _parse_datalines(datalines) -> pandas.DataFrame:
     return dfraw
 
 
-def parse_metadata_data(fp) -> Tuple[Dict[str, Any], pandas.DataFrame]:
-    with open(fp, "r", encoding="utf-8") as f:
-        lines = f.readlines()
+def parse_metadata_data(raw: bytes) -> Tuple[Dict[str, Any], pandas.DataFrame]:
+    lines = utils._decode_lines(raw, "utf-8")
 
     metadata: DefaultDict[str, Any] = collections.defaultdict(dict)
     section = None
@@ -207,7 +206,7 @@ def parse_metadata_data(fp) -> Tuple[Dict[str, Any], pandas.DataFrame]:
                 defect_lines.append(data_start + l + 1)
         dfraw = _parse_datalines(filtered_datalines).drop_duplicates(keep="first")
         logger.warning(
-            f"{fp} contains defects in lines {defect_lines}. Be extra skeptical about the parsed results."
+            f"File contains defects in lines {defect_lines}. Be extra skeptical about the parsed results."
         )
 
     return dict(metadata), dfraw[list(dfraw.columns)[:-1]]

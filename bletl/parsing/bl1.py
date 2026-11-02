@@ -180,9 +180,10 @@ class BioLector1Parser(BLDParser):
                 data[filter_name + f"{gain:.0f}"] = FilterTimeSeries(times, raw_values)
         return data
 
-    def parse(
+    def _parse(
         self,
-        filepath,
+        raw: bytes,
+        *,
         lot_number: Optional[int] = None,
         temp: Optional[int] = None,
         cal_0: Optional[float] = None,
@@ -191,8 +192,8 @@ class BioLector1Parser(BLDParser):
         phi_max: Optional[float] = None,
         pH_0: Optional[float] = None,
         dpH: Optional[float] = None,
-    ):
-        headerlines, data = split_header_data(filepath)
+    ) -> BLData:
+        headerlines, data = split_header_data(raw)
 
         metadata = extract_metadata(headerlines)
         process_parameters = extract_process_parameters(headerlines)
@@ -239,13 +240,13 @@ def read_header_loglines(dir_incremental):
     return headerlines, loglines
 
 
-def split_header_data(fp):
+def split_header_data(raw: bytes) -> tuple[list[str], pandas.DataFrame]:
     """Splits the raw data into the header and data sections.
 
     Parameters
     ----------
-    fp : str
-        Filepath to the raw CSV file.
+    raw : bytes
+        Content of the raw CSV file.
 
     Returns
     -------
@@ -254,8 +255,7 @@ def split_header_data(fp):
     dfraw : pandas.DataFrame
         Data table.
     """
-    with open(fp, "r", encoding="latin-1") as f:
-        lines = f.readlines()
+    lines = utils._decode_lines(raw, "latin-1")
 
     headerlines = []
     datalines = []
