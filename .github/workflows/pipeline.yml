@@ -14,37 +14,36 @@ jobs:
         pymc-version: ["without", "'pymc>=5.0.0'"]
     steps:
     - uses: actions/checkout@v7
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v7
+    - name: Setup uv
+      uses: astral-sh/setup-uv@v10.3.3
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        pip install -e .
-        pip install -r requirements-dev.txt
+        uv sync --group dev
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        uv run flake8 bletl/ --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings
-        flake8 . --count --exit-zero --statistics
+        uv run flake8 bletl/ --count --exit-zero --statistics
     - name: Test without PyMC
       if: matrix.pymc-version == 'without'
       run: |
-        pytest -v --cov=./bletl --cov-report xml --cov-report term-missing tests/
+        uv run pytest -v --cov=./bletl --cov-report xml --cov-report term-missing tests/
     - name: Install and test with PyMC
       if: matrix.pymc-version != 'without'
       run: |
-        pip install ${{ matrix.pymc-version }}
-        pytest -v --cov=./bletl --cov-report xml --cov-report term-missing tests/
+        uv sync --group pymc
+        uv run pytest -v --cov=./bletl --cov-report xml --cov-report term-missing tests/
     - name: Upload coverage
       uses: codecov/codecov-action@v7
       with:
         file: ./coverage.xml
     - name: Test Wheel build, install and import
       run: |
-        python -m build
-        twine check dist/*
+        uv run python -m build
+        uv run twine check dist/*
         cd dist
-        pip install bletl*.whl
-        python -c "import bletl; print(bletl.__version__)"
+        uv pip install bletl*.whl
+        uv run python -c "import bletl; print(bletl.__version__)"

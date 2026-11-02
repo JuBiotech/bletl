@@ -35,6 +35,22 @@ dependencies = [
     "typing_extensions>=4.5; python_version < '3.13'",
 ]
 
+[dependency-groups]
+dev = [
+    "calibr8",
+    "codecov",
+    "flake8",
+    "pandas>=3.1.0",
+    "pytest",
+    "pytest-cov",
+    "twine",
+    "build",
+]
+
+pymc = [
+    "pymc>=5.0.0",
+]
+
 [project.urls]
 Homepage = "https://github.com/jubiotech/bletl"
 Documentation = "https://bletl.readthedocs.io/en/latest/"
